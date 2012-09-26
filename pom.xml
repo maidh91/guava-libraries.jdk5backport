@@ -10,7 +10,7 @@
     <version>7</version>
   </parent>
   <groupId>com.google.guava</groupId>
-  <artifactId>guava-parent</artifactId>
+  <artifactId>guava-parent-jdk5</artifactId>
   <version>13.0</version>
   <packaging>pom</packaging>
   <name>Guava Maven Parent</name>
@@ -55,7 +55,6 @@
   <modules>
     <module>guava</module>
     <module>guava-bootstrap</module>
-    <module>guava-gwt</module>
     <module>guava-testlib</module>
     <module>guava-tests</module>
   </modules>

@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.guava</groupId>
-    <artifactId>guava-parent</artifactId>
+    <artifactId>guava-parent-jdk5</artifactId>
     <version>13.0</version>
   </parent>
-  <artifactId>guava</artifactId>
+  <artifactId>guava-jdk5</artifactId>
   <name>Guava: Google Core Libraries for Java</name>
   <description>
     Guava is a suite of core and expanded libraries that include
@@ -26,7 +26,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>guava-bootstrap</artifactId>
+      <artifactId>guava-bootstrap-jdk5</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>    

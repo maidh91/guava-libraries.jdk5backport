@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.guava</groupId>
-    <artifactId>guava-parent</artifactId>
+    <artifactId>guava-parent-jdk5</artifactId>
     <version>13.0</version>
   </parent>
-  <artifactId>guava-bootstrap</artifactId>
+  <artifactId>guava-bootstrap-jdk5</artifactId>
   <name>Guava Compilation Bootstrap Classes</name>
   <description>
     ExecutorService's type parameters changed between JDK5 and JDK6 in a
