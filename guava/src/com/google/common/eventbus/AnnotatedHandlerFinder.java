@@ -43,22 +43,21 @@ class AnnotatedHandlerFinder implements HandlerFindingStrategy {
    * instances of this class; this greatly improves performance if multiple EventBus instances are
    * created and objects of the same class are registered on all of them.
    */
-  private static final LoadingCache<Class<?>, ImmutableList<Method>> handlerMethodsCache =
-      CacheBuilder.newBuilder()
-          .weakKeys()
-          .build(new CacheLoader<Class<?>, ImmutableList<Method>>() {
-            @Override
-            public ImmutableList<Method> load(Class<?> concreteClass) throws Exception {
-              return getAnnotatedMethodsInternal(concreteClass);
-            }
-          });
+  private static final LoadingCache<Class<?>, ImmutableList<Method>> handlerMethodsCache = CacheBuilder
+      .newBuilder().weakKeys().build(new CacheLoader<Class<?>, ImmutableList<Method>>() {
+
+        @Override
+        public ImmutableList<Method> load(Class<?> concreteClass) throws Exception {
+          return getAnnotatedMethodsInternal(concreteClass);
+        }
+      });
 
   /**
    * {@inheritDoc}
    *
    * This implementation finds all methods marked with a {@link Subscribe} annotation.
    */
-  @Override
+
   public Multimap<Class<?>, EventHandler> findAllHandlers(Object listener) {
     Multimap<Class<?>, EventHandler> methodsInListener = HashMultimap.create();
     Class<?> clazz = listener.getClass();

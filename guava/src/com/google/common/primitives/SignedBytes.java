@@ -48,7 +48,7 @@ public final class SignedBytes {
    * @since 10.0
    */
   public static final byte MAX_POWER_OF_TWO = 1 << 6;
-  
+
   /**
    * Returns the {@code byte} value that is equal to {@code value}, if possible.
    *
@@ -179,7 +179,6 @@ public final class SignedBytes {
   private enum LexicographicalComparator implements Comparator<byte[]> {
     INSTANCE;
 
-    @Override
     public int compare(byte[] left, byte[] right) {
       int minLength = Math.min(left.length, right.length);
       for (int i = 0; i < minLength; i++) {

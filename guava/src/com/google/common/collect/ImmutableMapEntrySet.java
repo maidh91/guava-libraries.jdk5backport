@@ -36,7 +36,6 @@ abstract class ImmutableMapEntrySet<K, V> extends ImmutableSet<Entry<K, V>> {
 
   abstract ImmutableMap<K, V> map();
 
-  @Override
   public int size() {
     return map().size();
   }
@@ -56,8 +55,8 @@ abstract class ImmutableMapEntrySet<K, V> extends ImmutableSet<Entry<K, V>> {
     return map().isPartialView();
   }
 
-  @GwtIncompatible("serialization")
   @Override
+  @GwtIncompatible("serialization")
   Object writeReplace() {
     return new EntrySetSerializedForm<K, V>(map());
   }
@@ -65,12 +64,15 @@ abstract class ImmutableMapEntrySet<K, V> extends ImmutableSet<Entry<K, V>> {
   @GwtIncompatible("serialization")
   private static class EntrySetSerializedForm<K, V> implements Serializable {
     final ImmutableMap<K, V> map;
+
     EntrySetSerializedForm(ImmutableMap<K, V> map) {
       this.map = map;
     }
+
     Object readResolve() {
       return map.entrySet();
     }
+
     private static final long serialVersionUID = 0;
   }
 }

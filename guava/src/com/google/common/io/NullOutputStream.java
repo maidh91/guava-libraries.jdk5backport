@@ -34,11 +34,12 @@ import java.io.OutputStream;
 @Deprecated
 public final class NullOutputStream extends OutputStream {
   /** Discards the specified byte. */
-  @Override public void write(int b) {
-  }
+  @Override
+  public void write(int b) {}
 
   /** Discards the specified byte array. */
-  @Override public void write(byte[] b, int off, int len) {
+  @Override
+  public void write(byte[] b, int off, int len) {
     checkNotNull(b);
   }
 }

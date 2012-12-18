@@ -74,8 +74,8 @@ public final class Enums {
    * A {@link Function} that maps an {@link Enum} name to the associated
    * constant, or {@code null} if the constant does not exist.
    */
-  private static final class ValueOfFunction<T extends Enum<T>>
-      implements Function<String, T>, Serializable {
+  private static final class ValueOfFunction<T extends Enum<T>> implements Function<String, T>,
+      Serializable {
 
     private final Class<T> enumClass;
 
@@ -83,7 +83,6 @@ public final class Enums {
       this.enumClass = checkNotNull(enumClass);
     }
 
-    @Override
     public T apply(String value) {
       try {
         return Enum.valueOf(enumClass, value);
@@ -92,16 +91,18 @@ public final class Enums {
       }
     }
 
-    @Override public boolean equals(@Nullable Object obj) {
-      return obj instanceof ValueOfFunction &&
-          enumClass.equals(((ValueOfFunction) obj).enumClass);
+    @Override
+    public boolean equals(@Nullable Object obj) {
+      return obj instanceof ValueOfFunction && enumClass.equals(((ValueOfFunction) obj).enumClass);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return enumClass.hashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Enums.valueOf(" + enumClass + ")";
     }
 

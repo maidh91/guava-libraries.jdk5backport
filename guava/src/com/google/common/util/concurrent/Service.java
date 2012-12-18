@@ -122,7 +122,7 @@ public interface Service {
    * @since 14.0
    */
   Throwable failureCause();
-  
+
   /**
    * Registers a {@link Listener} to be {@linkplain Executor#execute executed} on the given 
    * executor.  The listener will have the corresponding transition method called whenever the 
@@ -144,13 +144,14 @@ public interface Service {
    * @since 13.0
    */
   void addListener(Listener listener, Executor executor);
-  
+
   /**
    * The lifecycle states of a service.
    *
    * @since 9.0 (in 1.0 as {@code com.google.common.base.Service.State})
    */
-  @Beta // should come out of Beta when Service does
+  @Beta
+  // should come out of Beta when Service does
   enum State {
     /**
      * A service in this state is inactive. It does minimal work and consumes
@@ -185,14 +186,15 @@ public interface Service {
      */
     FAILED
   }
-  
+
   /**
    * A listener for the various state changes that a {@link Service} goes through in its lifecycle.
    *
    * @author Luke Sandberg
    * @since 13.0
    */
-  @Beta // should come out of Beta when Service does
+  @Beta
+  // should come out of Beta when Service does
   interface Listener {
     /**
      * Called when the service transitions from {@linkplain State#NEW NEW} to 
@@ -200,13 +202,13 @@ public interface Service {
      * {@link Service#startAndWait} is called the first time.
      */
     void starting();
-    
+
     /**
      * Called when the service transitions from {@linkplain State#STARTING STARTING} to 
      * {@linkplain State#RUNNING RUNNING}. This occurs when a service has successfully started.
      */
     void running();
-    
+
     /**
      * Called when the service transitions to the {@linkplain State#STOPPING STOPPING} state. The 
      * only valid values for {@code from} are {@linkplain State#STARTING STARTING} or 
@@ -215,7 +217,7 @@ public interface Service {
      * @param from The previous state that is being transitioned from.  
      */
     void stopping(State from);
-    
+
     /**
      * Called when the service transitions to the {@linkplain State#TERMINATED TERMINATED} state. 
      * The {@linkplain State#TERMINATED TERMINATED} state is a terminal state in the transition
@@ -227,7 +229,7 @@ public interface Service {
      *     {@linkplain State#STOPPING STOPPING}.
      */
     void terminated(State from);
-    
+
     /**
      * Called when the service transitions to the {@linkplain State#FAILED FAILED} state. The 
      * {@linkplain State#FAILED FAILED} state is a terminal state in the transition diagram.  

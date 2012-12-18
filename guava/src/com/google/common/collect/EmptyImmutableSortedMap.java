@@ -27,7 +27,8 @@ import javax.annotation.Nullable;
  *
  * @author Louis Wasserman
  */
-@SuppressWarnings("serial") // uses writeReplace, not default serialization
+@SuppressWarnings("serial")
+// uses writeReplace, not default serialization
 final class EmptyImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
   private final transient ImmutableSortedSet<K> keySet;
 
@@ -35,8 +36,7 @@ final class EmptyImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
     this.keySet = ImmutableSortedSet.emptySet(comparator);
   }
 
-  EmptyImmutableSortedMap(
-      Comparator<? super K> comparator, ImmutableSortedMap<K, V> descendingMap) {
+  EmptyImmutableSortedMap(Comparator<? super K> comparator, ImmutableSortedMap<K, V> descendingMap) {
     super(descendingMap);
     this.keySet = ImmutableSortedSet.emptySet(comparator);
   }

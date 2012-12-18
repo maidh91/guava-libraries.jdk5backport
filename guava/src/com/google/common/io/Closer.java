@@ -24,8 +24,6 @@ import com.google.common.base.Throwables;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.logging.Level;
 
 /**
@@ -81,8 +79,7 @@ final class Closer implements Closeable {
   /**
    * The suppressor implementation to use for the current Java version.
    */
-  private static final Suppressor SUPPRESSOR = SuppressingSuppressor.isAvailable()
-      ? SuppressingSuppressor.INSTANCE
+  private static final Suppressor SUPPRESSOR = SuppressingSuppressor.isAvailable() ? SuppressingSuppressor.INSTANCE
       : LoggingSuppressor.INSTANCE;
 
   /**
@@ -92,13 +89,15 @@ final class Closer implements Closeable {
     return new Closer(SUPPRESSOR);
   }
 
-  @VisibleForTesting final Suppressor suppressor;
+  @VisibleForTesting
+  final Suppressor suppressor;
 
   // only need space for 2 elements in most cases, so try to use the smallest array possible
   private final Deque<Closeable> stack = new ArrayDeque<Closeable>(4);
   private Throwable thrown;
 
-  @VisibleForTesting Closer(Suppressor suppressor) {
+  @VisibleForTesting
+  Closer(Suppressor suppressor) {
     this.suppressor = checkNotNull(suppressor); // checkNotNull to satisfy null tests
   }
 
@@ -142,8 +141,8 @@ final class Closer implements Closeable {
    * @return this method does not return; it always throws
    * @throws X when the given throwable is of the declared type X
    */
-  public <X extends Exception> RuntimeException rethrow(Throwable e,
-      Class<X> declaredType) throws X {
+  public <X extends Exception> RuntimeException rethrow(Throwable e, Class<X> declaredType)
+      throws X {
     thrown = e;
     Throwables.propagateIfPossible(e, declaredType);
     throw Throwables.propagate(e);
@@ -163,8 +162,8 @@ final class Closer implements Closeable {
    * @throws X1 when the given throwable is of the declared type X1
    * @throws X2 when the given throwable is of the declared type X2
    */
-  public <X1 extends Exception, X2 extends Exception> RuntimeException rethrow(
-      Throwable e, Class<X1> declaredType1, Class<X2> declaredType2) throws X1, X2 {
+  public <X1 extends Exception, X2 extends Exception> RuntimeException rethrow(Throwable e,
+      Class<X1> declaredType1, Class<X2> declaredType2) throws X1, X2 {
     thrown = e;
     Throwables.propagateIfPossible(e, declaredType1, declaredType2);
     throw Throwables.propagate(e);
@@ -177,7 +176,7 @@ final class Closer implements Closeable {
    * <i>first</i> exception to be thrown from an attempt to close a closeable will be thrown and any
    * additional exceptions that are thrown after that will be suppressed.
    */
-  @Override
+
   public void close() throws IOException {
     Throwable throwable = thrown;
 
@@ -204,7 +203,8 @@ final class Closer implements Closeable {
   /**
    * Suppression strategy interface.
    */
-  @VisibleForTesting interface Suppressor {
+  @VisibleForTesting
+  interface Suppressor {
     /**
      * Suppresses the given exception ({@code suppressed}) which was thrown when attempting to close
      * the given closeable. {@code thrown} is the exception that is actually being thrown from the
@@ -216,11 +216,11 @@ final class Closer implements Closeable {
   /**
    * Suppresses exceptions by logging them.
    */
-  @VisibleForTesting static final class LoggingSuppressor implements Suppressor {
+  @VisibleForTesting
+  static final class LoggingSuppressor implements Suppressor {
 
     static final LoggingSuppressor INSTANCE = new LoggingSuppressor();
 
-    @Override
     public void suppress(Closeable closeable, Throwable thrown, Throwable suppressed) {
       // log to the same place as Closeables
       Closeables.logger.log(Level.WARNING,
@@ -232,7 +232,8 @@ final class Closer implements Closeable {
    * Suppresses exceptions by adding them to the exception that will be thrown using JDK7's
    * addSuppressed(Throwable) mechanism.
    */
-  @VisibleForTesting static final class SuppressingSuppressor implements Suppressor {
+  @VisibleForTesting
+  static final class SuppressingSuppressor implements Suppressor {
 
     static final SuppressingSuppressor INSTANCE = new SuppressingSuppressor();
 
@@ -250,7 +251,6 @@ final class Closer implements Closeable {
       }
     }
 
-    @Override
     public void suppress(Closeable closeable, Throwable thrown, Throwable suppressed) {
       // ensure no exceptions from addSuppressed
       if (thrown == suppressed) {

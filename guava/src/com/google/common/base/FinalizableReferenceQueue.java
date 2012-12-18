@@ -85,8 +85,8 @@ public class FinalizableReferenceQueue implements Closeable {
   /** Reference to Finalizer.startFinalizer(). */
   private static final Method startFinalizer;
   static {
-    Class<?> finalizer = loadFinalizer(
-        new SystemLoader(), new DecoupledLoader(), new DirectLoader());
+    Class<?> finalizer = loadFinalizer(new SystemLoader(), new DecoupledLoader(),
+        new DirectLoader());
     startFinalizer = getStartFinalizer(finalizer);
   }
 
@@ -124,7 +124,6 @@ public class FinalizableReferenceQueue implements Closeable {
     this.threadStarted = threadStarted;
   }
 
-  @Override
   public void close() {
     frqRef.enqueue();
     cleanUp();
@@ -194,7 +193,6 @@ public class FinalizableReferenceQueue implements Closeable {
     @VisibleForTesting
     static boolean disabled;
 
-    @Override
     public Class<?> loadFinalizer() {
       if (disabled) {
         return null;
@@ -230,7 +228,6 @@ public class FinalizableReferenceQueue implements Closeable {
         + "to garbage collect this class loader. To support reclaiming this class loader, either"
         + "resolve the underlying issue, or move Google Collections to your system class path.";
 
-    @Override
     public Class<?> loadFinalizer() {
       try {
         /*
@@ -275,7 +272,7 @@ public class FinalizableReferenceQueue implements Closeable {
       // We use the bootstrap class loader as the parent because Finalizer by design uses
       // only standard Java classes. That also means that FinalizableReferenceQueueTest
       // doesn't pick up the wrong version of the Finalizer class.
-      return new URLClassLoader(new URL[] {base}, null);
+      return new URLClassLoader(new URL[] { base }, null);
     }
   }
 
@@ -284,7 +281,7 @@ public class FinalizableReferenceQueue implements Closeable {
    * this class loader, but at least the world doesn't end.
    */
   static class DirectLoader implements FinalizerLoader {
-    @Override
+
     public Class<?> loadFinalizer() {
       try {
         return Class.forName(FINALIZER_CLASS_NAME);
@@ -299,10 +296,7 @@ public class FinalizableReferenceQueue implements Closeable {
    */
   static Method getStartFinalizer(Class<?> finalizer) {
     try {
-      return finalizer.getMethod(
-          "startFinalizer",
-          Class.class,
-          ReferenceQueue.class,
+      return finalizer.getMethod("startFinalizer", Class.class, ReferenceQueue.class,
           PhantomReference.class);
     } catch (NoSuchMethodException e) {
       throw new AssertionError(e);

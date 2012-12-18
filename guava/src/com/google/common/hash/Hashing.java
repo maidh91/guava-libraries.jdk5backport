@@ -216,12 +216,14 @@ public final class Hashing {
 
   enum ChecksumType implements Supplier<Checksum> {
     CRC_32(32) {
+
       @Override
       public Checksum get() {
         return new CRC32();
       }
     },
     ADLER_32(32) {
+
       @Override
       public Checksum get() {
         return new Adler32();
@@ -234,7 +236,6 @@ public final class Hashing {
       this.bits = bits;
     }
 
-    @Override
     public abstract Checksum get();
   }
 
@@ -390,7 +391,6 @@ public final class Hashing {
       return HashCodes.fromBytesNoCopy(bytes);
     }
 
-    @Override
     public int bits() {
       return bits;
     }
@@ -405,7 +405,7 @@ public final class Hashing {
 
     public double nextDouble() {
       state = 2862933555777941757L * state + 1;
-      return ((double) ((int) (state >>> 33) + 1)) / (0x1.0p31);
+      return ((int) (state >>> 33) + 1) / (0x1.0p31);
     }
   }
 }

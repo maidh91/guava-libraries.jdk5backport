@@ -103,8 +103,7 @@ public final class Ranges {
    * @throws IllegalArgumentException if {@code lower} is greater than {@code
    *     upper}
    */
-  public static <C extends Comparable<?>> Range<C> closedOpen(
-      C lower, C upper) {
+  public static <C extends Comparable<?>> Range<C> closedOpen(C lower, C upper) {
     return Range.closedOpen(lower, upper);
   }
 
@@ -115,8 +114,7 @@ public final class Ranges {
    * @throws IllegalArgumentException if {@code lower} is greater than {@code
    *     upper}
    */
-  public static <C extends Comparable<?>> Range<C> openClosed(
-      C lower, C upper) {
+  public static <C extends Comparable<?>> Range<C> openClosed(C lower, C upper) {
     return Range.openClosed(lower, upper);
   }
 
@@ -128,8 +126,8 @@ public final class Ranges {
    * @throws IllegalArgumentException if {@code lower} is greater than {@code
    *     upper}
    */
-  public static <C extends Comparable<?>> Range<C> range(
-      C lower, BoundType lowerType, C upper, BoundType upperType) {
+  public static <C extends Comparable<?>> Range<C> range(C lower, BoundType lowerType, C upper,
+      BoundType upperType) {
     return Range.range(lower, lowerType, upper, upperType);
   }
 
@@ -153,8 +151,7 @@ public final class Ranges {
    * Returns a range with no lower bound up to the given endpoint, which may be
    * either inclusive (closed) or exclusive (open).
    */
-  public static <C extends Comparable<?>> Range<C> upTo(
-      C endpoint, BoundType boundType) {
+  public static <C extends Comparable<?>> Range<C> upTo(C endpoint, BoundType boundType) {
     return Range.upTo(endpoint, boundType);
   }
 
@@ -178,8 +175,7 @@ public final class Ranges {
    * Returns a range from the given endpoint, which may be either inclusive
    * (closed) or exclusive (open), with no upper bound.
    */
-  public static <C extends Comparable<?>> Range<C> downTo(
-      C endpoint, BoundType boundType) {
+  public static <C extends Comparable<?>> Range<C> downTo(C endpoint, BoundType boundType) {
     return Range.downTo(endpoint, boundType);
   }
 
@@ -207,8 +203,7 @@ public final class Ranges {
    * @throws NoSuchElementException if {@code values} is empty
    * @throws NullPointerException if any of {@code values} is null
    */
-  public static <C extends Comparable<?>> Range<C> encloseAll(
-      Iterable<C> values) {
+  public static <C extends Comparable<?>> Range<C> encloseAll(Iterable<C> values) {
     return Range.encloseAll(values);
   }
 }

@@ -54,8 +54,7 @@ public final class JdkFutureAdapters {
    * Future} instances to be upgraded to {@code ListenableFuture} after the
    * fact.
    */
-  public static <V> ListenableFuture<V> listenInPoolThread(
-      Future<V> future) {
+  public static <V> ListenableFuture<V> listenInPoolThread(Future<V> future) {
     if (future instanceof ListenableFuture) {
       return (ListenableFuture<V>) future;
     }
@@ -86,8 +85,7 @@ public final class JdkFutureAdapters {
    *
    * @since 12.0
    */
-  public static <V> ListenableFuture<V> listenInPoolThread(
-      Future<V> future, Executor executor) {
+  public static <V> ListenableFuture<V> listenInPoolThread(Future<V> future, Executor executor) {
     checkNotNull(executor);
     if (future instanceof ListenableFuture) {
       return (ListenableFuture<V>) future;
@@ -105,16 +103,13 @@ public final class JdkFutureAdapters {
    * <p>If the delegate future is interrupted or throws an unexpected unchecked
    * exception, the listeners will not be invoked.
    */
-  private static class ListenableFutureAdapter<V> extends ForwardingFuture<V>
-      implements ListenableFuture<V> {
+  private static class ListenableFutureAdapter<V> extends ForwardingFuture<V> implements
+      ListenableFuture<V> {
 
-    private static final ThreadFactory threadFactory =
-        new ThreadFactoryBuilder()
-            .setDaemon(true)
-            .setNameFormat("ListenableFutureAdapter-thread-%d")
-            .build();
-    private static final Executor defaultAdapterExecutor =
-        Executors.newCachedThreadPool(threadFactory);
+    private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true)
+        .setNameFormat("ListenableFutureAdapter-thread-%d").build();
+    private static final Executor defaultAdapterExecutor = Executors
+        .newCachedThreadPool(threadFactory);
 
     private final Executor adapterExecutor;
 
@@ -142,7 +137,6 @@ public final class JdkFutureAdapters {
       return delegate;
     }
 
-    @Override
     public void addListener(Runnable listener, Executor exec) {
       executionList.add(listener, exec);
 
@@ -157,7 +151,7 @@ public final class JdkFutureAdapters {
         }
 
         adapterExecutor.execute(new Runnable() {
-          @Override
+
           public void run() {
             try {
               delegate.get();

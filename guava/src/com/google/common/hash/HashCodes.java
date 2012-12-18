@@ -41,31 +41,31 @@ public final class HashCodes {
   public static HashCode fromInt(int hash) {
     return new IntHashCode(hash);
   }
-  
+
   private static final class IntHashCode extends HashCode implements Serializable {
     final int hash;
-    
+
     IntHashCode(int hash) {
       this.hash = hash;
     }
 
-    @Override public int bits() {
+    @Override
+    public int bits() {
       return 32;
     }
 
-    @Override public byte[] asBytes() {
-      return new byte[] {
-          (byte) hash,
-          (byte) (hash >> 8),
-          (byte) (hash >> 16),
-          (byte) (hash >> 24)};
+    @Override
+    public byte[] asBytes() {
+      return new byte[] { (byte) hash, (byte) (hash >> 8), (byte) (hash >> 16), (byte) (hash >> 24) };
     }
-    
-    @Override public int asInt() {
+
+    @Override
+    public int asInt() {
       return hash;
     }
 
-    @Override public long asLong() {
+    @Override
+    public long asLong() {
       throw new IllegalStateException("this HashCode only has 32 bits; cannot create a long");
     }
 
@@ -76,7 +76,7 @@ public final class HashCodes {
 
     private static final long serialVersionUID = 0;
   }
-  
+
   /**
    * Creates a 64-bit {@code HashCode}, of which the bytes will form the passed long, interpreted 
    * in little endian order.
@@ -84,35 +84,33 @@ public final class HashCodes {
   public static HashCode fromLong(long hash) {
     return new LongHashCode(hash);
   }
-  
+
   private static final class LongHashCode extends HashCode implements Serializable {
     final long hash;
-    
+
     LongHashCode(long hash) {
       this.hash = hash;
     }
 
-    @Override public int bits() {
+    @Override
+    public int bits() {
       return 64;
     }
 
-    @Override public byte[] asBytes() {
-      return new byte[] {
-          (byte) hash,
-          (byte) (hash >> 8),
-          (byte) (hash >> 16),
-          (byte) (hash >> 24),
-          (byte) (hash >> 32),
-          (byte) (hash >> 40),
-          (byte) (hash >> 48),
-          (byte) (hash >> 56)};
+    @Override
+    public byte[] asBytes() {
+      return new byte[] { (byte) hash, (byte) (hash >> 8), (byte) (hash >> 16),
+          (byte) (hash >> 24), (byte) (hash >> 32), (byte) (hash >> 40), (byte) (hash >> 48),
+          (byte) (hash >> 56) };
     }
 
-    @Override public int asInt() {
+    @Override
+    public int asInt() {
       return (int) hash;
     }
 
-    @Override public long asLong() {
+    @Override
+    public long asLong() {
       return hash;
     }
 
@@ -140,42 +138,39 @@ public final class HashCodes {
   static HashCode fromBytesNoCopy(byte[] bytes) {
     return new BytesHashCode(bytes);
   }
-  
+
   private static final class BytesHashCode extends HashCode implements Serializable {
     final byte[] bytes;
-    
+
     BytesHashCode(byte[] bytes) {
       this.bytes = checkNotNull(bytes);
     }
 
-    @Override public int bits() {
+    @Override
+    public int bits() {
       return bytes.length * 8;
     }
 
-    @Override public byte[] asBytes() {
+    @Override
+    public byte[] asBytes() {
       return bytes.clone();
     }
 
-    @Override public int asInt() {
-      checkState(bytes.length >= 4,
-          "HashCode#asInt() requires >= 4 bytes (it only has %s bytes).", bytes.length);
-      return (bytes[0] & 0xFF)
-          | ((bytes[1] & 0xFF) << 8)
-          | ((bytes[2] & 0xFF) << 16)
+    @Override
+    public int asInt() {
+      checkState(bytes.length >= 4, "HashCode#asInt() requires >= 4 bytes (it only has %s bytes).",
+          bytes.length);
+      return (bytes[0] & 0xFF) | ((bytes[1] & 0xFF) << 8) | ((bytes[2] & 0xFF) << 16)
           | ((bytes[3] & 0xFF) << 24);
     }
 
-    @Override public long asLong() {
+    @Override
+    public long asLong() {
       checkState(bytes.length >= 8,
           "HashCode#asLong() requires >= 8 bytes (it only has %s bytes).", bytes.length);
-      return (bytes[0] & 0xFFL)
-          | ((bytes[1] & 0xFFL) << 8)
-          | ((bytes[2] & 0xFFL) << 16)
-          | ((bytes[3] & 0xFFL) << 24)
-          | ((bytes[4] & 0xFFL) << 32)
-          | ((bytes[5] & 0xFFL) << 40)
-          | ((bytes[6] & 0xFFL) << 48)
-          | ((bytes[7] & 0xFFL) << 56);
+      return (bytes[0] & 0xFFL) | ((bytes[1] & 0xFFL) << 8) | ((bytes[2] & 0xFFL) << 16)
+          | ((bytes[3] & 0xFFL) << 24) | ((bytes[4] & 0xFFL) << 32) | ((bytes[5] & 0xFFL) << 40)
+          | ((bytes[6] & 0xFFL) << 48) | ((bytes[7] & 0xFFL) << 56);
     }
 
     @Override

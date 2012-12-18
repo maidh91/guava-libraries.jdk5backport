@@ -32,10 +32,13 @@ public enum CaseFormat {
    * Hyphenated variable naming convention, e.g., "lower-hyphen".
    */
   LOWER_HYPHEN(CharMatcher.is('-'), "-") {
-    @Override String normalizeWord(String word) {
+    @Override
+    String normalizeWord(String word) {
       return Ascii.toLowerCase(word);
     }
-    @Override String convert(CaseFormat format, String s) {
+
+    @Override
+    String convert(CaseFormat format, String s) {
       if (format == LOWER_UNDERSCORE) {
         return s.replace('-', '_');
       }
@@ -50,10 +53,13 @@ public enum CaseFormat {
    * C++ variable naming convention, e.g., "lower_underscore".
    */
   LOWER_UNDERSCORE(CharMatcher.is('_'), "_") {
-    @Override String normalizeWord(String word) {
+    @Override
+    String normalizeWord(String word) {
       return Ascii.toLowerCase(word);
     }
-    @Override String convert(CaseFormat format, String s) {
+
+    @Override
+    String convert(CaseFormat format, String s) {
       if (format == LOWER_HYPHEN) {
         return s.replace('_', '-');
       }
@@ -68,7 +74,8 @@ public enum CaseFormat {
    * Java variable naming convention, e.g., "lowerCamel".
    */
   LOWER_CAMEL(CharMatcher.inRange('A', 'Z'), "") {
-    @Override String normalizeWord(String word) {
+    @Override
+    String normalizeWord(String word) {
       return firstCharOnlyToUpper(word);
     }
   },
@@ -77,7 +84,8 @@ public enum CaseFormat {
    * Java and C++ class naming convention, e.g., "UpperCamel".
    */
   UPPER_CAMEL(CharMatcher.inRange('A', 'Z'), "") {
-    @Override String normalizeWord(String word) {
+    @Override
+    String normalizeWord(String word) {
       return firstCharOnlyToUpper(word);
     }
   },
@@ -86,10 +94,13 @@ public enum CaseFormat {
    * Java and C++ constant naming convention, e.g., "UPPER_UNDERSCORE".
    */
   UPPER_UNDERSCORE(CharMatcher.is('_'), "_") {
-    @Override String normalizeWord(String word) {
+    @Override
+    String normalizeWord(String word) {
       return Ascii.toUpperCase(word);
     }
-    @Override String convert(CaseFormat format, String s) {
+
+    @Override
+    String convert(CaseFormat format, String s) {
       if (format == LOWER_HYPHEN) {
         return Ascii.toLowerCase(s.replace('_', '-'));
       }
@@ -138,9 +149,8 @@ public enum CaseFormat {
       out.append(format.wordSeparator);
       i = j + wordSeparator.length();
     }
-    return (i == 0)
-      ? format.normalizeFirstWord(s)
-      : out.append(format.normalizeWord(s.substring(i))).toString();
+    return (i == 0) ? format.normalizeFirstWord(s) : out.append(
+        format.normalizeWord(s.substring(i))).toString();
   }
 
   abstract String normalizeWord(String word);
@@ -150,11 +160,8 @@ public enum CaseFormat {
   }
 
   private static String firstCharOnlyToUpper(String word) {
-    return (word.isEmpty())
-        ? word
-        : new StringBuilder(word.length())
-            .append(Ascii.toUpperCase(word.charAt(0)))
-            .append(Ascii.toLowerCase(word.substring(1)))
-            .toString();
+    return (word.isEmpty()) ? word : new StringBuilder(word.length())
+        .append(Ascii.toUpperCase(word.charAt(0))).append(Ascii.toLowerCase(word.substring(1)))
+        .toString();
   }
 }

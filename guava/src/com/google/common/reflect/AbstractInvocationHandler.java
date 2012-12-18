@@ -50,16 +50,14 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * <li>other method calls are dispatched to {@link #handleInvocation}.
    * </ul>
    */
-  @Override public final Object invoke(Object proxy, Method method, @Nullable Object[] args)
-      throws Throwable {
+  public final Object invoke(Object proxy, Method method, @Nullable Object[] args) throws Throwable {
     if (args == null) {
       args = NO_ARGS;
     }
     if (args.length == 0 && method.getName().equals("hashCode")) {
       return hashCode();
     }
-    if (args.length == 1
-        && method.getName().equals("equals")
+    if (args.length == 1 && method.getName().equals("equals")
         && method.getParameterTypes()[0] == Object.class) {
       Object arg = args[0];
       return proxy.getClass().isInstance(arg) && equals(Proxy.getInvocationHandler(arg));
@@ -89,7 +87,8 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * </ul>
    * Subclasses can override this method to provide custom equality.
    */
-  @Override public boolean equals(Object obj) {
+  @Override
+  public boolean equals(Object obj) {
     return super.equals(obj);
   }
 
@@ -97,7 +96,8 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * By default delegates to {@link Object#hashCode}. The dynamic proxies' {@code hashCode()} will
    * delegate to this method. Subclasses can override this method to provide custom equality.
    */
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return super.hashCode();
   }
 
@@ -106,7 +106,8 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * delegate to this method. Subclasses can override this method to provide custom string
    * representation for the proxies.
    */
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return super.toString();
   }
 }

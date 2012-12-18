@@ -91,7 +91,7 @@ public final class IntMath {
         // Since sqrt(2) is irrational, log2(x) - logFloor cannot be exactly 0.5
         int leadingZeros = Integer.numberOfLeadingZeros(x);
         int cmp = MAX_POWER_OF_SQRT2_UNSIGNED >>> leadingZeros;
-          // floor(2^(logFloor + 0.5))
+        // floor(2^(logFloor + 0.5))
         int logFloor = (Integer.SIZE - 1) - leadingZeros;
         return (x <= cmp) ? logFloor : logFloor + 1;
 
@@ -101,7 +101,8 @@ public final class IntMath {
   }
 
   /** The biggest half power of two that can fit in an unsigned int. */
-  @VisibleForTesting static final int MAX_POWER_OF_SQRT2_UNSIGNED = 0xB504F333;
+  @VisibleForTesting
+  static final int MAX_POWER_OF_SQRT2_UNSIGNED = 0xB504F333;
 
   /**
    * Returns the base-10 logarithm of {@code x}, rounded according to the specified rounding mode.
@@ -156,15 +157,18 @@ public final class IntMath {
   }
 
   // maxLog10ForLeadingZeros[i] == floor(log10(2^(Long.SIZE - i)))
-  @VisibleForTesting static final byte[] maxLog10ForLeadingZeros = {9, 9, 9, 8, 8, 8,
-    7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0};
+  @VisibleForTesting
+  static final byte[] maxLog10ForLeadingZeros = { 9, 9, 9, 8, 8, 8, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5,
+      4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
-  @VisibleForTesting static final int[] powersOf10 = {1, 10, 100, 1000, 10000,
-    100000, 1000000, 10000000, 100000000, 1000000000};
+  @VisibleForTesting
+  static final int[] powersOf10 = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000,
+      1000000000 };
 
   // halfPowersOf10[i] = largest int less than 10^(i + 0.5)
-  @VisibleForTesting static final int[] halfPowersOf10 =
-      {3, 31, 316, 3162, 31622, 316227, 3162277, 31622776, 316227766, Integer.MAX_VALUE};
+  @VisibleForTesting
+  static final int[] halfPowersOf10 = { 3, 31, 316, 3162, 31622, 316227, 3162277, 31622776,
+      316227766, Integer.MAX_VALUE };
 
   /**
    * Returns {@code b} to the {@code k}th power. Even if the result overflows, it will be equal to
@@ -463,7 +467,8 @@ public final class IntMath {
     }
   }
 
-  @VisibleForTesting static final int FLOOR_SQRT_MAX_INT = 46340;
+  @VisibleForTesting
+  static final int FLOOR_SQRT_MAX_INT = 46340;
 
   /**
    * Returns {@code n!}, that is, the product of the first {@code n} positive
@@ -477,20 +482,11 @@ public final class IntMath {
     return (n < factorials.length) ? factorials[n] : Integer.MAX_VALUE;
   }
 
-  private static final int[] factorials = {
-      1,
-      1,
-      1 * 2,
-      1 * 2 * 3,
-      1 * 2 * 3 * 4,
-      1 * 2 * 3 * 4 * 5,
-      1 * 2 * 3 * 4 * 5 * 6,
-      1 * 2 * 3 * 4 * 5 * 6 * 7,
-      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8,
-      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9,
-      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10,
-      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10 * 11,
-      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10 * 11 * 12};
+  private static final int[] factorials = { 1, 1, 1 * 2, 1 * 2 * 3, 1 * 2 * 3 * 4,
+      1 * 2 * 3 * 4 * 5, 1 * 2 * 3 * 4 * 5 * 6, 1 * 2 * 3 * 4 * 5 * 6 * 7,
+      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8, 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9,
+      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10, 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10 * 11,
+      1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10 * 11 * 12 };
 
   /**
    * Returns {@code n} choose {@code k}, also known as the binomial coefficient of {@code n} and
@@ -525,25 +521,9 @@ public final class IntMath {
   }
 
   // binomial(biggestBinomials[k], k) fits in an int, but not binomial(biggestBinomials[k]+1,k).
-  @VisibleForTesting static int[] biggestBinomials = {
-    Integer.MAX_VALUE,
-    Integer.MAX_VALUE,
-    65536,
-    2345,
-    477,
-    193,
-    110,
-    75,
-    58,
-    49,
-    43,
-    39,
-    37,
-    35,
-    34,
-    34,
-    33
-  };
+  @VisibleForTesting
+  static int[] biggestBinomials = { Integer.MAX_VALUE, Integer.MAX_VALUE, 65536, 2345, 477, 193,
+      110, 75, 58, 49, 43, 39, 37, 35, 34, 34, 33 };
 
   /**
    * Returns the arithmetic mean of {@code x} and {@code y}, rounded towards

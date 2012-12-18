@@ -82,15 +82,13 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public final class MediaType {
   private static final String CHARSET_ATTRIBUTE = "charset";
-  private static final ImmutableListMultimap<String, String> UTF_8_CONSTANT_PARAMETERS =
-      ImmutableListMultimap.of(CHARSET_ATTRIBUTE, Ascii.toLowerCase(UTF_8.name()));
+  private static final ImmutableListMultimap<String, String> UTF_8_CONSTANT_PARAMETERS = ImmutableListMultimap
+      .of(CHARSET_ATTRIBUTE, Ascii.toLowerCase(UTF_8.name()));
 
   /** Matcher for type, subtype and attributes. */
   private static final CharMatcher TOKEN_MATCHER = ASCII.and(JAVA_ISO_CONTROL.negate())
-      .and(CharMatcher.isNot(' '))
-      .and(CharMatcher.noneOf("()<>@,;:\\\"/[]?="));
-  private static final CharMatcher QUOTED_TEXT_MATCHER = ASCII
-      .and(CharMatcher.noneOf("\"\\\r"));
+      .and(CharMatcher.isNot(' ')).and(CharMatcher.noneOf("()<>@,;:\\\"/[]?="));
+  private static final CharMatcher QUOTED_TEXT_MATCHER = ASCII.and(CharMatcher.noneOf("\"\\\r"));
   /*
    * This matches the same characters as linear-white-space from RFC 822, but we make no effort to
    * enforce any particular rules with regards to line folding as stated in the class docs.
@@ -125,8 +123,8 @@ public final class MediaType {
   public static final MediaType ANY_APPLICATION_TYPE = createConstant(APPLICATION_TYPE, WILDCARD);
 
   /* text types */
-  public static final MediaType CACHE_MANIFEST_UTF_8 =
-      createConstantUtf8(TEXT_TYPE, "cache-manifest");
+  public static final MediaType CACHE_MANIFEST_UTF_8 = createConstantUtf8(TEXT_TYPE,
+      "cache-manifest");
   public static final MediaType CSS_UTF_8 = createConstantUtf8(TEXT_TYPE, "css");
   public static final MediaType CSV_UTF_8 = createConstantUtf8(TEXT_TYPE, "csv");
   public static final MediaType HTML_UTF_8 = createConstantUtf8(TEXT_TYPE, "html");
@@ -172,20 +170,20 @@ public final class MediaType {
   public static final MediaType FORM_DATA = createConstant(APPLICATION_TYPE,
       "x-www-form-urlencoded");
   public static final MediaType GZIP = createConstant(APPLICATION_TYPE, "x-gzip");
-   /**
-    * <a href="http://www.rfc-editor.org/rfc/rfc4329.txt">RFC 4329</a> declares this to be the
-    * correct media type for JavaScript, but {@link #TEXT_JAVASCRIPT_UTF_8 text/javascript} may be
-    * necessary in certain situations for compatibility.
-    */
-  public static final MediaType JAVASCRIPT_UTF_8 =
-      createConstantUtf8(APPLICATION_TYPE, "javascript");
+  /**
+   * <a href="http://www.rfc-editor.org/rfc/rfc4329.txt">RFC 4329</a> declares this to be the
+   * correct media type for JavaScript, but {@link #TEXT_JAVASCRIPT_UTF_8 text/javascript} may be
+   * necessary in certain situations for compatibility.
+   */
+  public static final MediaType JAVASCRIPT_UTF_8 = createConstantUtf8(APPLICATION_TYPE,
+      "javascript");
   public static final MediaType JSON_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "json");
   public static final MediaType KML = createConstant(APPLICATION_TYPE, "vnd.google-earth.kml+xml");
   public static final MediaType KMZ = createConstant(APPLICATION_TYPE, "vnd.google-earth.kmz");
   public static final MediaType MBOX = createConstant(APPLICATION_TYPE, "mbox");
   public static final MediaType MICROSOFT_EXCEL = createConstant(APPLICATION_TYPE, "vnd.ms-excel");
-  public static final MediaType MICROSOFT_POWERPOINT =
-      createConstant(APPLICATION_TYPE, "vnd.ms-powerpoint");
+  public static final MediaType MICROSOFT_POWERPOINT = createConstant(APPLICATION_TYPE,
+      "vnd.ms-powerpoint");
   public static final MediaType MICROSOFT_WORD = createConstant(APPLICATION_TYPE, "msword");
   public static final MediaType OCTET_STREAM = createConstant(APPLICATION_TYPE, "octet-stream");
   public static final MediaType OGG_CONTAINER = createConstant(APPLICATION_TYPE, "ogg");
@@ -193,16 +191,16 @@ public final class MediaType {
       "vnd.openxmlformats-officedocument.wordprocessingml.document");
   public static final MediaType OOXML_PRESENTATION = createConstant(APPLICATION_TYPE,
       "vnd.openxmlformats-officedocument.presentationml.presentation");
-  public static final MediaType OOXML_SHEET =
-      createConstant(APPLICATION_TYPE, "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-  public static final MediaType OPENDOCUMENT_GRAPHICS =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.graphics");
-  public static final MediaType OPENDOCUMENT_PRESENTATION =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.presentation");
-  public static final MediaType OPENDOCUMENT_SPREADSHEET =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.spreadsheet");
-  public static final MediaType OPENDOCUMENT_TEXT =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.text");
+  public static final MediaType OOXML_SHEET = createConstant(APPLICATION_TYPE,
+      "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+  public static final MediaType OPENDOCUMENT_GRAPHICS = createConstant(APPLICATION_TYPE,
+      "vnd.oasis.opendocument.graphics");
+  public static final MediaType OPENDOCUMENT_PRESENTATION = createConstant(APPLICATION_TYPE,
+      "vnd.oasis.opendocument.presentation");
+  public static final MediaType OPENDOCUMENT_SPREADSHEET = createConstant(APPLICATION_TYPE,
+      "vnd.oasis.opendocument.spreadsheet");
+  public static final MediaType OPENDOCUMENT_TEXT = createConstant(APPLICATION_TYPE,
+      "vnd.oasis.opendocument.text");
   public static final MediaType PDF = createConstant(APPLICATION_TYPE, "pdf");
   public static final MediaType POSTSCRIPT = createConstant(APPLICATION_TYPE, "postscript");
   public static final MediaType RTF_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "rtf");
@@ -213,91 +211,51 @@ public final class MediaType {
   public static final MediaType XHTML_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "xhtml+xml");
   public static final MediaType ZIP = createConstant(APPLICATION_TYPE, "zip");
 
-  private static final ImmutableMap<MediaType, MediaType> KNOWN_TYPES =
-      new ImmutableMap.Builder<MediaType, MediaType>()
-          .put(ANY_TYPE, ANY_TYPE)
-          .put(ANY_TEXT_TYPE, ANY_TEXT_TYPE)
-          .put(ANY_IMAGE_TYPE, ANY_IMAGE_TYPE)
-          .put(ANY_AUDIO_TYPE, ANY_AUDIO_TYPE)
-          .put(ANY_VIDEO_TYPE, ANY_VIDEO_TYPE)
-          .put(ANY_APPLICATION_TYPE, ANY_APPLICATION_TYPE)
-          /* text types */
-          .put(CACHE_MANIFEST_UTF_8, CACHE_MANIFEST_UTF_8)
-          .put(CSS_UTF_8, CSS_UTF_8)
-          .put(CSV_UTF_8, CSV_UTF_8)
-          .put(HTML_UTF_8, HTML_UTF_8)
-          .put(I_CALENDAR_UTF_8, I_CALENDAR_UTF_8)
-          .put(PLAIN_TEXT_UTF_8, PLAIN_TEXT_UTF_8)
-          .put(TEXT_JAVASCRIPT_UTF_8, TEXT_JAVASCRIPT_UTF_8)
-          .put(VCARD_UTF_8, VCARD_UTF_8)
-          .put(WML_UTF_8, WML_UTF_8)
-          .put(XML_UTF_8, XML_UTF_8)
-          /* image types */
-          .put(BMP, BMP)
-          .put(GIF, GIF)
-          .put(ICO, ICO)
-          .put(JPEG, JPEG)
-          .put(PNG, PNG)
-          .put(SVG_UTF_8, SVG_UTF_8)
-          .put(TIFF, TIFF)
-          .put(WEBP, WEBP)
-          /* audio types */
-          .put(MP4_AUDIO, MP4_AUDIO)
-          .put(MPEG_AUDIO, MPEG_AUDIO)
-          .put(OGG_AUDIO, OGG_AUDIO)
-          .put(WEBM_AUDIO, WEBM_AUDIO)
-          /* video types */
-          .put(MP4_VIDEO, MP4_VIDEO)
-          .put(MPEG_VIDEO, MPEG_VIDEO)
-          .put(OGG_VIDEO, OGG_VIDEO)
-          .put(QUICKTIME, QUICKTIME)
-          .put(WEBM_VIDEO, WEBM_VIDEO)
-          .put(WMV, WMV)
-          /* application types */
-          .put(ATOM_UTF_8, ATOM_UTF_8)
-          .put(BZIP2, BZIP2)
-          .put(FORM_DATA, FORM_DATA)
-          .put(GZIP, GZIP)
-          .put(JAVASCRIPT_UTF_8, JAVASCRIPT_UTF_8)
-          .put(JSON_UTF_8, JSON_UTF_8)
-          .put(KML, KML)
-          .put(KMZ, KMZ)
-          .put(MBOX, MBOX)
-          .put(MICROSOFT_EXCEL, MICROSOFT_EXCEL)
-          .put(MICROSOFT_POWERPOINT, MICROSOFT_POWERPOINT)
-          .put(MICROSOFT_WORD, MICROSOFT_WORD)
-          .put(OCTET_STREAM, OCTET_STREAM)
-          .put(OGG_CONTAINER, OGG_CONTAINER)
-          .put(OOXML_DOCUMENT, OOXML_DOCUMENT)
-          .put(OOXML_PRESENTATION, OOXML_PRESENTATION)
-          .put(OOXML_SHEET, OOXML_SHEET)
-          .put(OPENDOCUMENT_GRAPHICS, OPENDOCUMENT_GRAPHICS)
-          .put(OPENDOCUMENT_PRESENTATION, OPENDOCUMENT_PRESENTATION)
-          .put(OPENDOCUMENT_SPREADSHEET, OPENDOCUMENT_SPREADSHEET)
-          .put(OPENDOCUMENT_TEXT, OPENDOCUMENT_TEXT)
-          .put(PDF, PDF)
-          .put(POSTSCRIPT, POSTSCRIPT)
-          .put(RTF_UTF_8, RTF_UTF_8)
-          .put(SHOCKWAVE_FLASH, SHOCKWAVE_FLASH)
-          .put(SKETCHUP, SKETCHUP)
-          .put(TAR, TAR)
-          .put(XHTML_UTF_8, XHTML_UTF_8)
-          .put(ZIP, ZIP)
-          .build();
+  private static final ImmutableMap<MediaType, MediaType> KNOWN_TYPES = new ImmutableMap.Builder<MediaType, MediaType>()
+      .put(ANY_TYPE, ANY_TYPE).put(ANY_TEXT_TYPE, ANY_TEXT_TYPE)
+      .put(ANY_IMAGE_TYPE, ANY_IMAGE_TYPE).put(ANY_AUDIO_TYPE, ANY_AUDIO_TYPE)
+      .put(ANY_VIDEO_TYPE, ANY_VIDEO_TYPE).put(ANY_APPLICATION_TYPE, ANY_APPLICATION_TYPE)
+      /* text types */
+      .put(CACHE_MANIFEST_UTF_8, CACHE_MANIFEST_UTF_8).put(CSS_UTF_8, CSS_UTF_8)
+      .put(CSV_UTF_8, CSV_UTF_8).put(HTML_UTF_8, HTML_UTF_8)
+      .put(I_CALENDAR_UTF_8, I_CALENDAR_UTF_8).put(PLAIN_TEXT_UTF_8, PLAIN_TEXT_UTF_8)
+      .put(TEXT_JAVASCRIPT_UTF_8, TEXT_JAVASCRIPT_UTF_8).put(VCARD_UTF_8, VCARD_UTF_8)
+      .put(WML_UTF_8, WML_UTF_8).put(XML_UTF_8, XML_UTF_8)
+      /* image types */
+      .put(BMP, BMP).put(GIF, GIF).put(ICO, ICO).put(JPEG, JPEG).put(PNG, PNG)
+      .put(SVG_UTF_8, SVG_UTF_8).put(TIFF, TIFF).put(WEBP, WEBP)
+      /* audio types */
+      .put(MP4_AUDIO, MP4_AUDIO).put(MPEG_AUDIO, MPEG_AUDIO).put(OGG_AUDIO, OGG_AUDIO)
+      .put(WEBM_AUDIO, WEBM_AUDIO)
+      /* video types */
+      .put(MP4_VIDEO, MP4_VIDEO).put(MPEG_VIDEO, MPEG_VIDEO).put(OGG_VIDEO, OGG_VIDEO)
+      .put(QUICKTIME, QUICKTIME).put(WEBM_VIDEO, WEBM_VIDEO).put(WMV, WMV)
+      /* application types */
+      .put(ATOM_UTF_8, ATOM_UTF_8).put(BZIP2, BZIP2).put(FORM_DATA, FORM_DATA).put(GZIP, GZIP)
+      .put(JAVASCRIPT_UTF_8, JAVASCRIPT_UTF_8).put(JSON_UTF_8, JSON_UTF_8).put(KML, KML)
+      .put(KMZ, KMZ).put(MBOX, MBOX).put(MICROSOFT_EXCEL, MICROSOFT_EXCEL)
+      .put(MICROSOFT_POWERPOINT, MICROSOFT_POWERPOINT).put(MICROSOFT_WORD, MICROSOFT_WORD)
+      .put(OCTET_STREAM, OCTET_STREAM).put(OGG_CONTAINER, OGG_CONTAINER)
+      .put(OOXML_DOCUMENT, OOXML_DOCUMENT).put(OOXML_PRESENTATION, OOXML_PRESENTATION)
+      .put(OOXML_SHEET, OOXML_SHEET).put(OPENDOCUMENT_GRAPHICS, OPENDOCUMENT_GRAPHICS)
+      .put(OPENDOCUMENT_PRESENTATION, OPENDOCUMENT_PRESENTATION)
+      .put(OPENDOCUMENT_SPREADSHEET, OPENDOCUMENT_SPREADSHEET)
+      .put(OPENDOCUMENT_TEXT, OPENDOCUMENT_TEXT).put(PDF, PDF).put(POSTSCRIPT, POSTSCRIPT)
+      .put(RTF_UTF_8, RTF_UTF_8).put(SHOCKWAVE_FLASH, SHOCKWAVE_FLASH).put(SKETCHUP, SKETCHUP)
+      .put(TAR, TAR).put(XHTML_UTF_8, XHTML_UTF_8).put(ZIP, ZIP).build();
 
   private final String type;
   private final String subtype;
   private final ImmutableListMultimap<String, String> parameters;
 
-  private MediaType(String type, String subtype,
-      ImmutableListMultimap<String, String> parameters) {
+  private MediaType(String type, String subtype, ImmutableListMultimap<String, String> parameters) {
     this.type = type;
     this.subtype = subtype;
     this.parameters = parameters;
   }
 
   private static MediaType createConstant(String type, String subtype) {
-    return new MediaType(type, subtype, ImmutableListMultimap.<String, String>of());
+    return new MediaType(type, subtype, ImmutableListMultimap.<String, String> of());
   }
 
   private static MediaType createConstantUtf8(String type, String subtype) {
@@ -322,7 +280,7 @@ public final class MediaType {
   private Map<String, ImmutableMultiset<String>> parametersAsMap() {
     return Maps.transformValues(parameters.asMap(),
         new Function<Collection<String>, ImmutableMultiset<String>>() {
-          @Override public ImmutableMultiset<String> apply(Collection<String> input) {
+          public ImmutableMultiset<String> apply(Collection<String> input) {
             return ImmutableMultiset.copyOf(input);
           }
         });
@@ -448,7 +406,7 @@ public final class MediaType {
    * type, but not the subtype.
    */
   public static MediaType create(String type, String subtype) {
-    return create(type, subtype, ImmutableListMultimap.<String, String>of());
+    return create(type, subtype, ImmutableListMultimap.<String, String> of());
   }
 
   /**
@@ -496,8 +454,7 @@ public final class MediaType {
     return create(VIDEO_TYPE, subtype);
   }
 
-  private static MediaType create(String type, String subtype,
-      Multimap<String, String> parameters) {
+  private static MediaType create(String type, String subtype, Multimap<String, String> parameters) {
     checkNotNull(type);
     checkNotNull(subtype);
     checkNotNull(parameters);
@@ -614,21 +571,22 @@ public final class MediaType {
     }
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof MediaType) {
       MediaType that = (MediaType) obj;
-      return this.type.equals(that.type)
-          && this.subtype.equals(that.subtype)
-          // compare parameters regardless of order
+      return this.type.equals(that.type) && this.subtype.equals(that.subtype)
+      // compare parameters regardless of order
           && this.parametersAsMap().equals(that.parametersAsMap());
     } else {
       return false;
     }
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return Objects.hashCode(type, subtype, parametersAsMap());
   }
 
@@ -638,13 +596,14 @@ public final class MediaType {
    * Returns the string representation of this media type in the format described in <a
    * href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>.
    */
-  @Override public String toString() {
+  @Override
+  public String toString() {
     StringBuilder builder = new StringBuilder().append(type).append('/').append(subtype);
     if (!parameters.isEmpty()) {
       builder.append("; ");
       Multimap<String, String> quotedParameters = Multimaps.transformValues(parameters,
           new Function<String, String>() {
-            @Override public String apply(String value) {
+            public String apply(String value) {
               return TOKEN_MATCHER.matchesAllOf(value) ? value : escapeAndQuote(value);
             }
           });

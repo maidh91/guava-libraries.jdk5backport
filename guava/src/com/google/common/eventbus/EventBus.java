@@ -117,16 +117,15 @@ public class EventBus {
    * across all EventBus instances, which greatly improves performance if multiple such instances
    * are created and objects of the same class are posted on all of them.
    */
-  private static final LoadingCache<Class<?>, Set<Class<?>>> flattenHierarchyCache =
-      CacheBuilder.newBuilder()
-          .weakKeys()
-          .build(new CacheLoader<Class<?>, Set<Class<?>>>() {
-            @SuppressWarnings({"unchecked", "rawtypes"}) // safe cast
-            @Override
-            public Set<Class<?>> load(Class<?> concreteClass) {
-              return (Set) TypeToken.of(concreteClass).getTypes().rawTypes();
-            }
-          });
+  private static final LoadingCache<Class<?>, Set<Class<?>>> flattenHierarchyCache = CacheBuilder
+      .newBuilder().weakKeys().build(new CacheLoader<Class<?>, Set<Class<?>>>() {
+        @Override
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        // safe cast
+        public Set<Class<?>> load(Class<?> concreteClass) {
+          return (Set) TypeToken.of(concreteClass).getTypes().rawTypes();
+        }
+      });
 
   /**
    * All registered event handlers, indexed by event type.
@@ -134,8 +133,7 @@ public class EventBus {
    * <p>This SetMultimap is NOT safe for concurrent use; all access should be
    * made after acquiring a read or write lock via {@link #handlersByTypeLock}.
    */
-  private final SetMultimap<Class<?>, EventHandler> handlersByType =
-      HashMultimap.create();
+  private final SetMultimap<Class<?>, EventHandler> handlersByType = HashMultimap.create();
   private final ReadWriteLock handlersByTypeLock = new ReentrantReadWriteLock();
 
   /**
@@ -152,17 +150,17 @@ public class EventBus {
   private final HandlerFindingStrategy finder = new AnnotatedHandlerFinder();
 
   /** queues of events for the current thread to dispatch */
-  private final ThreadLocal<Queue<EventWithHandler>> eventsToDispatch =
-      new ThreadLocal<Queue<EventWithHandler>>() {
-    @Override protected Queue<EventWithHandler> initialValue() {
+  private final ThreadLocal<Queue<EventWithHandler>> eventsToDispatch = new ThreadLocal<Queue<EventWithHandler>>() {
+    @Override
+    protected Queue<EventWithHandler> initialValue() {
       return new LinkedList<EventWithHandler>();
     }
   };
 
   /** true if the current thread is currently dispatching an event */
-  private final ThreadLocal<Boolean> isDispatching =
-      new ThreadLocal<Boolean>() {
-    @Override protected Boolean initialValue() {
+  private final ThreadLocal<Boolean> isDispatching = new ThreadLocal<Boolean>() {
+    @Override
+    protected Boolean initialValue() {
       return false;
     }
   };
@@ -193,8 +191,7 @@ public class EventBus {
    * @param object  object whose handler methods should be registered.
    */
   public void register(Object object) {
-    Multimap<Class<?>, EventHandler> methodsInListener =
-        finder.findAllHandlers(object);
+    Multimap<Class<?>, EventHandler> methodsInListener = finder.findAllHandlers(object);
     handlersByTypeLock.writeLock().lock();
     try {
       handlersByType.putAll(methodsInListener);
@@ -219,8 +216,8 @@ public class EventBus {
       try {
         Set<EventHandler> currentHandlers = handlersByType.get(eventType);
         if (!currentHandlers.containsAll(eventMethodsInListener)) {
-          throw new IllegalArgumentException(
-              "missing event handler for an annotated method. Is " + object + " registered?");
+          throw new IllegalArgumentException("missing event handler for an annotated method. Is "
+              + object + " registered?");
         }
         currentHandlers.removeAll(eventMethodsInListener);
       } finally {
@@ -312,8 +309,7 @@ public class EventBus {
     try {
       wrapper.handleEvent(event);
     } catch (InvocationTargetException e) {
-      logger.log(Level.SEVERE,
-          "Could not dispatch event: " + event + " to handler " + wrapper, e);
+      logger.log(Level.SEVERE, "Could not dispatch event: " + event + " to handler " + wrapper, e);
     }
   }
 
@@ -338,6 +334,7 @@ public class EventBus {
   static class EventWithHandler {
     final Object event;
     final EventHandler handler;
+
     public EventWithHandler(Object event, EventHandler handler) {
       this.event = checkNotNull(event);
       this.handler = checkNotNull(handler);

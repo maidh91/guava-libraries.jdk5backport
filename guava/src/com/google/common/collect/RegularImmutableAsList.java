@@ -25,7 +25,8 @@ import com.google.common.annotations.GwtCompatible;
  * @author Louis Wasserman
  */
 @GwtCompatible
-@SuppressWarnings("serial") // uses writeReplace, not default serialization
+@SuppressWarnings("serial")
+// uses writeReplace, not default serialization
 class RegularImmutableAsList<E> extends ImmutableAsList<E> {
   private final ImmutableCollection<E> delegate;
   private final ImmutableList<? extends E> delegateList;
@@ -36,7 +37,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
   }
 
   RegularImmutableAsList(ImmutableCollection<E> delegate, Object[] array) {
-    this(delegate, ImmutableList.<E>asImmutableList(array));
+    this(delegate, ImmutableList.<E> asImmutableList(array));
   }
 
   @Override
@@ -48,8 +49,9 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
     return delegateList;
   }
 
-  @SuppressWarnings("unchecked")  // safe covariant cast!
   @Override
+  @SuppressWarnings("unchecked")
+  // safe covariant cast!
   public UnmodifiableListIterator<E> listIterator(int index) {
     return (UnmodifiableListIterator<E>) delegateList.listIterator(index);
   }
@@ -84,7 +86,6 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
     return delegateList.hashCode();
   }
 
-  @Override
   public E get(int index) {
     return delegateList.get(index);
   }

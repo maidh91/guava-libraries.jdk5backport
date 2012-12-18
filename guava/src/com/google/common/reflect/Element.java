@@ -45,43 +45,49 @@ class Element extends AccessibleObject implements Member {
     this.member = member;
   }
 
-  @Override public final boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+  @Override
+  public final boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
     return accessibleObject.isAnnotationPresent(annotationClass);
   }
 
-  @Override public final <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
+  @Override
+  public final <A extends Annotation> A getAnnotation(Class<A> annotationClass) {
     return accessibleObject.getAnnotation(annotationClass);
   }
 
-  @Override public final Annotation[] getAnnotations() {
+  @Override
+  public final Annotation[] getAnnotations() {
     return accessibleObject.getAnnotations();
   }
 
-  @Override public final Annotation[] getDeclaredAnnotations() {
+  @Override
+  public final Annotation[] getDeclaredAnnotations() {
     return accessibleObject.getDeclaredAnnotations();
   }
 
-  @Override public final void setAccessible(boolean flag) throws SecurityException {
+  @Override
+  public final void setAccessible(boolean flag) throws SecurityException {
     accessibleObject.setAccessible(flag);
   }
 
-  @Override public final boolean isAccessible() {
+  @Override
+  public final boolean isAccessible() {
     return accessibleObject.isAccessible();
   }
 
-  @Override public Class<?> getDeclaringClass() {
+  public Class<?> getDeclaringClass() {
     return member.getDeclaringClass();
   }
 
-  @Override public final String getName() {
+  public final String getName() {
     return member.getName();
   }
 
-  @Override public final int getModifiers() {
+  public final int getModifiers() {
     return member.getModifiers();
   }
 
-  @Override public final boolean isSynthetic() {
+  public final boolean isSynthetic() {
     return member.isSynthetic();
   }
 
@@ -146,7 +152,8 @@ class Element extends AccessibleObject implements Member {
     return Modifier.isTransient(getModifiers());
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof Element) {
       Element that = (Element) obj;
       return member.equals(that.member);
@@ -154,11 +161,13 @@ class Element extends AccessibleObject implements Member {
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return member.hashCode();
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return member.toString();
   }
 }

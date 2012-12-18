@@ -55,8 +55,8 @@ public final class ClassPath {
   private static final Logger logger = Logger.getLogger(ClassPath.class.getName());
 
   /** Separator for the Class-Path manifest attribute value in jar files. */
-  private static final Splitter CLASS_PATH_ATTRIBUTE_SEPARATOR =
-      Splitter.on(" ").omitEmptyStrings();
+  private static final Splitter CLASS_PATH_ATTRIBUTE_SEPARATOR = Splitter.on(" ")
+      .omitEmptyStrings();
 
   private static final String CLASS_FILE_NAME_EXTENSION = ".class";
 
@@ -122,7 +122,8 @@ public final class ClassPath {
     private final String className;
     private final ClassLoader loader;
 
-    @VisibleForTesting ClassInfo(String className, ClassLoader loader) {
+    @VisibleForTesting
+    ClassInfo(String className, ClassLoader loader) {
       this.className = checkNotNull(className);
       this.loader = checkNotNull(loader);
     }
@@ -157,26 +158,28 @@ public final class ClassPath {
       }
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       return className.hashCode();
     }
 
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
       if (obj instanceof ClassInfo) {
         ClassInfo that = (ClassInfo) obj;
-        return className.equals(that.className)
-            && loader == that.loader;
+        return className.equals(that.className) && loader == that.loader;
       }
       return false;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return className;
     }
   }
 
-  @VisibleForTesting static ImmutableMap<URI, ClassLoader> getClassPathEntries(
-      ClassLoader classloader) {
+  @VisibleForTesting
+  static ImmutableMap<URI, ClassLoader> getClassPathEntries(ClassLoader classloader) {
     LinkedHashMap<URI, ClassLoader> entries = Maps.newLinkedHashMap();
     // Search parent first, since it's the order ClassLoader#loadClass() uses.
     ClassLoader parent = classloader.getParent();
@@ -209,8 +212,8 @@ public final class ClassPath {
     }
   }
 
-  @VisibleForTesting static ImmutableSet<ClassInfo> readClassesFrom(
-      File file, ClassLoader classloader)
+  @VisibleForTesting
+  static ImmutableSet<ClassInfo> readClassesFrom(File file, ClassLoader classloader)
       throws IOException {
     if (!file.exists()) {
       return ImmutableSet.of();
@@ -222,15 +225,14 @@ public final class ClassPath {
     }
   }
 
-  private static ImmutableSet<ClassInfo> readClassesFromDirectory(
-      File directory, ClassLoader classloader) {
+  private static ImmutableSet<ClassInfo> readClassesFromDirectory(File directory,
+      ClassLoader classloader) {
     ImmutableSet.Builder<ClassInfo> builder = ImmutableSet.builder();
     readClassesFromDirectory(directory, classloader, "", builder);
     return builder.build();
   }
 
-  private static void readClassesFromDirectory(
-      File directory, ClassLoader classloader,
+  private static void readClassesFromDirectory(File directory, ClassLoader classloader,
       String packagePrefix, ImmutableSet.Builder<ClassInfo> builder) {
     for (File f : directory.listFiles()) {
       String name = f.getName();
@@ -267,8 +269,8 @@ public final class ClassPath {
    * JAR File Specification</a>. If {@code manifest} is null, it means the jar file has no manifest,
    * and an empty set will be returned.
    */
-  @VisibleForTesting static ImmutableSet<URI> getClassPathFromManifest(
-      File jarFile, @Nullable Manifest manifest) {
+  @VisibleForTesting
+  static ImmutableSet<URI> getClassPathFromManifest(File jarFile, @Nullable Manifest manifest) {
     if (manifest == null) {
       return ImmutableSet.of();
     }
@@ -296,8 +298,8 @@ public final class ClassPath {
    * JAR File Specification</a>. Even though the specification only talks about relative urls,
    * absolute urls are actually supported too (for example, in Maven surefire plugin).
    */
-  @VisibleForTesting static URI getClassPathEntry(File jarFile, String path)
-      throws URISyntaxException {
+  @VisibleForTesting
+  static URI getClassPathEntry(File jarFile, String path) throws URISyntaxException {
     URI uri = new URI(path);
     if (uri.isAbsolute()) {
       return uri;
@@ -306,11 +308,13 @@ public final class ClassPath {
     }
   }
 
-  @VisibleForTesting static boolean isTopLevelClassFile(String filename) {
+  @VisibleForTesting
+  static boolean isTopLevelClassFile(String filename) {
     return filename.endsWith(CLASS_FILE_NAME_EXTENSION) && filename.indexOf('$') < 0;
   }
 
-  @VisibleForTesting static String getClassName(String filename) {
+  @VisibleForTesting
+  static String getClassName(String filename) {
     int classNameEnd = filename.length() - CLASS_FILE_NAME_EXTENSION.length();
     return filename.substring(0, classNameEnd);
   }

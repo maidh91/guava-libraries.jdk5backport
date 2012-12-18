@@ -24,7 +24,8 @@ import javax.annotation.Nullable;
  *
  * @author Louis Wasserman
  */
-@SuppressWarnings("serial") // uses writeReplace, not default serialization
+@SuppressWarnings("serial")
+// uses writeReplace, not default serialization
 final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
   private final transient RegularImmutableSortedSet<K> keySet;
   private final transient ImmutableList<V> valueList;
@@ -34,9 +35,7 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
     this.valueList = valueList;
   }
 
-  RegularImmutableSortedMap(
-      RegularImmutableSortedSet<K> keySet,
-      ImmutableList<V> valueList,
+  RegularImmutableSortedMap(RegularImmutableSortedSet<K> keySet, ImmutableList<V> valueList,
       ImmutableSortedMap<K, V> descendingMap) {
     super(descendingMap);
     this.keySet = keySet;
@@ -49,6 +48,7 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
   }
 
   private class EntrySet extends ImmutableMapEntrySet<K, V> {
+
     @Override
     public UnmodifiableIterator<Entry<K, V>> iterator() {
       return asList().iterator();
@@ -61,7 +61,6 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
         private final ImmutableList<K> keyList = keySet().asList();
         private final ImmutableList<V> valueList = values().asList();
 
-        @Override
         public Entry<K, V> get(int index) {
           return Maps.immutableEntry(keyList.get(index), valueList.get(index));
         }
@@ -101,9 +100,7 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
     } else if (fromIndex == toIndex) {
       return emptyMap(comparator());
     } else {
-      return from(
-          keySet.getSubSet(fromIndex, toIndex),
-          valueList.subList(fromIndex, toIndex));
+      return from(keySet.getSubSet(fromIndex, toIndex), valueList.subList(fromIndex, toIndex));
     }
   }
 
@@ -120,9 +117,7 @@ final class RegularImmutableSortedMap<K, V> extends ImmutableSortedMap<K, V> {
   @Override
   ImmutableSortedMap<K, V> createDescendingMap() {
     return new RegularImmutableSortedMap<K, V>(
-        (RegularImmutableSortedSet<K>) keySet.descendingSet(),
-        valueList.reverse(),
-        this);
+        (RegularImmutableSortedSet<K>) keySet.descendingSet(), valueList.reverse(), this);
   }
 
 }

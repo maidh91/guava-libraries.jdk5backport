@@ -262,16 +262,15 @@ public abstract class RateLimiter {
   }
 
   @VisibleForTesting
-  static RateLimiter create(
-      SleepingTicker ticker, double permitsPerSecond, long warmupPeriod, TimeUnit timeUnit) {
+  static RateLimiter create(SleepingTicker ticker, double permitsPerSecond, long warmupPeriod,
+      TimeUnit timeUnit) {
     RateLimiter rateLimiter = new WarmingUp(ticker, warmupPeriod, timeUnit);
     rateLimiter.setRate(permitsPerSecond);
     return rateLimiter;
   }
 
   @VisibleForTesting
-  static RateLimiter createBursty(
-      SleepingTicker ticker, double permitsPerSecond, int maxBurstSize) {
+  static RateLimiter createBursty(SleepingTicker ticker, double permitsPerSecond, int maxBurstSize) {
     Bursty rateLimiter = new Bursty(ticker);
     rateLimiter.setRate(permitsPerSecond);
     rateLimiter.maxPermits = maxBurstSize;
@@ -338,8 +337,8 @@ public abstract class RateLimiter {
    * @param permitsPerSecond the new stable rate of this {@code RateLimiter}.
    */
   public final void setRate(double permitsPerSecond) {
-    Preconditions.checkArgument(permitsPerSecond > 0.0
-        && !Double.isNaN(permitsPerSecond), "rate must be positive");
+    Preconditions.checkArgument(permitsPerSecond > 0.0 && !Double.isNaN(permitsPerSecond),
+        "rate must be positive");
     synchronized (mutex) {
       resync(readSafeMicros());
       double stableIntervalMicros = TimeUnit.SECONDS.toMicros(1L) / permitsPerSecond;
@@ -490,8 +489,8 @@ public abstract class RateLimiter {
   private void resync(long nowMicros) {
     // if nextFreeTicket is in the past, resync to now
     if (nowMicros > nextFreeTicketMicros) {
-      storedPermits = Math.min(maxPermits,
-          storedPermits + (nowMicros - nextFreeTicketMicros) / stableIntervalMicros);
+      storedPermits = Math.min(maxPermits, storedPermits + (nowMicros - nextFreeTicketMicros)
+          / stableIntervalMicros);
       nextFreeTicketMicros = nowMicros;
     }
   }
@@ -607,8 +606,7 @@ public abstract class RateLimiter {
         // if we don't special-case this, we would get storedPermits == NaN, below
         storedPermits = 0.0;
       } else {
-        storedPermits = (oldMaxPermits == 0.0)
-            ? maxPermits // initial state is cold
+        storedPermits = (oldMaxPermits == 0.0) ? maxPermits // initial state is cold
             : storedPermits * maxPermits / oldMaxPermits;
       }
     }
@@ -620,8 +618,9 @@ public abstract class RateLimiter {
       // measuring the integral on the right part of the function (the climbing line)
       if (availablePermitsAboveHalf > 0.0) {
         double permitsAboveHalfToTake = Math.min(availablePermitsAboveHalf, permitsToTake);
-        micros = (long) (permitsAboveHalfToTake * (permitsToTime(availablePermitsAboveHalf)
-            + permitsToTime(availablePermitsAboveHalf - permitsAboveHalfToTake)) / 2.0);
+        micros = (long) (permitsAboveHalfToTake
+            * (permitsToTime(availablePermitsAboveHalf) + permitsToTime(availablePermitsAboveHalf
+                - permitsAboveHalfToTake)) / 2.0);
         permitsToTake -= permitsAboveHalfToTake;
       }
       // measuring the integral on the left part of the function (the horizontal line)
@@ -658,8 +657,7 @@ public abstract class RateLimiter {
        * unnecessarily overconstrain the thread scheduler.
        */
       maxPermits = permitsPerSecond; // one second worth of permits
-      storedPermits = (oldMaxPermits == 0.0)
-          ? 0.0 // initial state
+      storedPermits = (oldMaxPermits == 0.0) ? 0.0 // initial state
           : storedPermits * maxPermits / oldMaxPermits;
     }
 
@@ -674,6 +672,7 @@ public abstract class RateLimiter {
     abstract void sleepMicrosUninterruptibly(long micros);
 
     static final SleepingTicker SYSTEM_TICKER = new SleepingTicker() {
+
       @Override
       public long read() {
         return systemTicker().read();

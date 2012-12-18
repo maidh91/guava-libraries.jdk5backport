@@ -78,8 +78,7 @@ public abstract class CharSource {
    */
   public BufferedReader openBufferedStream() throws IOException {
     Reader reader = openStream();
-    return (reader instanceof BufferedReader)
-        ? (BufferedReader) reader
+    return (reader instanceof BufferedReader) ? (BufferedReader) reader
         : new BufferedReader(reader);
   }
 
@@ -151,7 +150,8 @@ public abstract class CharSource {
    *
    * @throws IOException if an I/O error occurs in the process of reading from this source
    */
-  public @Nullable String readFirstLine() throws IOException {
+  public @Nullable
+  String readFirstLine() throws IOException {
     Closer closer = Closer.create();
     try {
       BufferedReader reader = closer.add(openBufferedStream());

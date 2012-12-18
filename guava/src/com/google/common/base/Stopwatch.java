@@ -69,7 +69,7 @@ import java.util.concurrent.TimeUnit;
  * @since 10.0
  */
 @Beta
-@GwtCompatible(emulated=true)
+@GwtCompatible(emulated = true)
 public final class Stopwatch {
   private final Ticker ticker;
   private boolean isRunning;
@@ -124,8 +124,7 @@ public final class Stopwatch {
    */
   public Stopwatch stop() {
     long tick = ticker.read();
-    checkState(isRunning,
-        "This stopwatch is already stopped; it cannot be stopped more than once.");
+    checkState(isRunning, "This stopwatch is already stopped; it cannot be stopped more than once.");
     isRunning = false;
     elapsedNanos += tick - startTick;
     return this;
@@ -191,8 +190,9 @@ public final class Stopwatch {
   /**
    * Returns a string representation of the current elapsed time.
    */
+  @Override
   @GwtIncompatible("String.format()")
-  @Override public String toString() {
+  public String toString() {
     return toString(4);
   }
 
@@ -214,8 +214,7 @@ public final class Stopwatch {
     double value = (double) nanos / NANOSECONDS.convert(1, unit);
 
     // Too bad this functionality is not exposed as a regular method call
-    return String.format("%." + significantDigits + "g %s",
-        value, abbreviate(unit));
+    return String.format("%." + significantDigits + "g %s", value, abbreviate(unit));
   }
 
   private static TimeUnit chooseUnit(long nanos) {

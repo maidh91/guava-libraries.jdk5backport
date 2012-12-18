@@ -38,12 +38,10 @@ final class ChecksumHashFunction extends AbstractStreamingHashFunction implement
     this.bits = bits;
   }
 
-  @Override
   public int bits() {
     return bits;
   }
 
-  @Override
   public Hasher newHasher() {
     return new ChecksumHasher(checksumSupplier.get());
   }
@@ -69,7 +67,6 @@ final class ChecksumHashFunction extends AbstractStreamingHashFunction implement
       checksum.update(bytes, off, len);
     }
 
-    @Override
     public HashCode hash() {
       long value = checksum.getValue();
       if (bits == 32) {

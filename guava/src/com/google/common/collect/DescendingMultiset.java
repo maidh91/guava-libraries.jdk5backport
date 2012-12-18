@@ -20,7 +20,6 @@ import com.google.common.annotations.GwtCompatible;
 
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.NavigableSet;
 import java.util.Set;
 
 /**
@@ -30,24 +29,23 @@ import java.util.Set;
  * @author Louis Wasserman
  */
 @GwtCompatible(emulated = true)
-abstract class DescendingMultiset<E> extends ForwardingMultiset<E>
-    implements SortedMultiset<E> {
+abstract class DescendingMultiset<E> extends ForwardingMultiset<E> implements SortedMultiset<E> {
   abstract SortedMultiset<E> forwardMultiset();
 
   private transient Comparator<? super E> comparator;
 
-  @Override public Comparator<? super E> comparator() {
+  public Comparator<? super E> comparator() {
     Comparator<? super E> result = comparator;
     if (result == null) {
-      return comparator =
-          Ordering.from(forwardMultiset().comparator()).<E>reverse();
+      return comparator = Ordering.from(forwardMultiset().comparator()).<E> reverse();
     }
     return result;
   }
 
   private transient NavigableSet<E> elementSet;
 
-  @Override public NavigableSet<E> elementSet() {
+  @Override
+  public NavigableSet<E> elementSet() {
     NavigableSet<E> result = elementSet;
     if (result == null) {
       return elementSet = new SortedMultisets.NavigableElementSet<E>(this);
@@ -55,45 +53,42 @@ abstract class DescendingMultiset<E> extends ForwardingMultiset<E>
     return result;
   }
 
-  @Override public Entry<E> pollFirstEntry() {
+  public Entry<E> pollFirstEntry() {
     return forwardMultiset().pollLastEntry();
   }
 
-  @Override public Entry<E> pollLastEntry() {
+  public Entry<E> pollLastEntry() {
     return forwardMultiset().pollFirstEntry();
   }
 
-  @Override public SortedMultiset<E> headMultiset(E toElement,
-      BoundType boundType) {
-    return forwardMultiset().tailMultiset(toElement, boundType)
+  public SortedMultiset<E> headMultiset(E toElement, BoundType boundType) {
+    return forwardMultiset().tailMultiset(toElement, boundType).descendingMultiset();
+  }
+
+  public SortedMultiset<E> subMultiset(E fromElement, BoundType fromBoundType, E toElement,
+      BoundType toBoundType) {
+    return forwardMultiset().subMultiset(toElement, toBoundType, fromElement, fromBoundType)
         .descendingMultiset();
   }
 
-  @Override public SortedMultiset<E> subMultiset(E fromElement,
-      BoundType fromBoundType, E toElement, BoundType toBoundType) {
-    return forwardMultiset().subMultiset(toElement, toBoundType, fromElement,
-        fromBoundType).descendingMultiset();
+  public SortedMultiset<E> tailMultiset(E fromElement, BoundType boundType) {
+    return forwardMultiset().headMultiset(fromElement, boundType).descendingMultiset();
   }
 
-  @Override public SortedMultiset<E> tailMultiset(E fromElement,
-      BoundType boundType) {
-    return forwardMultiset().headMultiset(fromElement, boundType)
-        .descendingMultiset();
-  }
-
-  @Override protected Multiset<E> delegate() {
+  @Override
+  protected Multiset<E> delegate() {
     return forwardMultiset();
   }
 
-  @Override public SortedMultiset<E> descendingMultiset() {
+  public SortedMultiset<E> descendingMultiset() {
     return forwardMultiset();
   }
 
-  @Override public Entry<E> firstEntry() {
+  public Entry<E> firstEntry() {
     return forwardMultiset().lastEntry();
   }
 
-  @Override public Entry<E> lastEntry() {
+  public Entry<E> lastEntry() {
     return forwardMultiset().firstEntry();
   }
 
@@ -101,40 +96,48 @@ abstract class DescendingMultiset<E> extends ForwardingMultiset<E>
 
   private transient Set<Entry<E>> entrySet;
 
-  @Override public Set<Entry<E>> entrySet() {
+  @Override
+  public Set<Entry<E>> entrySet() {
     Set<Entry<E>> result = entrySet;
     return (result == null) ? entrySet = createEntrySet() : result;
   }
 
   Set<Entry<E>> createEntrySet() {
     return new Multisets.EntrySet<E>() {
-      @Override Multiset<E> multiset() {
+      @Override
+      Multiset<E> multiset() {
         return DescendingMultiset.this;
       }
 
-      @Override public Iterator<Entry<E>> iterator() {
+      @Override
+      public Iterator<Entry<E>> iterator() {
         return entryIterator();
       }
 
-      @Override public int size() {
+      @Override
+      public int size() {
         return forwardMultiset().entrySet().size();
       }
     };
   }
 
-  @Override public Iterator<E> iterator() {
+  @Override
+  public Iterator<E> iterator() {
     return Multisets.iteratorImpl(this);
   }
 
-  @Override public Object[] toArray() {
+  @Override
+  public Object[] toArray() {
     return standardToArray();
   }
 
-  @Override public <T> T[] toArray(T[] array) {
+  @Override
+  public <T> T[] toArray(T[] array) {
     return standardToArray(array);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return entrySet().toString();
   }
 }

@@ -83,8 +83,7 @@ public abstract class ByteSource {
    */
   public BufferedInputStream openBufferedStream() throws IOException {
     InputStream in = openStream();
-    return (in instanceof BufferedInputStream)
-        ? (BufferedInputStream) in
+    return (in instanceof BufferedInputStream) ? (BufferedInputStream) in
         : new BufferedInputStream(in);
   }
 

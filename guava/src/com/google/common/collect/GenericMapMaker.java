@@ -44,7 +44,6 @@ public abstract class GenericMapMaker<K0, V0> {
   enum NullListener implements RemovalListener<Object, Object> {
     INSTANCE;
 
-    @Override
     public void onRemoval(RemovalNotification<Object, Object> notification) {}
   }
 
@@ -117,7 +116,8 @@ public abstract class GenericMapMaker<K0, V0> {
    * GenericMapMaker you've already called that, and shouldn't be calling it again.
    */
 
-  @SuppressWarnings("unchecked") // safe covariant cast
+  @SuppressWarnings("unchecked")
+  // safe covariant cast
   @GwtIncompatible("To be supported")
   <K extends K0, V extends V0> RemovalListener<K, V> getRemovalListener() {
     return (RemovalListener<K, V>) Objects.firstNonNull(removalListener, NullListener.INSTANCE);

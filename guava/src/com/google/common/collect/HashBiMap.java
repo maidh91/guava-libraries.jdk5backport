@@ -132,8 +132,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
   private void delete(BiEntry<K, V> entry) {
     int keyBucket = entry.keyHash & mask;
     BiEntry<K, V> prevBucketEntry = null;
-    for (BiEntry<K, V> bucketEntry = hashTableKToV[keyBucket]; true;
-        bucketEntry = bucketEntry.nextInKToVBucket) {
+    for (BiEntry<K, V> bucketEntry = hashTableKToV[keyBucket]; true; bucketEntry = bucketEntry.nextInKToVBucket) {
       if (bucketEntry == entry) {
         if (prevBucketEntry == null) {
           hashTableKToV[keyBucket] = entry.nextInKToVBucket;
@@ -147,8 +146,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
 
     int valueBucket = entry.valueHash & mask;
     prevBucketEntry = null;
-    for (BiEntry<K, V> bucketEntry = hashTableVToK[valueBucket];;
-        bucketEntry = bucketEntry.nextInVToKBucket) {
+    for (BiEntry<K, V> bucketEntry = hashTableVToK[valueBucket];; bucketEntry = bucketEntry.nextInVToKBucket) {
       if (bucketEntry == entry) {
         if (prevBucketEntry == null) {
           hashTableVToK[valueBucket] = entry.nextInVToKBucket;
@@ -182,8 +180,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
   }
 
   private BiEntry<K, V> seekByKey(@Nullable Object key, int keyHash) {
-    for (BiEntry<K, V> entry = hashTableKToV[keyHash & mask]; entry != null;
-        entry = entry.nextInKToVBucket) {
+    for (BiEntry<K, V> entry = hashTableKToV[keyHash & mask]; entry != null; entry = entry.nextInKToVBucket) {
       if (keyHash == entry.keyHash && Objects.equal(key, entry.key)) {
         return entry;
       }
@@ -192,8 +189,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
   }
 
   private BiEntry<K, V> seekByValue(@Nullable Object value, int valueHash) {
-    for (BiEntry<K, V> entry = hashTableVToK[valueHash & mask]; entry != null;
-        entry = entry.nextInVToKBucket) {
+    for (BiEntry<K, V> entry = hashTableVToK[valueHash & mask]; entry != null; entry = entry.nextInVToKBucket) {
       if (valueHash == entry.valueHash && Objects.equal(value, entry.value)) {
         return entry;
       }
@@ -211,8 +207,8 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
     return seekByValue(value, hash(value)) != null;
   }
 
-  @Nullable
   @Override
+  @Nullable
   public V get(@Nullable Object key) {
     BiEntry<K, V> entry = seekByKey(key, hash(key));
     return (entry == null) ? null : entry.value;
@@ -223,7 +219,6 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
     return put(key, value, false);
   }
 
-  @Override
   public V forcePut(@Nullable K key, @Nullable V value) {
     return put(key, value, true);
   }
@@ -348,7 +343,6 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
       }
     }
 
-    @Override
     public boolean hasNext() {
       checkForConcurrentModification();
       if (next != null) {
@@ -364,7 +358,6 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
       return false;
     }
 
-    @Override
     public T next() {
       checkForConcurrentModification();
       if (!hasNext()) {
@@ -377,7 +370,6 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
       return output(entry);
     }
 
-    @Override
     public void remove() {
       checkForConcurrentModification();
       checkState(toRemove != null, "Only one remove() call allowed per call to next");
@@ -395,6 +387,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
   }
 
   private final class KeySet extends Maps.KeySet<K, V> {
+
     @Override
     Map<K, V> map() {
       return HashBiMap.this;
@@ -403,6 +396,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
     @Override
     public Iterator<K> iterator() {
       return new Itr<K>() {
+
         @Override
         K output(BiEntry<K, V> entry) {
           return entry.key;
@@ -433,6 +427,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
   }
 
   private final class EntrySet extends Maps.EntrySet<K, V> {
+
     @Override
     Map<K, V> map() {
       return HashBiMap.this;
@@ -441,6 +436,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
     @Override
     public Iterator<Entry<K, V>> iterator() {
       return new Itr<Entry<K, V>>() {
+
         @Override
         Entry<K, V> output(BiEntry<K, V> entry) {
           return new MapEntry(entry);
@@ -453,25 +449,27 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
             this.delegate = entry;
           }
 
-          @Override public K getKey() {
+          @Override
+          public K getKey() {
             return delegate.key;
           }
 
-          @Override public V getValue() {
+          @Override
+          public V getValue() {
             return delegate.value;
           }
 
-          @Override public V setValue(V value) {
+          @Override
+          public V setValue(V value) {
             V oldValue = delegate.value;
             int valueHash = hash(value);
             if (valueHash == delegate.valueHash && Objects.equal(value, oldValue)) {
               return value;
             }
-            checkArgument(
-                seekByValue(value, valueHash) == null, "value already present: %s", value);
+            checkArgument(seekByValue(value, valueHash) == null, "value already present: %s", value);
             delete(delegate);
-            BiEntry<K, V> newEntry =
-                new BiEntry<K, V>(delegate.key, delegate.keyHash, value, valueHash);
+            BiEntry<K, V> newEntry = new BiEntry<K, V>(delegate.key, delegate.keyHash, value,
+                valueHash);
             insert(newEntry);
             expectedModCount = modCount;
             if (toRemove == delegate) {
@@ -487,7 +485,6 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
 
   private transient BiMap<V, K> inverse;
 
-  @Override
   public BiMap<V, K> inverse() {
     return (inverse == null) ? inverse = new Inverse() : inverse;
   }
@@ -523,7 +520,6 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
       return putInverse(value, key, false);
     }
 
-    @Override
     public K forcePut(@Nullable V value, @Nullable K key) {
       return putInverse(value, key, true);
     }
@@ -539,7 +535,6 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
       }
     }
 
-    @Override
     public BiMap<K, V> inverse() {
       return forward();
     }
@@ -550,6 +545,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
     }
 
     private final class InverseKeySet extends Maps.KeySet<V, K> {
+
       @Override
       Map<V, K> map() {
         return Inverse.this;
@@ -569,7 +565,8 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
       @Override
       public Iterator<V> iterator() {
         return new Itr<V>() {
-          @Override V output(BiEntry<K, V> entry) {
+          @Override
+          V output(BiEntry<K, V> entry) {
             return entry.value;
           }
         };
@@ -593,6 +590,7 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
         @Override
         public Iterator<Entry<V, K>> iterator() {
           return new Itr<Entry<V, K>>() {
+
             @Override
             Entry<V, K> output(BiEntry<K, V> entry) {
               return new InverseEntry(entry);
@@ -624,8 +622,8 @@ public final class HashBiMap<K, V> extends AbstractMap<K, V> implements BiMap<K,
                 }
                 checkArgument(seekByKey(key, keyHash) == null, "value already present: %s", key);
                 delete(delegate);
-                BiEntry<K, V> newEntry =
-                    new BiEntry<K, V>(key, keyHash, delegate.value, delegate.valueHash);
+                BiEntry<K, V> newEntry = new BiEntry<K, V>(key, keyHash, delegate.value,
+                    delegate.valueHash);
                 insert(newEntry);
                 expectedModCount = modCount;
                 // This is safe because entries can only get bumped up to earlier in the iteration,

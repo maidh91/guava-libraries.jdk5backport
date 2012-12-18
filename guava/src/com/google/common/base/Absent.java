@@ -34,50 +34,63 @@ final class Absent extends Optional<Object> {
 
   private Absent() {}
 
-  @Override public boolean isPresent() {
+  @Override
+  public boolean isPresent() {
     return false;
   }
 
-  @Override public Object get() {
+  @Override
+  public Object get() {
     throw new IllegalStateException("Optional.get() cannot be called on an absent value");
   }
 
-  @Override public Object or(Object defaultValue) {
+  @Override
+  public Object or(Object defaultValue) {
     return checkNotNull(defaultValue, "use Optional.orNull() instead of Optional.or(null)");
   }
 
-  @SuppressWarnings("unchecked") // safe covariant cast
-  @Override public Optional<Object> or(Optional<?> secondChoice) {
+  @Override
+  @SuppressWarnings("unchecked")
+  // safe covariant cast
+  public Optional<Object> or(Optional<?> secondChoice) {
     return (Optional) checkNotNull(secondChoice);
   }
 
-  @Override public Object or(Supplier<?> supplier) {
+  @Override
+  public Object or(Supplier<?> supplier) {
     return checkNotNull(supplier.get(),
         "use Optional.orNull() instead of a Supplier that returns null");
   }
 
-  @Override @Nullable public Object orNull() {
+  @Override
+  @Nullable
+  public Object orNull() {
     return null;
   }
 
-  @Override public Set<Object> asSet() {
+  @Override
+  public Set<Object> asSet() {
     return Collections.emptySet();
   }
 
-  @Override public <V> Optional<V> transform(Function<Object, V> function) {
+  @Override
+  public <V> Optional<V> transform(Function<Object, V> function) {
     checkNotNull(function);
     return Optional.absent();
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     return object == this;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return 0x598df91c;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "Optional.absent()";
   }
 

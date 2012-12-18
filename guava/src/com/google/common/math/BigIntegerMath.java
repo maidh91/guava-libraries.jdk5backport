@@ -83,8 +83,8 @@ public final class BigIntegerMath {
       case HALF_UP:
       case HALF_EVEN:
         if (logFloor < SQRT2_PRECOMPUTE_THRESHOLD) {
-          BigInteger halfPower = SQRT2_PRECOMPUTED_BITS.shiftRight(
-              SQRT2_PRECOMPUTE_THRESHOLD - logFloor);
+          BigInteger halfPower = SQRT2_PRECOMPUTED_BITS.shiftRight(SQRT2_PRECOMPUTE_THRESHOLD
+              - logFloor);
           if (x.compareTo(halfPower) <= 0) {
             return logFloor;
           } else {
@@ -111,10 +111,12 @@ public final class BigIntegerMath {
    * of two. This can be any value, but higher values incur more class load time and linearly
    * increasing memory consumption.
    */
-  @VisibleForTesting static final int SQRT2_PRECOMPUTE_THRESHOLD = 256;
+  @VisibleForTesting
+  static final int SQRT2_PRECOMPUTE_THRESHOLD = 256;
 
-  @VisibleForTesting static final BigInteger SQRT2_PRECOMPUTED_BITS =
-      new BigInteger("16a09e667f3bcc908b2fb1366ea957d3e3adec17512775099da2f590b0667322a", 16);
+  @VisibleForTesting
+  static final BigInteger SQRT2_PRECOMPUTED_BITS = new BigInteger(
+      "16a09e667f3bcc908b2fb1366ea957d3e3adec17512775099da2f590b0667322a", 16);
 
   /**
    * Returns the base-10 logarithm of {@code x}, rounded according to the specified rounding mode.
@@ -256,7 +258,7 @@ public final class BigIntegerMath {
      */
     BigInteger sqrt0;
     int log2 = log2(x, FLOOR);
-    if(log2 < Double.MAX_EXPONENT) {
+    if (log2 < Double.MAX_EXPONENT) {
       sqrt0 = sqrtApproxWithDoubles(x);
     } else {
       int shift = (log2 - DoubleUtils.SIGNIFICAND_BITS) & ~1; // even!
@@ -290,7 +292,7 @@ public final class BigIntegerMath {
    *         is not an integer multiple of {@code b}
    */
   @GwtIncompatible("TODO")
-  public static BigInteger divide(BigInteger p, BigInteger q, RoundingMode mode){
+  public static BigInteger divide(BigInteger p, BigInteger q, RoundingMode mode) {
     BigDecimal pDec = new BigDecimal(p);
     BigDecimal qDec = new BigDecimal(q);
     return pDec.divide(qDec, 0, mode).toBigIntegerExact();
@@ -384,14 +386,14 @@ public final class BigIntegerMath {
     }
   }
 
- /**
-   * Returns {@code n} choose {@code k}, also known as the binomial coefficient of {@code n} and
-   * {@code k}, that is, {@code n! / (k! (n - k)!)}.
-   *
-   * <p><b>Warning</b>: the result can take as much as <i>O(k log n)</i> space.
-   *
-   * @throws IllegalArgumentException if {@code n < 0}, {@code k < 0}, or {@code k > n}
-   */
+  /**
+    * Returns {@code n} choose {@code k}, also known as the binomial coefficient of {@code n} and
+    * {@code k}, that is, {@code n! / (k! (n - k)!)}.
+    *
+    * <p><b>Warning</b>: the result can take as much as <i>O(k log n)</i> space.
+    *
+    * @throws IllegalArgumentException if {@code n < 0}, {@code k < 0}, or {@code k > n}
+    */
   public static BigInteger binomial(int n, int k) {
     checkNonNegative("n", n);
     checkNonNegative("k", k);
@@ -421,9 +423,8 @@ public final class BigIntegerMath {
       if (numeratorBits + bits >= Long.SIZE - 1) {
         // The numerator is as big as it can get without risking overflow.
         // Multiply numeratorAccum / denominatorAccum into accum.
-        accum = accum
-            .multiply(BigInteger.valueOf(numeratorAccum))
-            .divide(BigInteger.valueOf(denominatorAccum));
+        accum = accum.multiply(BigInteger.valueOf(numeratorAccum)).divide(
+            BigInteger.valueOf(denominatorAccum));
         numeratorAccum = p;
         denominatorAccum = q;
         numeratorBits = bits;
@@ -434,9 +435,8 @@ public final class BigIntegerMath {
         numeratorBits += bits;
       }
     }
-    return accum
-        .multiply(BigInteger.valueOf(numeratorAccum))
-        .divide(BigInteger.valueOf(denominatorAccum));
+    return accum.multiply(BigInteger.valueOf(numeratorAccum)).divide(
+        BigInteger.valueOf(denominatorAccum));
   }
 
   // Returns true if BigInteger.valueOf(x.longValue()).equals(x).

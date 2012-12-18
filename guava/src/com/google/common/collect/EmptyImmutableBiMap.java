@@ -28,17 +28,18 @@ import javax.annotation.Nullable;
  * @author Jared Levy
  */
 @GwtCompatible(emulated = true)
-@SuppressWarnings("serial") // uses writeReplace(), not default serialization
+@SuppressWarnings("serial")
+// uses writeReplace(), not default serialization
 final class EmptyImmutableBiMap extends ImmutableBiMap<Object, Object> {
   static final EmptyImmutableBiMap INSTANCE = new EmptyImmutableBiMap();
 
   private EmptyImmutableBiMap() {}
-  
-  @Override public ImmutableBiMap<Object, Object> inverse() {
+
+  @Override
+  public ImmutableBiMap<Object, Object> inverse() {
     return this;
   }
-  
-  @Override
+
   public int size() {
     return 0;
   }
@@ -101,7 +102,7 @@ final class EmptyImmutableBiMap extends ImmutableBiMap<Object, Object> {
   boolean isPartialView() {
     return false;
   }
-  
+
   Object readResolve() {
     return INSTANCE; // preserve singleton property
   }

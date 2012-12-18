@@ -98,9 +98,8 @@ public class Joiner {
    */
   @Beta
   @Deprecated
-  public
-  final <A extends Appendable, I extends Object & Iterable<?> & Iterator<?>> A
-      appendTo(A appendable, I parts) throws IOException {
+  public final <A extends Appendable, I extends Object & Iterable<?> & Iterator<?>> A appendTo(
+      A appendable, I parts) throws IOException {
     return appendTo(appendable, (Iterator<?>) parts);
   }
 
@@ -141,9 +140,8 @@ public class Joiner {
   /**
    * Appends to {@code appendable} the string representation of each of the remaining arguments.
    */
-  public final <A extends Appendable> A appendTo(
-      A appendable, @Nullable Object first, @Nullable Object second, Object... rest)
-          throws IOException {
+  public final <A extends Appendable> A appendTo(A appendable, @Nullable Object first,
+      @Nullable Object second, Object... rest) throws IOException {
     return appendTo(appendable, iterable(first, second, rest));
   }
 
@@ -157,9 +155,8 @@ public class Joiner {
    */
   @Beta
   @Deprecated
-  public
-  final <I extends Object & Iterable<?> & Iterator<?>> StringBuilder
-      appendTo(StringBuilder builder, I parts) {
+  public final <I extends Object & Iterable<?> & Iterator<?>> StringBuilder appendTo(
+      StringBuilder builder, I parts) {
     return appendTo(builder, (Iterator<?>) parts);
   }
 
@@ -202,8 +199,8 @@ public class Joiner {
    * Identical to {@link #appendTo(Appendable, Object, Object, Object...)}, except that it does not
    * throw {@link IOException}.
    */
-  public final StringBuilder appendTo(
-      StringBuilder builder, @Nullable Object first, @Nullable Object second, Object... rest) {
+  public final StringBuilder appendTo(StringBuilder builder, @Nullable Object first,
+      @Nullable Object second, Object... rest) {
     return appendTo(builder, iterable(first, second, rest));
   }
 
@@ -217,8 +214,7 @@ public class Joiner {
    */
   @Beta
   @Deprecated
-  public
-  final <I extends Object & Iterable<?> & Iterator<?>> String join(I parts) {
+  public final <I extends Object & Iterable<?> & Iterator<?>> String join(I parts) {
     return join((Iterator<?>) parts);
   }
 
@@ -264,16 +260,19 @@ public class Joiner {
   public Joiner useForNull(final String nullText) {
     checkNotNull(nullText);
     return new Joiner(this) {
-      @Override CharSequence toString(@Nullable Object part) {
+      @Override
+      CharSequence toString(@Nullable Object part) {
         return (part == null) ? nullText : Joiner.this.toString(part);
       }
 
-      @Override public Joiner useForNull(String nullText) {
+      @Override
+      public Joiner useForNull(String nullText) {
         checkNotNull(nullText); // weird: just to satisfy NullPointerTester.
         throw new UnsupportedOperationException("already specified useForNull");
       }
 
-      @Override public Joiner skipNulls() {
+      @Override
+      public Joiner skipNulls() {
         throw new UnsupportedOperationException("already specified useForNull");
       }
     };
@@ -286,8 +285,8 @@ public class Joiner {
   @CheckReturnValue
   public Joiner skipNulls() {
     return new Joiner(this) {
-      @Override public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts)
-          throws IOException {
+      @Override
+      public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts) throws IOException {
         checkNotNull(appendable, "appendable");
         checkNotNull(parts, "parts");
         while (parts.hasNext()) {
@@ -307,12 +306,14 @@ public class Joiner {
         return appendable;
       }
 
-      @Override public Joiner useForNull(String nullText) {
+      @Override
+      public Joiner useForNull(String nullText) {
         checkNotNull(nullText); // weird: just to satisfy NullPointerTester.
         throw new UnsupportedOperationException("already specified skipNulls");
       }
 
-      @Override public MapJoiner withKeyValueSeparator(String kvs) {
+      @Override
+      public MapJoiner withKeyValueSeparator(String kvs) {
         checkNotNull(kvs); // weird: just to satisfy NullPointerTester.
         throw new UnsupportedOperationException("can't use .skipNulls() with maps");
       }
@@ -391,10 +392,8 @@ public class Joiner {
      */
     @Beta
     @Deprecated
-    public
-    <A extends Appendable,
-        I extends Object & Iterable<? extends Entry<?, ?>> & Iterator<? extends Entry<?, ?>>>
-        A appendTo(A appendable, I entries) throws IOException {
+    public <A extends Appendable, I extends Object & Iterable<? extends Entry<?, ?>> & Iterator<? extends Entry<?, ?>>> A appendTo(
+        A appendable, I entries) throws IOException {
       Iterator<? extends Entry<?, ?>> iterator = entries;
       return appendTo(appendable, iterator);
     }
@@ -448,9 +447,8 @@ public class Joiner {
      */
     @Beta
     @Deprecated
-    public
-    <I extends Object & Iterable<? extends Entry<?, ?>> & Iterator<? extends Entry<?, ?>>>
-        StringBuilder appendTo(StringBuilder builder, I entries) throws IOException {
+    public <I extends Object & Iterable<? extends Entry<?, ?>> & Iterator<? extends Entry<?, ?>>> StringBuilder appendTo(
+        StringBuilder builder, I entries) throws IOException {
       Iterator<? extends Entry<?, ?>> iterator = entries;
       return appendTo(builder, iterator);
     }
@@ -495,9 +493,8 @@ public class Joiner {
      */
     @Beta
     @Deprecated
-    public
-    <I extends Object & Iterable<? extends Entry<?, ?>> & Iterator<? extends Entry<?, ?>>>
-        String join(I entries) throws IOException {
+    public <I extends Object & Iterable<? extends Entry<?, ?>> & Iterator<? extends Entry<?, ?>>> String join(
+        I entries) throws IOException {
       Iterator<? extends Entry<?, ?>> iterator = entries;
       return join(iterator);
     }
@@ -535,19 +532,21 @@ public class Joiner {
   }
 
   CharSequence toString(Object part) {
-    checkNotNull(part);  // checkNotNull for GWT (do not optimize).
+    checkNotNull(part); // checkNotNull for GWT (do not optimize).
     return (part instanceof CharSequence) ? (CharSequence) part : part.toString();
   }
 
-  private static Iterable<Object> iterable(
-      final Object first, final Object second, final Object[] rest) {
+  private static Iterable<Object> iterable(final Object first, final Object second,
+      final Object[] rest) {
     checkNotNull(rest);
     return new AbstractList<Object>() {
-      @Override public int size() {
+      @Override
+      public int size() {
         return rest.length + 2;
       }
 
-      @Override public Object get(int index) {
+      @Override
+      public Object get(int index) {
         switch (index) {
           case 0:
             return first;

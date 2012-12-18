@@ -31,8 +31,8 @@ import javax.annotation.Nullable;
  * @author Kevin Bourrillion
  * @since 2.0 (imported from Google Collections Library)
  */
-public final class ImmutableClassToInstanceMap<B> extends
-    ForwardingMap<Class<? extends B>, B> implements ClassToInstanceMap<B> {
+public final class ImmutableClassToInstanceMap<B> extends ForwardingMap<Class<? extends B>, B>
+    implements ClassToInstanceMap<B> {
   /**
    * Returns a new builder. The generated builder is equivalent to the builder
    * created by the {@link Builder} constructor.
@@ -59,8 +59,7 @@ public final class ImmutableClassToInstanceMap<B> extends
    * @since 2.0 (imported from Google Collections Library)
    */
   public static final class Builder<B> {
-    private final ImmutableMap.Builder<Class<? extends B>, B> mapBuilder
-        = ImmutableMap.builder();
+    private final ImmutableMap.Builder<Class<? extends B>, B> mapBuilder = ImmutableMap.builder();
 
     /**
      * Associates {@code key} with {@code value} in the built map. Duplicate
@@ -79,10 +78,8 @@ public final class ImmutableClassToInstanceMap<B> extends
      * @throws ClassCastException if any value is not an instance of the type
      *     specified by its key
      */
-    public <T extends B> Builder<B> putAll(
-        Map<? extends Class<? extends T>, ? extends T> map) {
-      for (Entry<? extends Class<? extends T>, ? extends T> entry
-          : map.entrySet()) {
+    public <T extends B> Builder<B> putAll(Map<? extends Class<? extends T>, ? extends T> map) {
+      for (Entry<? extends Class<? extends T>, ? extends T> entry : map.entrySet()) {
         Class<? extends T> type = entry.getKey();
         T value = entry.getValue();
         mapBuilder.put(type, cast(type, value));
@@ -121,7 +118,8 @@ public final class ImmutableClassToInstanceMap<B> extends
   public static <B, S extends B> ImmutableClassToInstanceMap<B> copyOf(
       Map<? extends Class<? extends S>, ? extends S> map) {
     if (map instanceof ImmutableClassToInstanceMap) {
-      @SuppressWarnings("unchecked") // covariant casts safe (unmodifiable)
+      @SuppressWarnings("unchecked")
+      // covariant casts safe (unmodifiable)
       // Eclipse won't compile if we cast to the parameterized type.
       ImmutableClassToInstanceMap<B> cast = (ImmutableClassToInstanceMap) map;
       return cast;
@@ -131,17 +129,17 @@ public final class ImmutableClassToInstanceMap<B> extends
 
   private final ImmutableMap<Class<? extends B>, B> delegate;
 
-  private ImmutableClassToInstanceMap(
-      ImmutableMap<Class<? extends B>, B> delegate) {
+  private ImmutableClassToInstanceMap(ImmutableMap<Class<? extends B>, B> delegate) {
     this.delegate = delegate;
   }
 
-  @Override protected Map<Class<? extends B>, B> delegate() {
+  @Override
+  protected Map<Class<? extends B>, B> delegate() {
     return delegate;
   }
 
-  @Override
-  @SuppressWarnings("unchecked") // value could not get in if not a T
+  @SuppressWarnings("unchecked")
+  // value could not get in if not a T
   @Nullable
   public <T extends B> T getInstance(Class<T> type) {
     return (T) delegate.get(checkNotNull(type));
@@ -154,7 +152,6 @@ public final class ImmutableClassToInstanceMap<B> extends
    * @deprecated Unsupported operation.
    */
   @Deprecated
-  @Override
   public <T extends B> T putInstance(Class<T> type, T value) {
     throw new UnsupportedOperationException();
   }

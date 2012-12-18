@@ -77,12 +77,10 @@ public final class Files {
    *     Charsets} for helpful predefined constants
    * @return the buffered reader
    */
-  public static BufferedReader newReader(File file, Charset charset)
-      throws FileNotFoundException {
+  public static BufferedReader newReader(File file, Charset charset) throws FileNotFoundException {
     checkNotNull(file);
     checkNotNull(charset);
-    return new BufferedReader(
-        new InputStreamReader(new FileInputStream(file), charset));
+    return new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
   }
 
   /**
@@ -94,12 +92,10 @@ public final class Files {
    *     Charsets} for helpful predefined constants
    * @return the buffered writer
    */
-  public static BufferedWriter newWriter(File file, Charset charset)
-      throws FileNotFoundException {
+  public static BufferedWriter newWriter(File file, Charset charset) throws FileNotFoundException {
     checkNotNull(file);
     checkNotNull(charset);
-    return new BufferedWriter(
-        new OutputStreamWriter(new FileOutputStream(file), charset));
+    return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), charset));
   }
 
   /**
@@ -145,8 +141,7 @@ public final class Files {
       // technically, this could probably be Integer.MAX_VALUE - 5
       if (size > Integer.MAX_VALUE) {
         // OOME is what would be thrown if we tried to initialize the array
-        throw new OutOfMemoryError("file is too large to fit in a byte array: "
-            + size + " bytes");
+        throw new OutOfMemoryError("file is too large to fit in a byte array: " + size + " bytes");
       }
 
       // initialize the array to the current size of the file
@@ -159,8 +154,7 @@ public final class Files {
         int read = 0;
 
         // read until we've read size bytes or reached EOF
-        while (off < size
-            && ((read = in.read(bytes, off, (int) size - off)) != -1)) {
+        while (off < size && ((read = in.read(bytes, off, (int) size - off)) != -1)) {
           off += read;
         }
 
@@ -249,8 +243,7 @@ public final class Files {
    *
    * @since 14.0
    */
-  public static CharSink asCharSink(File file, Charset charset,
-      FileWriteMode... modes) {
+  public static CharSink asCharSink(File file, Charset charset, FileWriteMode... modes) {
     return asByteSink(file, modes).asCharSink(charset);
   }
 
@@ -261,8 +254,7 @@ public final class Files {
    * @param file the file to read from
    * @return the factory
    */
-  public static InputSupplier<FileInputStream> newInputStreamSupplier(
-      final File file) {
+  public static InputSupplier<FileInputStream> newInputStreamSupplier(final File file) {
     return ByteStreams.asInputSupplier(asByteSource(file));
   }
 
@@ -273,8 +265,7 @@ public final class Files {
    * @param file the file to write to
    * @return the factory
    */
-  public static OutputSupplier<FileOutputStream> newOutputStreamSupplier(
-      File file) {
+  public static OutputSupplier<FileOutputStream> newOutputStreamSupplier(File file) {
     return newOutputStreamSupplier(file, false);
   }
 
@@ -287,15 +278,13 @@ public final class Files {
    *     otherwise the file is overwritten
    * @return the factory
    */
-  public static OutputSupplier<FileOutputStream> newOutputStreamSupplier(
-      final File file, final boolean append) {
+  public static OutputSupplier<FileOutputStream> newOutputStreamSupplier(final File file,
+      final boolean append) {
     return ByteStreams.asOutputSupplier(asByteSink(file, modes(append)));
   }
 
   private static FileWriteMode[] modes(boolean append) {
-    return append
-        ? new FileWriteMode[]{ FileWriteMode.APPEND }
-        : new FileWriteMode[0];
+    return append ? new FileWriteMode[] { FileWriteMode.APPEND } : new FileWriteMode[0];
   }
 
   /**
@@ -307,8 +296,7 @@ public final class Files {
    *     Charsets} for helpful predefined constants
    * @return the factory
    */
-  public static InputSupplier<InputStreamReader> newReaderSupplier(File file,
-      Charset charset) {
+  public static InputSupplier<InputStreamReader> newReaderSupplier(File file, Charset charset) {
     return CharStreams.asInputSupplier(asCharSource(file, charset));
   }
 
@@ -321,8 +309,7 @@ public final class Files {
    *     Charsets} for helpful predefined constants
    * @return the factory
    */
-  public static OutputSupplier<OutputStreamWriter> newWriterSupplier(File file,
-      Charset charset) {
+  public static OutputSupplier<OutputStreamWriter> newWriterSupplier(File file, Charset charset) {
     return newWriterSupplier(file, charset, false);
   }
 
@@ -337,8 +324,8 @@ public final class Files {
    *     otherwise the file is overwritten
    * @return the factory
    */
-  public static OutputSupplier<OutputStreamWriter> newWriterSupplier(File file,
-      Charset charset, boolean append) {
+  public static OutputSupplier<OutputStreamWriter> newWriterSupplier(File file, Charset charset,
+      boolean append) {
     return CharStreams.asOutputSupplier(asCharSink(file, charset, modes(append)));
   }
 
@@ -377,8 +364,7 @@ public final class Files {
    * @param to the destination file
    * @throws IOException if an I/O error occurs
    */
-  public static void copy(InputSupplier<? extends InputStream> from, File to)
-      throws IOException {
+  public static void copy(InputSupplier<? extends InputStream> from, File to) throws IOException {
     ByteStreams.asByteSource(from).copyTo(asByteSink(to));
   }
 
@@ -401,8 +387,7 @@ public final class Files {
    * @param to the output factory
    * @throws IOException if an I/O error occurs
    */
-  public static void copy(File from, OutputSupplier<? extends OutputStream> to)
-      throws IOException {
+  public static void copy(File from, OutputSupplier<? extends OutputStream> to) throws IOException {
     asByteSource(from).copyTo(ByteStreams.asByteSink(to));
   }
 
@@ -431,8 +416,7 @@ public final class Files {
    * @throws IllegalArgumentException if {@code from.equals(to)}
    */
   public static void copy(File from, File to) throws IOException {
-    checkArgument(!from.equals(to),
-        "Source %s and destination %s must be different", from, to);
+    checkArgument(!from.equals(to), "Source %s and destination %s must be different", from, to);
     asByteSource(from).copyTo(asByteSink(to));
   }
 
@@ -447,8 +431,8 @@ public final class Files {
    *     Charsets} for helpful predefined constants
    * @throws IOException if an I/O error occurs
    */
-  public static <R extends Readable & Closeable> void copy(
-      InputSupplier<R> from, File to, Charset charset) throws IOException {
+  public static <R extends Readable & Closeable> void copy(InputSupplier<R> from, File to,
+      Charset charset) throws IOException {
     CharStreams.asCharSource(from).copyTo(asCharSink(to, charset));
   }
 
@@ -462,8 +446,7 @@ public final class Files {
    *     Charsets} for helpful predefined constants
    * @throws IOException if an I/O error occurs
    */
-  public static void write(CharSequence from, File to, Charset charset)
-      throws IOException {
+  public static void write(CharSequence from, File to, Charset charset) throws IOException {
     asCharSink(to, charset).write(from);
   }
 
@@ -477,8 +460,7 @@ public final class Files {
    *     Charsets} for helpful predefined constants
    * @throws IOException if an I/O error occurs
    */
-  public static void append(CharSequence from, File to, Charset charset)
-      throws IOException {
+  public static void append(CharSequence from, File to, Charset charset) throws IOException {
     write(from, to, charset, true);
   }
 
@@ -493,8 +475,8 @@ public final class Files {
    * @param append true to append, false to overwrite
    * @throws IOException if an I/O error occurs
    */
-  private static void write(CharSequence from, File to, Charset charset,
-      boolean append) throws IOException {
+  private static void write(CharSequence from, File to, Charset charset, boolean append)
+      throws IOException {
     asCharSink(to, charset, modes(append)).write(from);
   }
 
@@ -509,8 +491,8 @@ public final class Files {
    * @param to the appendable supplier
    * @throws IOException if an I/O error occurs
    */
-  public static <W extends Appendable & Closeable> void copy(File from,
-      Charset charset, OutputSupplier<W> to) throws IOException {
+  public static <W extends Appendable & Closeable> void copy(File from, Charset charset,
+      OutputSupplier<W> to) throws IOException {
     asCharSource(from, charset).copyTo(CharStreams.asCharSink(to));
   }
 
@@ -524,8 +506,7 @@ public final class Files {
    * @param to the appendable object
    * @throws IOException if an I/O error occurs
    */
-  public static void copy(File from, Charset charset, Appendable to)
-      throws IOException {
+  public static void copy(File from, Charset charset, Appendable to) throws IOException {
     asCharSource(from, charset).copyTo(to);
   }
 
@@ -583,9 +564,8 @@ public final class Files {
         return tempDir;
       }
     }
-    throw new IllegalStateException("Failed to create directory within "
-        + TEMP_DIR_ATTEMPTS + " attempts (tried "
-        + baseName + "0 to " + baseName + (TEMP_DIR_ATTEMPTS - 1) + ')');
+    throw new IllegalStateException("Failed to create directory within " + TEMP_DIR_ATTEMPTS
+        + " attempts (tried " + baseName + "0 to " + baseName + (TEMP_DIR_ATTEMPTS - 1) + ')');
   }
 
   /**
@@ -597,8 +577,7 @@ public final class Files {
    */
   public static void touch(File file) throws IOException {
     checkNotNull(file);
-    if (!file.createNewFile()
-        && !file.setLastModified(System.currentTimeMillis())) {
+    if (!file.createNewFile() && !file.setLastModified(System.currentTimeMillis())) {
       throw new IOException("Unable to update modification time of " + file);
     }
   }
@@ -644,8 +623,7 @@ public final class Files {
   public static void move(File from, File to) throws IOException {
     checkNotNull(from);
     checkNotNull(to);
-    checkArgument(!from.equals(to),
-        "Source %s and destination %s must be different", from, to);
+    checkArgument(!from.equals(to), "Source %s and destination %s must be different", from, to);
 
     if (!from.renameTo(to)) {
       copy(from, to);
@@ -669,8 +647,7 @@ public final class Files {
    * @return the first line, or null if the file is empty
    * @throws IOException if an I/O error occurs
    */
-  public static String readFirstLine(File file, Charset charset)
-      throws IOException {
+  public static String readFirstLine(File file, Charset charset) throws IOException {
     return asCharSource(file, charset).readFirstLine();
   }
 
@@ -685,8 +662,7 @@ public final class Files {
    * @return a mutable {@link List} containing all the lines
    * @throws IOException if an I/O error occurs
    */
-  public static List<String> readLines(File file, Charset charset)
-      throws IOException {
+  public static List<String> readLines(File file, Charset charset) throws IOException {
     return CharStreams.readLines(Files.newReaderSupplier(file, charset));
   }
 
@@ -701,8 +677,8 @@ public final class Files {
    * @return the output of processing the lines
    * @throws IOException if an I/O error occurs
    */
-  public static <T> T readLines(File file, Charset charset,
-      LineProcessor<T> callback) throws IOException {
+  public static <T> T readLines(File file, Charset charset, LineProcessor<T> callback)
+      throws IOException {
     return CharStreams.readLines(newReaderSupplier(file, charset), callback);
   }
 
@@ -717,8 +693,7 @@ public final class Files {
    * @return the result of the byte processor
    * @throws IOException if an I/O error occurs
    */
-  public static <T> T readBytes(File file, ByteProcessor<T> processor)
-      throws IOException {
+  public static <T> T readBytes(File file, ByteProcessor<T> processor) throws IOException {
     return ByteStreams.readBytes(newInputStreamSupplier(file), processor);
   }
 
@@ -736,8 +711,7 @@ public final class Files {
    *     to be removed in Guava 15.0.
    */
   @Deprecated
-  public static long getChecksum(File file, Checksum checksum)
-      throws IOException {
+  public static long getChecksum(File file, Checksum checksum) throws IOException {
     return ByteStreams.getChecksum(newInputStreamSupplier(file), checksum);
   }
 
@@ -750,8 +724,7 @@ public final class Files {
    * @throws IOException if an I/O error occurs
    * @since 12.0
    */
-  public static HashCode hash(File file, HashFunction hashFunction)
-      throws IOException {
+  public static HashCode hash(File file, HashFunction hashFunction) throws IOException {
     return asByteSource(file).hash(hashFunction);
   }
 
@@ -794,8 +767,7 @@ public final class Files {
    * @see FileChannel#map(MapMode, long, long)
    * @since 2.0
    */
-  public static MappedByteBuffer map(File file, MapMode mode)
-      throws IOException {
+  public static MappedByteBuffer map(File file, MapMode mode) throws IOException {
     checkNotNull(file);
     checkNotNull(mode);
     if (!file.exists()) {
@@ -832,8 +804,8 @@ public final class Files {
 
     Closer closer = Closer.create();
     try {
-      RandomAccessFile raf = closer.add(
-          new RandomAccessFile(file, mode == MapMode.READ_ONLY ? "r" : "rw"));
+      RandomAccessFile raf = closer.add(new RandomAccessFile(file, mode == MapMode.READ_ONLY ? "r"
+          : "rw"));
       return map(raf, mode, size);
     } catch (Throwable e) {
       throw closer.rethrow(e, IOException.class);
@@ -842,8 +814,8 @@ public final class Files {
     }
   }
 
-  private static MappedByteBuffer map(RandomAccessFile raf, MapMode mode,
-      long size) throws IOException {
+  private static MappedByteBuffer map(RandomAccessFile raf, MapMode mode, long size)
+      throws IOException {
     Closer closer = Closer.create();
     try {
       FileChannel channel = closer.add(raf.getChannel());
@@ -883,8 +855,7 @@ public final class Files {
     }
 
     // split the path apart
-    Iterable<String> components =
-        Splitter.on('/').omitEmptyStrings().split(pathname);
+    Iterable<String> components = Splitter.on('/').omitEmptyStrings().split(pathname);
     List<String> path = new ArrayList<String>();
 
     // resolve ., .., and //

@@ -49,10 +49,9 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
 
   @Override
   Predicate<? super Entry<K, V>> entryPredicate() {
-    return Predicates.compose(keyPredicate, Maps.<K>keyFunction());
+    return Predicates.compose(keyPredicate, Maps.<K> keyFunction());
   }
 
-  @Override
   public int size() {
     int size = 0;
     for (Collection<V> collection : asMap().values()) {
@@ -61,17 +60,16 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
     return size;
   }
 
-  @Override
   public boolean containsKey(@Nullable Object key) {
     if (unfiltered.containsKey(key)) {
-      @SuppressWarnings("unchecked") // k is equal to a K, if not one itself
+      @SuppressWarnings("unchecked")
+      // k is equal to a K, if not one itself
       K k = (K) key;
       return keyPredicate.apply(k);
     }
     return false;
   }
 
-  @Override
   public Collection<V> removeAll(Object key) {
     return containsKey(key) ? unfiltered.removeAll(key) : unmodifiableEmptyCollection();
   }
@@ -84,7 +82,6 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
     }
   }
 
-  @Override
   public void clear() {
     keySet().clear();
   }
@@ -94,7 +91,6 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
     return Sets.filter(unfiltered.keySet(), keyPredicate);
   }
 
-  @Override
   public Collection<V> get(K key) {
     if (keyPredicate.apply(key)) {
       return unfiltered.get(key);
@@ -104,7 +100,7 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
       return new AddRejectingList<K, V>(key);
     }
   }
-  
+
   static class AddRejectingSet<K, V> extends ForwardingSet<V> {
     final K key;
 
@@ -169,13 +165,14 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
 
   @Override
   Iterator<Entry<K, V>> entryIterator() {
-    return Iterators.filter(
-        unfiltered.entries().iterator(), Predicates.compose(keyPredicate, Maps.<K>keyFunction()));
+    return Iterators.filter(unfiltered.entries().iterator(),
+        Predicates.compose(keyPredicate, Maps.<K> keyFunction()));
   }
 
   @Override
   Collection<Entry<K, V>> createEntries() {
     return new Multimaps.Entries<K, V>() {
+
       @Override
       Multimap<K, V> multimap() {
         return FilteredKeyMultimap.this;
@@ -185,7 +182,7 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
       public Iterator<Entry<K, V>> iterator() {
         return entryIterator();
       }
-      
+
       @Override
       @SuppressWarnings("unchecked")
       public boolean remove(@Nullable Object o) {
@@ -198,18 +195,18 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
         }
         return false;
       }
-      
+
       @Override
       public boolean removeAll(Collection<?> c) {
         Predicate<Entry<K, ?>> combinedPredicate = Predicates.and(
-            Predicates.compose(keyPredicate, Maps.<K>keyFunction()), Predicates.in(c));
+            Predicates.compose(keyPredicate, Maps.<K> keyFunction()), Predicates.in(c));
         return Iterators.removeIf(unfiltered.entries().iterator(), combinedPredicate);
       }
-      
+
       @Override
       public boolean retainAll(Collection<?> c) {
         Predicate<Entry<K, ?>> combinedPredicate = Predicates.and(
-            Predicates.compose(keyPredicate, Maps.<K>keyFunction()), 
+            Predicates.compose(keyPredicate, Maps.<K> keyFunction()),
             Predicates.not(Predicates.in(c)));
         return Iterators.removeIf(unfiltered.entries().iterator(), combinedPredicate);
       }
@@ -220,7 +217,7 @@ class FilteredKeyMultimap<K, V> extends FilteredMultimap<K, V> {
   Map<K, Collection<V>> createAsMap() {
     return Maps.filterKeys(unfiltered.asMap(), keyPredicate);
   }
-  
+
   @Override
   Multiset<K> createKeys() {
     return Multisets.filter(unfiltered.keys(), keyPredicate);

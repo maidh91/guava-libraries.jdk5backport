@@ -34,7 +34,6 @@ abstract class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
 
   abstract ImmutableMap<K, V> map();
 
-  @Override
   public int size() {
     return map().size();
   }
@@ -58,7 +57,7 @@ abstract class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
   ImmutableList<V> createAsList() {
     final ImmutableList<Entry<K, V>> entryList = map().entrySet().asList();
     return new ImmutableAsList<V>() {
-      @Override
+
       public V get(int index) {
         return entryList.get(index).getValue();
       }
@@ -70,20 +69,24 @@ abstract class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
     };
   }
 
+  @Override
   @GwtIncompatible("serialization")
-  @Override Object writeReplace() {
+  Object writeReplace() {
     return new SerializedForm<V>(map());
   }
 
   @GwtIncompatible("serialization")
   private static class SerializedForm<V> implements Serializable {
     final ImmutableMap<?, V> map;
+
     SerializedForm(ImmutableMap<?, V> map) {
       this.map = map;
     }
+
     Object readResolve() {
       return map.values();
     }
+
     private static final long serialVersionUID = 0;
   }
 }

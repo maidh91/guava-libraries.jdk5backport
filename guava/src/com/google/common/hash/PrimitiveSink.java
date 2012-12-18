@@ -41,7 +41,7 @@ public interface PrimitiveSink {
    * @return this instance
    */
   PrimitiveSink putBytes(byte[] bytes);
-  
+
   /**
    * Puts a chunk of an array of bytes into this sink. {@code bytes[off]} is the first byte written,
    * {@code bytes[off + len - 1]} is the last. 

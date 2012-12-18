@@ -159,7 +159,6 @@ public final class UnsignedLongs {
   enum LexicographicalComparator implements Comparator<long[]> {
     INSTANCE;
 
-    @Override
     public int compare(long[] left, long[] right) {
       int minLength = Math.min(left.length, right.length);
       for (int i = 0; i < minLength; i++) {
@@ -272,8 +271,8 @@ public final class UnsignedLongs {
     try {
       return parseUnsignedLong(request.rawValue, request.radix);
     } catch (NumberFormatException e) {
-      NumberFormatException decodeException =
-          new NumberFormatException("Error parsing value: " + stringValue);
+      NumberFormatException decodeException = new NumberFormatException("Error parsing value: "
+          + stringValue);
       decodeException.initCause(e);
       throw decodeException;
     }

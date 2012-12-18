@@ -10,8 +10,8 @@
     <version>7</version>
   </parent>
   <groupId>com.google.guava</groupId>
-  <artifactId>guava-parent</artifactId>
-  <version>14.0-rc1</version>
+  <artifactId>guava-parent-jdk5</artifactId>
+  <version>14.0</version>
   <packaging>pom</packaging>
   <name>Guava Maven Parent</name>
   <url>http://code.google.com/p/guava-libraries</url>
@@ -31,7 +31,7 @@
     </license>
   </licenses>
   <prerequisites>
-    <maven>3.0.3</maven>
+    <maven>2.0.9</maven>
   </prerequisites>
   <scm>
     <connection>scm:git:https://code.google.com/p/guava-libraries/</connection>
@@ -54,7 +54,7 @@
   </developers>
   <modules>
     <module>guava</module>
-    <module>guava-gwt</module>
+    <module>guava-bootstrap</module>
     <module>guava-testlib</module>
     <module>guava-tests</module>
   </modules>

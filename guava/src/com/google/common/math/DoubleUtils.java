@@ -17,14 +17,10 @@
 package com.google.common.math;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static java.lang.Double.MAX_EXPONENT;
-import static java.lang.Double.MIN_EXPONENT;
 import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.Double.doubleToRawLongBits;
 import static java.lang.Double.isNaN;
 import static java.lang.Double.longBitsToDouble;
-import static java.lang.Math.getExponent;
-
 import java.math.BigInteger;
 
 /**
@@ -33,8 +29,7 @@ import java.math.BigInteger;
  * @author Louis Wasserman
  */
 final class DoubleUtils {
-  private DoubleUtils() {
-  }
+  private DoubleUtils() {}
 
   static double nextDown(double d) {
     return -Math.nextUp(-d);
@@ -66,9 +61,7 @@ final class DoubleUtils {
     int exponent = getExponent(d);
     long bits = doubleToRawLongBits(d);
     bits &= SIGNIFICAND_MASK;
-    return (exponent == MIN_EXPONENT - 1)
-        ? bits << 1
-        : bits | IMPLICIT_BIT;
+    return (exponent == MIN_EXPONENT - 1) ? bits << 1 : bits | IMPLICIT_BIT;
   }
 
   static boolean isFinite(double d) {

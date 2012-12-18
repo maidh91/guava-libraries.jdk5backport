@@ -184,7 +184,7 @@ public abstract class BaseEncoding {
       final OutputSupplier<Writer> writerSupplier) {
     checkNotNull(writerSupplier);
     return new OutputSupplier<OutputStream>() {
-      @Override
+
       public OutputStream getOutput() throws IOException {
         return encodingStream(writerSupplier.getOutput());
       }
@@ -241,7 +241,7 @@ public abstract class BaseEncoding {
   public InputSupplier<InputStream> decodingStream(final InputSupplier<Reader> readerSupplier) {
     checkNotNull(readerSupplier);
     return new InputSupplier<InputStream>() {
-      @Override
+
       public InputStream getInput() throws IOException {
         return decodingStream(readerSupplier.getInput());
       }
@@ -310,8 +310,8 @@ public abstract class BaseEncoding {
   @CheckReturnValue
   public abstract BaseEncoding lowerCase();
 
-  private static final BaseEncoding BASE64 = new StandardBaseEncoding(
-      "base64()", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", '=');
+  private static final BaseEncoding BASE64 = new StandardBaseEncoding("base64()",
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", '=');
 
   /**
    * The "base64" base encoding specified by <a
@@ -330,8 +330,8 @@ public abstract class BaseEncoding {
     return BASE64;
   }
 
-  private static final BaseEncoding BASE64_URL = new StandardBaseEncoding(
-      "base64Url()", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", '=');
+  private static final BaseEncoding BASE64_URL = new StandardBaseEncoding("base64Url()",
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", '=');
 
   /**
    * The "base64url" encoding specified by <a
@@ -351,8 +351,8 @@ public abstract class BaseEncoding {
     return BASE64_URL;
   }
 
-  private static final BaseEncoding BASE32 =
-      new StandardBaseEncoding("base32()", "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", '=');
+  private static final BaseEncoding BASE32 = new StandardBaseEncoding("base32()",
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567", '=');
 
   /**
    * The "base32" encoding specified by <a
@@ -371,8 +371,8 @@ public abstract class BaseEncoding {
     return BASE32;
   }
 
-  private static final BaseEncoding BASE32_HEX =
-      new StandardBaseEncoding("base32Hex()", "0123456789ABCDEFGHIJKLMNOPQRSTUV", '=');
+  private static final BaseEncoding BASE32_HEX = new StandardBaseEncoding("base32Hex()",
+      "0123456789ABCDEFGHIJKLMNOPQRSTUV", '=');
 
   /**
    * The "base32hex" encoding specified by <a
@@ -390,8 +390,8 @@ public abstract class BaseEncoding {
     return BASE32_HEX;
   }
 
-  private static final BaseEncoding BASE16 =
-      new StandardBaseEncoding("base16()", "0123456789ABCDEF", null);
+  private static final BaseEncoding BASE16 = new StandardBaseEncoding("base16()",
+      "0123456789ABCDEF", null);
 
   /**
    * The "base16" encoding specified by <a
@@ -563,30 +563,25 @@ public abstract class BaseEncoding {
         int bitBufferLength = 0;
         int writtenChars = 0;
 
-        @Override
         public void write(byte b) throws IOException {
           bitBuffer <<= 8;
           bitBuffer |= b & 0xFF;
           bitBufferLength += 8;
           while (bitBufferLength >= alphabet.bitsPerChar) {
-            int charIndex = (bitBuffer >> (bitBufferLength - alphabet.bitsPerChar))
-                & alphabet.mask;
+            int charIndex = (bitBuffer >> (bitBufferLength - alphabet.bitsPerChar)) & alphabet.mask;
             out.write(alphabet.encode(charIndex));
             writtenChars++;
             bitBufferLength -= alphabet.bitsPerChar;
           }
         }
 
-        @Override
         public void flush() throws IOException {
           out.flush();
         }
 
-        @Override
         public void close() throws IOException {
           if (bitBufferLength > 0) {
-            int charIndex = (bitBuffer << (alphabet.bitsPerChar - bitBufferLength))
-                & alphabet.mask;
+            int charIndex = (bitBuffer << (alphabet.bitsPerChar - bitBufferLength)) & alphabet.mask;
             out.write(alphabet.encode(charIndex));
             writtenChars++;
             if (paddingChar != null) {
@@ -616,7 +611,6 @@ public abstract class BaseEncoding {
         boolean hitPadding = false;
         final CharMatcher paddingMatcher = paddingMatcher();
 
-        @Override
         public int read() throws IOException {
           while (true) {
             int readChar = reader.read();
@@ -635,8 +629,8 @@ public abstract class BaseEncoding {
               }
               hitPadding = true;
             } else if (hitPadding) {
-              throw new IOException(
-                  "Expected padding character but found '" + ch + "' at index " + readChars);
+              throw new IOException("Expected padding character but found '" + ch + "' at index "
+                  + readChars);
             } else {
               bitBuffer <<= alphabet.bitsPerChar;
               bitBuffer |= alphabet.decode(ch);
@@ -650,7 +644,6 @@ public abstract class BaseEncoding {
           }
         }
 
-        @Override
         public void close() throws IOException {
           reader.close();
         }
@@ -664,8 +657,8 @@ public abstract class BaseEncoding {
 
     @Override
     public BaseEncoding withPadChar(char padChar) {
-      if (8 % alphabet.bitsPerChar == 0 ||
-          (paddingChar != null && paddingChar.charValue() == padChar)) {
+      if (8 % alphabet.bitsPerChar == 0
+          || (paddingChar != null && paddingChar.charValue() == padChar)) {
         return this;
       } else {
         return new StandardBaseEncoding(alphabet, padChar);
@@ -688,8 +681,8 @@ public abstract class BaseEncoding {
       BaseEncoding result = upperCase;
       if (result == null) {
         Alphabet upper = alphabet.upperCase();
-        result = upperCase =
-            (upper == alphabet) ? this : new StandardBaseEncoding(upper, paddingChar);
+        result = upperCase = (upper == alphabet) ? this : new StandardBaseEncoding(upper,
+            paddingChar);
       }
       return result;
     }
@@ -699,8 +692,8 @@ public abstract class BaseEncoding {
       BaseEncoding result = lowerCase;
       if (result == null) {
         Alphabet lower = alphabet.lowerCase();
-        result = lowerCase =
-            (lower == alphabet) ? this : new StandardBaseEncoding(lower, paddingChar);
+        result = lowerCase = (lower == alphabet) ? this : new StandardBaseEncoding(lower,
+            paddingChar);
       }
       return result;
     }
@@ -724,7 +717,7 @@ public abstract class BaseEncoding {
     checkNotNull(delegate);
     checkNotNull(toIgnore);
     return new CharInput() {
-      @Override
+
       public int read() throws IOException {
         int readChar;
         do {
@@ -733,22 +726,20 @@ public abstract class BaseEncoding {
         return readChar;
       }
 
-      @Override
       public void close() throws IOException {
         delegate.close();
       }
     };
   }
 
-  static CharOutput separatingOutput(
-      final CharOutput delegate, final String separator, final int afterEveryChars) {
+  static CharOutput separatingOutput(final CharOutput delegate, final String separator,
+      final int afterEveryChars) {
     checkNotNull(delegate);
     checkNotNull(separator);
     checkArgument(afterEveryChars > 0);
     return new CharOutput() {
       int charsUntilSeparator = afterEveryChars;
 
-      @Override
       public void write(char c) throws IOException {
         if (charsUntilSeparator == 0) {
           for (int i = 0; i < separator.length(); i++) {
@@ -760,12 +751,10 @@ public abstract class BaseEncoding {
         charsUntilSeparator--;
       }
 
-      @Override
       public void flush() throws IOException {
         delegate.flush();
       }
 
-      @Override
       public void close() throws IOException {
         delegate.close();
       }
@@ -782,8 +771,8 @@ public abstract class BaseEncoding {
       this.delegate = checkNotNull(delegate);
       this.separator = checkNotNull(separator);
       this.afterEveryChars = afterEveryChars;
-      checkArgument(
-          afterEveryChars > 0, "Cannot add a separator after every %s chars", afterEveryChars);
+      checkArgument(afterEveryChars > 0, "Cannot add a separator after every %s chars",
+          afterEveryChars);
       this.separatorChars = CharMatcher.anyOf(separator).precomputed();
     }
 
@@ -836,8 +825,7 @@ public abstract class BaseEncoding {
 
     @Override
     public String toString() {
-      return delegate.toString() +
-          ".withSeparator(\"" + separator + "\", " + afterEveryChars + ")";
+      return delegate.toString() + ".withSeparator(\"" + separator + "\", " + afterEveryChars + ")";
     }
   }
 }

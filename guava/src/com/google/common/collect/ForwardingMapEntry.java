@@ -52,35 +52,34 @@ import javax.annotation.Nullable;
  * @since 2.0 (imported from Google Collections Library)
  */
 @GwtCompatible
-public abstract class ForwardingMapEntry<K, V>
-    extends ForwardingObject implements Map.Entry<K, V> {
+public abstract class ForwardingMapEntry<K, V> extends ForwardingObject implements Map.Entry<K, V> {
   // TODO(user): identify places where thread safety is actually lost
 
   /** Constructor for use by subclasses. */
   protected ForwardingMapEntry() {}
 
-  @Override protected abstract Map.Entry<K, V> delegate();
-
   @Override
+  protected abstract Map.Entry<K, V> delegate();
+
   public K getKey() {
     return delegate().getKey();
   }
 
-  @Override
   public V getValue() {
     return delegate().getValue();
   }
 
-  @Override
   public V setValue(V value) {
     return delegate().setValue(value);
   }
 
-  @Override public boolean equals(@Nullable Object object) {
+  @Override
+  public boolean equals(@Nullable Object object) {
     return delegate().equals(object);
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return delegate().hashCode();
   }
 
@@ -122,7 +121,8 @@ public abstract class ForwardingMapEntry<K, V>
    *
    * @since 7.0
    */
-  @Beta protected String standardToString() {
+  @Beta
+  protected String standardToString() {
     return getKey() + "=" + getValue();
   }
 }

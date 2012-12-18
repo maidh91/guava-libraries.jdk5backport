@@ -34,8 +34,8 @@ import javax.annotation.Nullable;
  */
 @Beta
 public final class Closeables {
-  @VisibleForTesting static final Logger logger
-      = Logger.getLogger(Closeables.class.getName());
+  @VisibleForTesting
+  static final Logger logger = Logger.getLogger(Closeables.class.getName());
 
   private Closeables() {}
 
@@ -69,8 +69,8 @@ public final class Closeables {
    * @throws IOException if {@code swallowIOException} is false and
    *     {@code close} throws an {@code IOException}.
    */
-  public static void close(@Nullable Closeable closeable,
-      boolean swallowIOException) throws IOException {
+  public static void close(@Nullable Closeable closeable, boolean swallowIOException)
+      throws IOException {
     if (closeable == null) {
       return;
     }
@@ -78,8 +78,7 @@ public final class Closeables {
       closeable.close();
     } catch (IOException e) {
       if (swallowIOException) {
-        logger.log(Level.WARNING,
-            "IOException thrown while closing Closeable.", e);
+        logger.log(Level.WARNING, "IOException thrown while closing Closeable.", e);
       } else {
         throw e;
       }

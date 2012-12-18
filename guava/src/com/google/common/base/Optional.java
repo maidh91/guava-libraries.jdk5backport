@@ -91,9 +91,7 @@ public abstract class Optional<T> implements Serializable {
    * reference; otherwise returns {@link Optional#absent}.
    */
   public static <T> Optional<T> fromNullable(@Nullable T nullableReference) {
-    return (nullableReference == null)
-        ? Optional.<T>absent()
-        : new Present<T>(nullableReference);
+    return (nullableReference == null) ? Optional.<T> absent() : new Present<T>(nullableReference);
   }
 
   Optional() {}
@@ -190,12 +188,14 @@ public abstract class Optional<T> implements Serializable {
    * are absent. Note that {@code Optional} instances of differing parameterized types can
    * be equal.
    */
+
   @Override
   public abstract boolean equals(@Nullable Object object);
 
   /**
    * Returns a hash code for this instance.
    */
+
   @Override
   public abstract int hashCode();
 
@@ -203,6 +203,7 @@ public abstract class Optional<T> implements Serializable {
    * Returns a string representation for this instance. The form of this string
    * representation is unspecified.
    */
+
   @Override
   public abstract String toString();
 
@@ -218,11 +219,11 @@ public abstract class Optional<T> implements Serializable {
       final Iterable<? extends Optional<? extends T>> optionals) {
     checkNotNull(optionals);
     return new Iterable<T>() {
-      @Override
+
       public Iterator<T> iterator() {
         return new AbstractIterator<T>() {
-          private final Iterator<? extends Optional<? extends T>> iterator =
-              checkNotNull(optionals.iterator());
+          private final Iterator<? extends Optional<? extends T>> iterator = checkNotNull(optionals
+              .iterator());
 
           @Override
           protected T computeNext() {

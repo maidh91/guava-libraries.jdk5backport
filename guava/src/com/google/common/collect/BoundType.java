@@ -29,6 +29,7 @@ public enum BoundType {
    * The endpoint value <i>is not</i> considered part of the set ("exclusive").
    */
   OPEN {
+
     @Override
     BoundType flip() {
       return CLOSED;
@@ -38,6 +39,7 @@ public enum BoundType {
    * The endpoint value <i>is</i> considered part of the set ("inclusive").
    */
   CLOSED {
+
     @Override
     BoundType flip() {
       return OPEN;

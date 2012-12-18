@@ -68,8 +68,7 @@ public abstract class CharSink {
    */
   public BufferedWriter openBufferedStream() throws IOException {
     Writer writer = openStream();
-    return (writer instanceof BufferedWriter)
-        ? (BufferedWriter) writer
+    return (writer instanceof BufferedWriter) ? (BufferedWriter) writer
         : new BufferedWriter(writer);
   }
 

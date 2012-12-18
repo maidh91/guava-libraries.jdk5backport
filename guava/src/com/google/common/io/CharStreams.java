@@ -70,8 +70,7 @@ public final class CharStreams {
    * @param value the string to read
    * @return the factory
    */
-  public static InputSupplier<StringReader> newReaderSupplier(
-      final String value) {
+  public static InputSupplier<StringReader> newReaderSupplier(final String value) {
     return CharStreams.asInputSupplier(asCharSource(value));
   }
 
@@ -86,8 +85,7 @@ public final class CharStreams {
 
   private static final class StringCharSource extends CharSource {
 
-    private static final Splitter LINE_SPLITTER
-        = Splitter.on(Pattern.compile("\r\n|\n|\r"));
+    private static final Splitter LINE_SPLITTER = Splitter.on(Pattern.compile("\r\n|\n|\r"));
 
     private final String string;
 
@@ -112,7 +110,7 @@ public final class CharStreams {
      */
     private Iterable<String> lines() {
       return new Iterable<String>() {
-        @Override
+
         public Iterator<String> iterator() {
           return new AbstractIterator<String>() {
             Iterator<String> lines = LINE_SPLITTER.split(string).iterator();
@@ -146,9 +144,7 @@ public final class CharStreams {
 
     @Override
     public String toString() {
-      String limited = (string.length() <= 15)
-          ? string
-          : string.substring(0, 12) + "...";
+      String limited = (string.length() <= 15) ? string : string.substring(0, 12) + "...";
       return "CharStreams.newCharSource(" + limited + ")";
     }
   }
@@ -164,8 +160,7 @@ public final class CharStreams {
    */
   public static InputSupplier<InputStreamReader> newReaderSupplier(
       final InputSupplier<? extends InputStream> in, final Charset charset) {
-    return CharStreams.asInputSupplier(
-        ByteStreams.asByteSource(in).asCharSource(charset));
+    return CharStreams.asInputSupplier(ByteStreams.asByteSource(in).asCharSource(charset));
   }
 
   /**
@@ -179,8 +174,7 @@ public final class CharStreams {
    */
   public static OutputSupplier<OutputStreamWriter> newWriterSupplier(
       final OutputSupplier<? extends OutputStream> out, final Charset charset) {
-    return CharStreams.asOutputSupplier(
-        ByteStreams.asByteSink(out).asCharSink(charset));
+    return CharStreams.asOutputSupplier(ByteStreams.asByteSink(out).asCharSink(charset));
   }
 
   /**
@@ -206,9 +200,8 @@ public final class CharStreams {
    * @return the number of characters copied
    * @throws IOException if an I/O error occurs
    */
-  public static <R extends Readable & Closeable,
-      W extends Appendable & Closeable> long copy(InputSupplier<R> from,
-      OutputSupplier<W> to) throws IOException {
+  public static <R extends Readable & Closeable, W extends Appendable & Closeable> long copy(
+      InputSupplier<R> from, OutputSupplier<W> to) throws IOException {
     return asCharSource(from).copyTo(asCharSink(to));
   }
 
@@ -222,8 +215,8 @@ public final class CharStreams {
    * @return the number of characters copied
    * @throws IOException if an I/O error occurs
    */
-  public static <R extends Readable & Closeable> long copy(
-      InputSupplier<R> from, Appendable to) throws IOException {
+  public static <R extends Readable & Closeable> long copy(InputSupplier<R> from, Appendable to)
+      throws IOException {
     return asCharSource(from).copyTo(to);
   }
 
@@ -270,8 +263,8 @@ public final class CharStreams {
    * @return a string containing all the characters
    * @throws IOException if an I/O error occurs
    */
-  public static <R extends Readable & Closeable> String toString(
-      InputSupplier<R> supplier) throws IOException {
+  public static <R extends Readable & Closeable> String toString(InputSupplier<R> supplier)
+      throws IOException {
     return asCharSource(supplier).read();
   }
 
@@ -298,8 +291,8 @@ public final class CharStreams {
    * @return the first line, or null if the reader is empty
    * @throws IOException if an I/O error occurs
    */
-  public static <R extends Readable & Closeable> String readFirstLine(
-      InputSupplier<R> supplier) throws IOException {
+  public static <R extends Readable & Closeable> String readFirstLine(InputSupplier<R> supplier)
+      throws IOException {
     return asCharSource(supplier).readFirstLine();
   }
 
@@ -312,8 +305,8 @@ public final class CharStreams {
    * @return a mutable {@link List} containing all the lines
    * @throws IOException if an I/O error occurs
    */
-  public static <R extends Readable & Closeable> List<String> readLines(
-      InputSupplier<R> supplier) throws IOException {
+  public static <R extends Readable & Closeable> List<String> readLines(InputSupplier<R> supplier)
+      throws IOException {
     Closer closer = Closer.create();
     try {
       R r = closer.add(supplier.getInput());
@@ -358,8 +351,7 @@ public final class CharStreams {
    * @throws IOException if an I/O error occurs
    * @since 14.0
    */
-  public static <T> T readLines(
-      Readable readable, LineProcessor<T> processor) throws IOException {
+  public static <T> T readLines(Readable readable, LineProcessor<T> processor) throws IOException {
     checkNotNull(readable);
     checkNotNull(processor);
 
@@ -383,8 +375,8 @@ public final class CharStreams {
    * @return the output of processing the lines
    * @throws IOException if an I/O error occurs
    */
-  public static <R extends Readable & Closeable, T> T readLines(
-      InputSupplier<R> supplier, LineProcessor<T> callback) throws IOException {
+  public static <R extends Readable & Closeable, T> T readLines(InputSupplier<R> supplier,
+      LineProcessor<T> callback) throws IOException {
     checkNotNull(supplier);
     checkNotNull(callback);
 
@@ -418,15 +410,14 @@ public final class CharStreams {
       final Iterable<? extends InputSupplier<? extends Reader>> suppliers) {
     checkNotNull(suppliers);
     return new InputSupplier<Reader>() {
-      @Override public Reader getInput() throws IOException {
+      public Reader getInput() throws IOException {
         return new MultiReader(suppliers.iterator());
       }
     };
   }
 
   /** Varargs form of {@link #join(Iterable)}. */
-  public static InputSupplier<Reader> join(
-      InputSupplier<? extends Reader>... suppliers) {
+  public static InputSupplier<Reader> join(InputSupplier<? extends Reader>... suppliers) {
     return join(Arrays.asList(suppliers));
   }
 
@@ -482,6 +473,7 @@ public final class CharStreams {
       return (Reader) readable;
     }
     return new Reader() {
+
       @Override
       public int read(char[] cbuf, int off, int len) throws IOException {
         return read(CharBuffer.wrap(cbuf, off, len));
@@ -499,32 +491,30 @@ public final class CharStreams {
     };
   }
 
-  static <R extends Reader> InputSupplier<R> asInputSupplier(
-      final CharSource source) {
+  static <R extends Reader> InputSupplier<R> asInputSupplier(final CharSource source) {
     checkNotNull(source);
     return new InputSupplier<R>() {
-      @Override
+
       public R getInput() throws IOException {
         return (R) source.openStream();
       }
     };
   }
 
-  static <W extends Writer> OutputSupplier<W> asOutputSupplier(
-      final CharSink sink) {
+  static <W extends Writer> OutputSupplier<W> asOutputSupplier(final CharSink sink) {
     checkNotNull(sink);
     return new OutputSupplier<W>() {
-      @Override
+
       public W getOutput() throws IOException {
         return (W) sink.openStream();
       }
     };
   }
 
-  static <R extends Readable & Closeable> CharSource asCharSource(
-      final InputSupplier<R> supplier) {
+  static <R extends Readable & Closeable> CharSource asCharSource(final InputSupplier<R> supplier) {
     checkNotNull(supplier);
     return new CharSource() {
+
       @Override
       public Reader openStream() throws IOException {
         return asReader(supplier.getInput());
@@ -532,10 +522,10 @@ public final class CharStreams {
     };
   }
 
-  static <W extends Appendable & Closeable> CharSink asCharSink(
-      final OutputSupplier<W> supplier) {
+  static <W extends Appendable & Closeable> CharSink asCharSink(final OutputSupplier<W> supplier) {
     checkNotNull(supplier);
     return new CharSink() {
+
       @Override
       public Writer openStream() throws IOException {
         return asWriter(supplier.getOutput());

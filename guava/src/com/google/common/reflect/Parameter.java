@@ -40,11 +40,7 @@ public final class Parameter implements AnnotatedElement {
   private final TypeToken<?> type;
   private final ImmutableList<Annotation> annotations;
 
-  Parameter(
-      Invokable<?, ?> declaration,
-      int position,
-      TypeToken<?> type,
-      Annotation[] annotations) {
+  Parameter(Invokable<?, ?> declaration, int position, TypeToken<?> type, Annotation[] annotations) {
     this.declaration = declaration;
     this.position = position;
     this.type = type;
@@ -61,11 +57,10 @@ public final class Parameter implements AnnotatedElement {
     return declaration;
   }
 
-  @Override public boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
+  public boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
     return getAnnotation(annotationType) != null;
   }
 
-  @Override
   @Nullable
   public <A extends Annotation> A getAnnotation(Class<A> annotationType) {
     checkNotNull(annotationType);
@@ -77,15 +72,16 @@ public final class Parameter implements AnnotatedElement {
     return null;
   }
 
-  @Override public Annotation[] getAnnotations() {
+  public Annotation[] getAnnotations() {
     return getDeclaredAnnotations();
   }
 
-  @Override public Annotation[] getDeclaredAnnotations() {
+  public Annotation[] getDeclaredAnnotations() {
     return annotations.toArray(new Annotation[annotations.size()]);
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof Parameter) {
       Parameter that = (Parameter) obj;
       return position == that.position && declaration.equals(that.declaration);
@@ -93,11 +89,13 @@ public final class Parameter implements AnnotatedElement {
     return false;
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return position;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return type + " arg" + position;
   }
 }

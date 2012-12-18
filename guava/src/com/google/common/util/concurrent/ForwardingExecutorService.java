@@ -36,67 +36,53 @@ import java.util.concurrent.TimeoutException;
  * @author Kurt Alfred Kluever
  * @since 10.0
  */
-public abstract class ForwardingExecutorService extends ForwardingObject
-    implements ExecutorService {
+public abstract class ForwardingExecutorService extends ForwardingObject implements ExecutorService {
   /** Constructor for use by subclasses. */
   protected ForwardingExecutorService() {}
-  
+
   @Override
   protected abstract ExecutorService delegate();
 
-  @Override
-  public boolean awaitTermination(long timeout, TimeUnit unit)
-      throws InterruptedException {
+  public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
     return delegate().awaitTermination(timeout, unit);
   }
 
-  @Override
-  public <T> List<Future<T>> invokeAll(
-      Collection<? extends Callable<T>> tasks) throws InterruptedException {
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+      throws InterruptedException {
     return delegate().invokeAll(tasks);
   }
 
-  @Override
-  public <T> List<Future<T>> invokeAll(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
-      throws InterruptedException {
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout,
+      TimeUnit unit) throws InterruptedException {
     return delegate().invokeAll(tasks, timeout, unit);
   }
 
-  @Override
-  public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
-      throws InterruptedException, ExecutionException {
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException,
+      ExecutionException {
     return delegate().invokeAny(tasks);
   }
 
-  @Override
-  public <T> T invokeAny(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return delegate().invokeAny(tasks, timeout, unit);
   }
 
-  @Override
   public boolean isShutdown() {
     return delegate().isShutdown();
   }
 
-  @Override
   public boolean isTerminated() {
     return delegate().isTerminated();
   }
 
-  @Override
   public void shutdown() {
     delegate().shutdown();
   }
 
-  @Override
   public List<Runnable> shutdownNow() {
     return delegate().shutdownNow();
   }
 
-  @Override
   public void execute(Runnable command) {
     delegate().execute(command);
   }
@@ -105,12 +91,10 @@ public abstract class ForwardingExecutorService extends ForwardingObject
     return delegate().submit(task);
   }
 
-  @Override
   public Future<?> submit(Runnable task) {
     return delegate().submit(task);
   }
 
-  @Override
   public <T> Future<T> submit(Runnable task, T result) {
     return delegate().submit(task, result);
   }

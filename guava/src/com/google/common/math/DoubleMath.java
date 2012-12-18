@@ -27,8 +27,6 @@ import static com.google.common.math.MathPreconditions.checkInRange;
 import static com.google.common.math.MathPreconditions.checkNonNegative;
 import static com.google.common.math.MathPreconditions.checkRoundingUnnecessary;
 import static java.lang.Math.abs;
-import static java.lang.Math.copySign;
-import static java.lang.Math.getExponent;
 import static java.lang.Math.log;
 import static java.lang.Math.rint;
 
@@ -266,8 +264,7 @@ public final class DoubleMath {
    */
   public static boolean isMathematicalInteger(double x) {
     return isFinite(x)
-        && (x == 0.0 ||
-            SIGNIFICAND_BITS - Long.numberOfTrailingZeros(getSignificand(x)) <= getExponent(x));
+        && (x == 0.0 || SIGNIFICAND_BITS - Long.numberOfTrailingZeros(getSignificand(x)) <= getExponent(x));
   }
 
   /**
@@ -298,18 +295,10 @@ public final class DoubleMath {
   static final int MAX_FACTORIAL = 170;
 
   @VisibleForTesting
-  static final double[] everySixteenthFactorial = {
-      0x1.0p0,
-      0x1.30777758p44,
-      0x1.956ad0aae33a4p117,
-      0x1.ee69a78d72cb6p202,
-      0x1.fe478ee34844ap295,
-      0x1.c619094edabffp394,
-      0x1.3638dd7bd6347p498,
-      0x1.7cac197cfe503p605,
-      0x1.1e5dfc140e1e5p716,
-      0x1.8ce85fadb707ep829,
-      0x1.95d5f3d928edep945};
+  static final double[] everySixteenthFactorial = { 0x1.0p0, 0x1.30777758p44,
+      0x1.956ad0aae33a4p117, 0x1.ee69a78d72cb6p202, 0x1.fe478ee34844ap295, 0x1.c619094edabffp394,
+      0x1.3638dd7bd6347p498, 0x1.7cac197cfe503p605, 0x1.1e5dfc140e1e5p716, 0x1.8ce85fadb707ep829,
+      0x1.95d5f3d928edep945 };
 
   /**
    * Returns {@code true} if {@code a} and {@code b} are within {@code tolerance} of each other.
@@ -338,11 +327,10 @@ public final class DoubleMath {
    */
   public static boolean fuzzyEquals(double a, double b, double tolerance) {
     MathPreconditions.checkNonNegative("tolerance", tolerance);
-    return
-          Math.copySign(a - b, 1.0) <= tolerance
-           // copySign(x, 1.0) is a branch-free version of abs(x), but with different NaN semantics
-          || (a == b) // needed to ensure that infinities equal themselves
-          || ((a != a) && (b != b)); // x != x is equivalent to Double.isNaN(x), but faster
+    return Math.copySign(a - b, 1.0) <= tolerance
+    // copySign(x, 1.0) is a branch-free version of abs(x), but with different NaN semantics
+        || (a == b) // needed to ensure that infinities equal themselves
+        || ((a != a) && (b != b)); // x != x is equivalent to Double.isNaN(x), but faster
   }
 
   /**

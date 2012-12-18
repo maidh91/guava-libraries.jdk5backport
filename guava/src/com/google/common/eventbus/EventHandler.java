@@ -51,8 +51,7 @@ class EventHandler {
    * @param method  handler method.
    */
   EventHandler(Object target, Method method) {
-    Preconditions.checkNotNull(target,
-        "EventHandler target cannot be null.");
+    Preconditions.checkNotNull(target, "EventHandler target cannot be null.");
     Preconditions.checkNotNull(method, "EventHandler method cannot be null.");
 
     this.target = target;
@@ -84,17 +83,19 @@ class EventHandler {
     }
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "[wrapper " + method + "]";
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     final int PRIME = 31;
-    return (PRIME + method.hashCode()) * PRIME
-        + System.identityHashCode(target);
+    return (PRIME + method.hashCode()) * PRIME + System.identityHashCode(target);
   }
 
-  @Override public boolean equals(@Nullable Object obj) {
+  @Override
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof EventHandler) {
       EventHandler that = (EventHandler) obj;
       // Use == so that different equal instances will still receive events.

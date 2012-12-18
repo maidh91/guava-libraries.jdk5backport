@@ -43,7 +43,8 @@ public final class Funnels {
       into.putBytes(from);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Funnels.byteArrayFunnel()";
     }
   }
@@ -62,11 +63,12 @@ public final class Funnels {
       into.putString(from);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       return "Funnels.stringFunnel()";
     }
   }
-  
+
   /**
    * Returns a funnel for integers.
    * 
@@ -75,15 +77,16 @@ public final class Funnels {
   public static Funnel<Integer> integerFunnel() {
     return IntegerFunnel.INSTANCE;
   }
-  
+
   private enum IntegerFunnel implements Funnel<Integer> {
     INSTANCE;
-    
+
     public void funnel(Integer from, PrimitiveSink into) {
       into.putInt(from);
     }
-    
-    @Override public String toString() {
+
+    @Override
+    public String toString() {
       return "Funnels.integerFunnel()";
     }
   }
@@ -96,19 +99,20 @@ public final class Funnels {
   public static Funnel<Long> longFunnel() {
     return LongFunnel.INSTANCE;
   }
-  
+
   private enum LongFunnel implements Funnel<Long> {
     INSTANCE;
-    
+
     public void funnel(Long from, PrimitiveSink into) {
       into.putLong(from);
     }
-    
-    @Override public String toString() {
+
+    @Override
+    public String toString() {
       return "Funnels.longFunnel()";
     }
   }
-  
+
   /**
    * Wraps a {@code PrimitiveSink} as an {@link OutputStream}, so it is easy to
    * {@link Funnel#funnel funnel} an object to a {@code PrimitiveSink}
@@ -122,26 +126,31 @@ public final class Funnels {
   public static OutputStream asOutputStream(PrimitiveSink sink) {
     return new SinkAsStream(sink);
   }
-  
+
   private static class SinkAsStream extends OutputStream {
     final PrimitiveSink sink;
+
     SinkAsStream(PrimitiveSink sink) {
       this.sink = Preconditions.checkNotNull(sink);
     }
-    
-    @Override public void write(int b) {
+
+    @Override
+    public void write(int b) {
       sink.putByte((byte) b);
     }
 
-    @Override public void write(byte[] bytes) {
+    @Override
+    public void write(byte[] bytes) {
       sink.putBytes(bytes);
     }
 
-    @Override public void write(byte[] bytes, int off, int len) {
+    @Override
+    public void write(byte[] bytes, int off, int len) {
       sink.putBytes(bytes, off, len);
     }
-    
-    @Override public String toString() {
+
+    @Override
+    public String toString() {
       return "Funnels.asOutputStream(" + sink + ")";
     }
   }

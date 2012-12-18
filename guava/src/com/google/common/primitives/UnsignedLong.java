@@ -96,8 +96,7 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
    * @since 14.0
    */
   public static UnsignedLong valueOf(long value) {
-    checkArgument(value >= 0,
-        "value (%s) is outside the range for an unsigned long value", value);
+    checkArgument(value >= 0, "value (%s) is outside the range for an unsigned long value", value);
     return fromLongBits(value);
   }
 
@@ -254,6 +253,7 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
   /**
    * Returns the value of this {@code UnsignedLong} as an {@code int}.
    */
+
   @Override
   public int intValue() {
     return (int) value;
@@ -266,6 +266,7 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
    * <p>Note that if this {@code UnsignedLong} holds a value {@code >= 2^63}, the returned value
    * will be equal to {@code this - 2^64}.
    */
+
   @Override
   public long longValue() {
     return value;
@@ -275,6 +276,7 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
    * Returns the value of this {@code UnsignedLong} as a {@code float}, analogous to a widening
    * primitive conversion from {@code long} to {@code float}, and correctly rounded.
    */
+
   @Override
   public float floatValue() {
     @SuppressWarnings("cast")
@@ -289,6 +291,7 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
    * Returns the value of this {@code UnsignedLong} as a {@code double}, analogous to a widening
    * primitive conversion from {@code long} to {@code double}, and correctly rounded.
    */
+
   @Override
   public double doubleValue() {
     @SuppressWarnings("cast")
@@ -310,7 +313,6 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
     return bigInt;
   }
 
-  @Override
   public int compareTo(UnsignedLong o) {
     checkNotNull(o);
     return UnsignedLongs.compare(value, o.value);
@@ -333,6 +335,7 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
   /**
    * Returns a string representation of the {@code UnsignedLong} value, in base 10.
    */
+
   @Override
   public String toString() {
     return UnsignedLongs.toString(value);

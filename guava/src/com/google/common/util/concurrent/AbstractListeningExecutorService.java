@@ -44,26 +44,26 @@ import javax.annotation.Nullable;
  */
 @Beta
 public abstract class AbstractListeningExecutorService implements ListeningExecutorService {
-  @Override public ListenableFuture<?> submit(Runnable task) {
+  public ListenableFuture<?> submit(Runnable task) {
     ListenableFutureTask<Void> ftask = ListenableFutureTask.create(task, null);
     execute(ftask);
     return ftask;
   }
 
-  @Override public <T> ListenableFuture<T> submit(Runnable task, @Nullable T result) {
+  public <T> ListenableFuture<T> submit(Runnable task, @Nullable T result) {
     ListenableFutureTask<T> ftask = ListenableFutureTask.create(task, result);
     execute(ftask);
     return ftask;
   }
 
-  @Override public <T> ListenableFuture<T> submit(Callable<T> task) {
+  public <T> ListenableFuture<T> submit(Callable<T> task) {
     ListenableFutureTask<T> ftask = ListenableFutureTask.create(task);
     execute(ftask);
     return ftask;
   }
 
-  @Override public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
-      throws InterruptedException, ExecutionException {
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException,
+      ExecutionException {
     try {
       return invokeAnyImpl(this, tasks, false, 0);
     } catch (TimeoutException cannotHappen) {
@@ -71,13 +71,12 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
     }
   }
 
-  @Override public <T> T invokeAny(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return invokeAnyImpl(this, tasks, true, unit.toNanos(timeout));
   }
 
-  @Override public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
       throws InterruptedException {
     if (tasks == null) {
       throw new NullPointerException();
@@ -94,9 +93,7 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
         if (!f.isDone()) {
           try {
             f.get();
-          } catch (CancellationException ignore) {
-          } catch (ExecutionException ignore) {
-          }
+          } catch (CancellationException ignore) {} catch (ExecutionException ignore) {}
         }
       }
       done = true;
@@ -110,9 +107,8 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
     }
   }
 
-  @Override public <T> List<Future<T>> invokeAll(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
-      throws InterruptedException {
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout,
+      TimeUnit unit) throws InterruptedException {
     if (tasks == null || unit == null) {
       throw new NullPointerException();
     }
@@ -146,9 +142,7 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
           }
           try {
             f.get(nanos, TimeUnit.NANOSECONDS);
-          } catch (CancellationException ignore) {
-          } catch (ExecutionException ignore) {
-          } catch (TimeoutException toe) {
+          } catch (CancellationException ignore) {} catch (ExecutionException ignore) {} catch (TimeoutException toe) {
             return futures;
           }
           long now = System.nanoTime();

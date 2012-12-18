@@ -34,7 +34,6 @@ import javax.annotation.Nullable;
 abstract class ImmutableMapKeySet<K, V> extends ImmutableSet<K> {
   abstract ImmutableMap<K, V> map();
 
-  @Override
   public int size() {
     return map().size();
   }
@@ -44,12 +43,10 @@ abstract class ImmutableMapKeySet<K, V> extends ImmutableSet<K> {
     return new UnmodifiableIterator<K>() {
       final UnmodifiableIterator<Entry<K, V>> entryIterator = map().entrySet().iterator();
 
-      @Override
       public boolean hasNext() {
         return entryIterator.hasNext();
       }
 
-      @Override
       public K next() {
         return entryIterator.next().getKey();
       }
@@ -66,7 +63,6 @@ abstract class ImmutableMapKeySet<K, V> extends ImmutableSet<K> {
     final ImmutableList<Entry<K, V>> entryList = map().entrySet().asList();
     return new ImmutableAsList<K>() {
 
-      @Override
       public K get(int index) {
         return entryList.get(index).getKey();
       }
@@ -84,20 +80,24 @@ abstract class ImmutableMapKeySet<K, V> extends ImmutableSet<K> {
     return true;
   }
 
+  @Override
   @GwtIncompatible("serialization")
-  @Override Object writeReplace() {
+  Object writeReplace() {
     return new KeySetSerializedForm<K>(map());
   }
 
   @GwtIncompatible("serialization")
   private static class KeySetSerializedForm<K> implements Serializable {
     final ImmutableMap<K, ?> map;
+
     KeySetSerializedForm(ImmutableMap<K, ?> map) {
       this.map = map;
     }
+
     Object readResolve() {
       return map.keySet();
     }
+
     private static final long serialVersionUID = 0;
   }
 }

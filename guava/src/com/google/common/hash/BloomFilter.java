@@ -66,8 +66,7 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
      * Queries {@code numHashFunctions} bits of the given bit array, by hashing a user element;
      * returns {@code true} if and only if all selected bits are set.
      */
-    <T> boolean mightContain(
-        T object, Funnel<? super T> funnel, int numHashFunctions, BitArray bits);
+    <T> boolean mightContain(T object, Funnel<? super T> funnel, int numHashFunctions, BitArray bits);
 
     /**
      * Identifier used to encode this strategy, when marshalled as part of a BloomFilter.
@@ -96,12 +95,9 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
   /**
    * Creates a BloomFilter.
    */
-  private BloomFilter(BitArray bits, int numHashFunctions, Funnel<T> funnel,
-      Strategy strategy) {
-    checkArgument(numHashFunctions > 0,
-        "numHashFunctions (%s) must be > 0", numHashFunctions);
-    checkArgument(numHashFunctions <= 255,
-        "numHashFunctions (%s) must be <= 255", numHashFunctions);
+  private BloomFilter(BitArray bits, int numHashFunctions, Funnel<T> funnel, Strategy strategy) {
+    checkArgument(numHashFunctions > 0, "numHashFunctions (%s) must be > 0", numHashFunctions);
+    checkArgument(numHashFunctions <= 255, "numHashFunctions (%s) must be <= 255", numHashFunctions);
     this.bits = checkNotNull(bits);
     this.numHashFunctions = numHashFunctions;
     this.funnel = checkNotNull(funnel);
@@ -131,7 +127,7 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
    * When using a reference of type {@code BloomFilter}, always invoke {@link #mightContain}
    * directly instead.
    */
-  @Override public boolean apply(T input) {
+  public boolean apply(T input) {
     return mightContain(input);
   }
 
@@ -182,10 +178,8 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
     }
     if (object instanceof BloomFilter) {
       BloomFilter<?> that = (BloomFilter<?>) object;
-      return this.numHashFunctions == that.numHashFunctions
-          && this.funnel.equals(that.funnel)
-          && this.bits.equals(that.bits)
-          && this.strategy.equals(that.strategy);
+      return this.numHashFunctions == that.numHashFunctions && this.funnel.equals(that.funnel)
+          && this.bits.equals(that.bits) && this.strategy.equals(that.strategy);
     }
     return false;
   }
@@ -216,8 +210,8 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
    * @param fpp the desired false positive probability (must be positive and less than 1.0)
    * @return a {@code BloomFilter}
    */
-  public static <T> BloomFilter<T> create(
-      Funnel<T> funnel, int expectedInsertions /* n */, double fpp) {
+  public static <T> BloomFilter<T> create(Funnel<T> funnel, int expectedInsertions /* n */,
+      double fpp) {
     checkNotNull(funnel);
     checkArgument(expectedInsertions >= 0, "Expected insertions (%s) must be >= 0",
         expectedInsertions);
@@ -324,9 +318,11 @@ public final class BloomFilter<T> implements Predicate<T>, Serializable {
       this.funnel = bf.funnel;
       this.strategy = bf.strategy;
     }
+
     Object readResolve() {
       return new BloomFilter<T>(new BitArray(data), numHashFunctions, funnel, strategy);
     }
+
     private static final long serialVersionUID = 1;
   }
 }

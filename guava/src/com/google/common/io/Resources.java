@@ -97,8 +97,7 @@ public final class Resources {
    *     Charsets} for helpful predefined constants
    * @return the factory
    */
-  public static InputSupplier<InputStreamReader> newReaderSupplier(
-      URL url, Charset charset) {
+  public static InputSupplier<InputStreamReader> newReaderSupplier(URL url, Charset charset) {
     return CharStreams.asInputSupplier(asCharSource(url, charset));
   }
 
@@ -147,8 +146,8 @@ public final class Resources {
    * @return the output of processing the lines
    * @throws IOException if an I/O error occurs
    */
-  public static <T> T readLines(URL url, Charset charset,
-      LineProcessor<T> callback) throws IOException {
+  public static <T> T readLines(URL url, Charset charset, LineProcessor<T> callback)
+      throws IOException {
     return CharStreams.readLines(newReaderSupplier(url, charset), callback);
   }
 
@@ -163,8 +162,7 @@ public final class Resources {
    * @return a mutable {@link List} containing all the lines
    * @throws IOException if an I/O error occurs
    */
-  public static List<String> readLines(URL url, Charset charset)
-      throws IOException {
+  public static List<String> readLines(URL url, Charset charset) throws IOException {
     return CharStreams.readLines(newReaderSupplier(url, charset));
   }
 
@@ -178,7 +176,7 @@ public final class Resources {
   public static void copy(URL from, OutputStream to) throws IOException {
     asByteSource(from).copyTo(to);
   }
-  
+
   /**
    * Returns a {@code URL} pointing to {@code resourceName} if the resource is
    * found in the class path. {@code Resources.class.getClassLoader()} is used
@@ -200,8 +198,8 @@ public final class Resources {
    */
   public static URL getResource(Class<?> contextClass, String resourceName) {
     URL url = contextClass.getResource(resourceName);
-    checkArgument(url != null, "resource %s relative to %s not found.",
-        resourceName, contextClass.getName());
+    checkArgument(url != null, "resource %s relative to %s not found.", resourceName,
+        contextClass.getName());
     return url;
   }
 }

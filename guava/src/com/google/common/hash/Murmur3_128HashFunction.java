@@ -46,11 +46,11 @@ final class Murmur3_128HashFunction extends AbstractStreamingHashFunction implem
     this.seed = seed;
   }
 
-  @Override public int bits() {
+  public int bits() {
     return 128;
   }
 
-  @Override public Hasher newHasher() {
+  public Hasher newHasher() {
     return new Murmur3_128Hasher(seed);
   }
 
@@ -69,7 +69,8 @@ final class Murmur3_128HashFunction extends AbstractStreamingHashFunction implem
       this.length = 0;
     }
 
-    @Override protected void process(ByteBuffer bb) {
+    @Override
+    protected void process(ByteBuffer bb) {
       long k1 = bb.getLong();
       long k2 = bb.getLong();
       bmix64(k1, k2);
@@ -90,7 +91,8 @@ final class Murmur3_128HashFunction extends AbstractStreamingHashFunction implem
       h2 = h2 * 5 + 0x38495ab5;
     }
 
-    @Override protected void processRemaining(ByteBuffer bb) {
+    @Override
+    protected void processRemaining(ByteBuffer bb) {
       long k1 = 0;
       long k2 = 0;
       length += bb.remaining();
@@ -108,7 +110,7 @@ final class Murmur3_128HashFunction extends AbstractStreamingHashFunction implem
         case 10:
           k2 ^= (long) toInt(bb.get(9)) << 8; // fall through
         case 9:
-          k2 ^= (long) toInt(bb.get(8)); // fall through
+          k2 ^= toInt(bb.get(8)); // fall through
         case 8:
           k1 ^= bb.getLong();
           break;
@@ -125,7 +127,7 @@ final class Murmur3_128HashFunction extends AbstractStreamingHashFunction implem
         case 2:
           k1 ^= (long) toInt(bb.get(1)) << 8; // fall through
         case 1:
-          k1 ^= (long) toInt(bb.get(0));
+          k1 ^= toInt(bb.get(0));
           break;
         default:
           throw new AssertionError("Should never get here.");
@@ -134,7 +136,8 @@ final class Murmur3_128HashFunction extends AbstractStreamingHashFunction implem
       h2 ^= mixK2(k2);
     }
 
-    @Override public HashCode makeHash() {
+    @Override
+    public HashCode makeHash() {
       h1 ^= length;
       h2 ^= length;
 
@@ -147,12 +150,8 @@ final class Murmur3_128HashFunction extends AbstractStreamingHashFunction implem
       h1 += h2;
       h2 += h1;
 
-      return HashCodes.fromBytesNoCopy(ByteBuffer
-          .wrap(new byte[CHUNK_SIZE])
-          .order(ByteOrder.LITTLE_ENDIAN)
-          .putLong(h1)
-          .putLong(h2)
-          .array());
+      return HashCodes.fromBytesNoCopy(ByteBuffer.wrap(new byte[CHUNK_SIZE])
+          .order(ByteOrder.LITTLE_ENDIAN).putLong(h1).putLong(h2).array());
     }
 
     private static long fmix64(long k) {

@@ -32,7 +32,6 @@ import javax.annotation.Nullable;
 final class EmptyImmutableMultiset extends ImmutableMultiset<Object> {
   static final EmptyImmutableMultiset INSTANCE = new EmptyImmutableMultiset();
 
-  @Override
   public int count(@Nullable Object element) {
     return 0;
   }
@@ -66,7 +65,6 @@ final class EmptyImmutableMultiset extends ImmutableMultiset<Object> {
     return 0;
   }
 
-  @Override
   public ImmutableSet<Object> elementSet() {
     return ImmutableSet.of();
   }
@@ -81,7 +79,6 @@ final class EmptyImmutableMultiset extends ImmutableMultiset<Object> {
     throw new AssertionError("should never be called");
   }
 
-  @Override
   public int size() {
     return 0;
   }

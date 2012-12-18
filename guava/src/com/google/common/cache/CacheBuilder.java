@@ -156,33 +156,27 @@ public final class CacheBuilder<K, V> {
   private static final int DEFAULT_EXPIRATION_NANOS = 0;
   private static final int DEFAULT_REFRESH_NANOS = 0;
 
-  static final Supplier<? extends StatsCounter> NULL_STATS_COUNTER = Suppliers.ofInstance(
-      new StatsCounter() {
-        @Override
+  static final Supplier<? extends StatsCounter> NULL_STATS_COUNTER = Suppliers
+      .ofInstance(new StatsCounter() {
+
         public void recordHits(int count) {}
 
-        @Override
         public void recordMisses(int count) {}
 
-        @Override
         public void recordLoadSuccess(long loadTime) {}
 
-        @Override
         public void recordLoadException(long loadTime) {}
 
-        @Override
         public void recordEviction() {}
 
-        @Override
         public CacheStats snapshot() {
           return EMPTY_STATS;
         }
       });
   static final CacheStats EMPTY_STATS = new CacheStats(0, 0, 0, 0, 0, 0);
 
-  static final Supplier<StatsCounter> CACHE_STATS_COUNTER =
-      new Supplier<StatsCounter>() {
-    @Override
+  static final Supplier<StatsCounter> CACHE_STATS_COUNTER = new Supplier<StatsCounter>() {
+
     public StatsCounter get() {
       return new SimpleStatsCounter();
     }
@@ -191,20 +185,19 @@ public final class CacheBuilder<K, V> {
   enum NullListener implements RemovalListener<Object, Object> {
     INSTANCE;
 
-    @Override
     public void onRemoval(RemovalNotification<Object, Object> notification) {}
   }
 
   enum OneWeigher implements Weigher<Object, Object> {
     INSTANCE;
 
-    @Override
     public int weigh(Object key, Object value) {
       return 1;
     }
   }
 
   static final Ticker NULL_TICKER = new Ticker() {
+
     @Override
     public long read() {
       return 0;
@@ -257,8 +250,7 @@ public final class CacheBuilder<K, V> {
   @Beta
   @GwtIncompatible("To be supported")
   public static CacheBuilder<Object, Object> from(CacheBuilderSpec spec) {
-    return spec.toCacheBuilder()
-        .lenientParsing();
+    return spec.toCacheBuilder().lenientParsing();
   }
 
   /**
@@ -309,8 +301,8 @@ public final class CacheBuilder<K, V> {
    */
   @GwtIncompatible("To be supported")
   CacheBuilder<K, V> valueEquivalence(Equivalence<Object> equivalence) {
-    checkState(valueEquivalence == null,
-        "value equivalence was already set to %s", valueEquivalence);
+    checkState(valueEquivalence == null, "value equivalence was already set to %s",
+        valueEquivalence);
     this.valueEquivalence = checkNotNull(equivalence);
     return this;
   }
@@ -646,8 +638,8 @@ public final class CacheBuilder<K, V> {
   }
 
   long getExpireAfterAccessNanos() {
-    return (expireAfterAccessNanos == UNSET_INT)
-        ? DEFAULT_EXPIRATION_NANOS : expireAfterAccessNanos;
+    return (expireAfterAccessNanos == UNSET_INT) ? DEFAULT_EXPIRATION_NANOS
+        : expireAfterAccessNanos;
   }
 
   /**
@@ -779,8 +771,7 @@ public final class CacheBuilder<K, V> {
    * @param loader the cache loader used to obtain new values
    * @return a cache having the requested features
    */
-  public <K1 extends K, V1 extends V> LoadingCache<K1, V1> build(
-      CacheLoader<? super K1, V1> loader) {
+  public <K1 extends K, V1 extends V> LoadingCache<K1, V1> build(CacheLoader<? super K1, V1> loader) {
     checkWeightWithWeigher();
     return new LocalCache.LocalLoadingCache<K1, V1>(this, loader);
   }
@@ -825,6 +816,7 @@ public final class CacheBuilder<K, V> {
    * Returns a string representation for this CacheBuilder instance. The exact form of the returned
    * string is not specified.
    */
+
   @Override
   public String toString() {
     Objects.ToStringHelper s = Objects.toStringHelper(this);

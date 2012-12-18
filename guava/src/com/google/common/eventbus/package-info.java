@@ -252,3 +252,4 @@
  * simply call them from your test code to simulate the EventBus.
  */
 package com.google.common.eventbus;
+

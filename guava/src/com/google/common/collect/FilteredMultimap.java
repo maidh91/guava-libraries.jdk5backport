@@ -31,7 +31,7 @@ import java.util.Map.Entry;
 @GwtCompatible
 abstract class FilteredMultimap<K, V> extends AbstractMultimap<K, V> {
   final Multimap<K, V> unfiltered;
-  
+
   FilteredMultimap(Multimap<K, V> unfiltered) {
     this.unfiltered = checkNotNull(unfiltered);
   }

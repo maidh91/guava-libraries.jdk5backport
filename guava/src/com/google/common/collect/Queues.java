@@ -17,15 +17,12 @@ package com.google.common.collect;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Deque;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
@@ -97,8 +94,7 @@ public final class Queues {
    * @param elements the elements that the queue should contain, in order
    * @return a new {@code ConcurrentLinkedQueue} containing those elements
    */
-  public static <E> ConcurrentLinkedQueue<E> newConcurrentLinkedQueue(
-      Iterable<? extends E> elements) {
+  public static <E> ConcurrentLinkedQueue<E> newConcurrentLinkedQueue(Iterable<? extends E> elements) {
     if (elements instanceof Collection) {
       return new ConcurrentLinkedQueue<E>(Collections2.cast(elements));
     }
@@ -203,8 +199,7 @@ public final class Queues {
    * @param elements the elements that the queue should contain, in order
    * @return a new {@code PriorityBlockingQueue} containing those elements
    */
-  public static <E> PriorityBlockingQueue<E> newPriorityBlockingQueue(
-      Iterable<? extends E> elements) {
+  public static <E> PriorityBlockingQueue<E> newPriorityBlockingQueue(Iterable<? extends E> elements) {
     if (elements instanceof Collection) {
       return new PriorityBlockingQueue<E>(Collections2.cast(elements));
     }
@@ -249,7 +244,7 @@ public final class Queues {
   public static <E> SynchronousQueue<E> newSynchronousQueue() {
     return new SynchronousQueue<E>();
   }
-  
+
   /**
    * Drains the queue as {@link BlockingQueue#drainTo(Collection, int)}, but if the requested 
    * {@code numElements} elements are not available, it will wait for them up to the specified
@@ -289,7 +284,7 @@ public final class Queues {
     }
     return added;
   }
-  
+
   /**
    * Drains the queue as {@linkplain #drain(BlockingQueue, Collection, int, long, TimeUnit)}, 
    * but with a different behavior in case it is interrupted while waiting. In that case, the 
@@ -304,7 +299,7 @@ public final class Queues {
    * @return the number of elements transferred
    */
   @Beta
-  public static <E> int drainUninterruptibly(BlockingQueue<E> q, Collection<? super E> buffer, 
+  public static <E> int drainUninterruptibly(BlockingQueue<E> q, Collection<? super E> buffer,
       int numElements, long timeout, TimeUnit unit) {
     Preconditions.checkNotNull(buffer);
     long deadline = System.nanoTime() + unit.toNanos(timeout);

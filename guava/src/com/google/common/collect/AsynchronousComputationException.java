@@ -25,13 +25,13 @@ package com.google.common.collect;
  *     is scheduled for deletion in November 2012.</b>
  */
 @Deprecated
-public
-class AsynchronousComputationException extends ComputationException {
+public class AsynchronousComputationException extends ComputationException {
   /**
    * Creates a new instance with the given cause.
    */
   public AsynchronousComputationException(Throwable cause) {
     super(cause);
   }
+
   private static final long serialVersionUID = 0;
 }

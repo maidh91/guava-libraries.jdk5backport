@@ -38,7 +38,6 @@ public abstract class UnmodifiableIterator<E> implements Iterator<E> {
    * @deprecated Unsupported operation.
    */
   @Deprecated
-  @Override
   public final void remove() {
     throw new UnsupportedOperationException();
   }

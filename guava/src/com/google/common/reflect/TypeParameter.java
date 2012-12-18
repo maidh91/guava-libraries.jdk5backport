@@ -54,11 +54,13 @@ public abstract class TypeParameter<T> extends TypeCapture<T> {
     this.typeVariable = (TypeVariable<?>) type;
   }
 
-  @Override public final int hashCode() {
+  @Override
+  public final int hashCode() {
     return typeVariable.hashCode();
   }
 
-  @Override public final boolean equals(@Nullable Object o) {
+  @Override
+  public final boolean equals(@Nullable Object o) {
     if (o instanceof TypeParameter) {
       TypeParameter<?> that = (TypeParameter<?>) o;
       return typeVariable.equals(that.typeVariable);
@@ -66,7 +68,8 @@ public abstract class TypeParameter<T> extends TypeCapture<T> {
     return false;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return typeVariable.toString();
   }
 }

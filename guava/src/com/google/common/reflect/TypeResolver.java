@@ -103,16 +103,14 @@ class TypeResolver {
     return new TypeResolver(builder.build());
   }
 
-  private static void populateTypeMappings(
-      Map<TypeVariable<?>, Type> mappings, Type from, Type to) {
+  private static void populateTypeMappings(Map<TypeVariable<?>, Type> mappings, Type from, Type to) {
     if (from.equals(to)) {
       return;
     }
     if (from instanceof TypeVariable) {
       mappings.put((TypeVariable<?>) from, to);
     } else if (from instanceof GenericArrayType) {
-      populateTypeMappings(mappings,
-          ((GenericArrayType) from).getGenericComponentType(),
+      populateTypeMappings(mappings, ((GenericArrayType) from).getGenericComponentType(),
           checkNonNullArgument(Types.getComponentType(to), "%s is not an array type.", to));
     } else if (from instanceof ParameterizedType) {
       ParameterizedType fromParameterizedType = (ParameterizedType) from;
@@ -132,10 +130,9 @@ class TypeResolver {
       Type[] toUpperBounds = toWildcardType.getUpperBounds();
       Type[] fromLowerBounds = fromWildcardType.getLowerBounds();
       Type[] toLowerBounds = toWildcardType.getLowerBounds();
-      checkArgument(
-          fromUpperBounds.length == toUpperBounds.length
-              && fromLowerBounds.length == toLowerBounds.length,
-          "Incompatible type: %s vs. %s", from, to);
+      checkArgument(fromUpperBounds.length == toUpperBounds.length
+          && fromLowerBounds.length == toLowerBounds.length, "Incompatible type: %s vs. %s", from,
+          to);
       for (int i = 0; i < fromUpperBounds.length; i++) {
         populateTypeMappings(mappings, fromUpperBounds[i], toUpperBounds[i]);
       }
@@ -161,8 +158,7 @@ class TypeResolver {
       return resolveGenericArrayType((GenericArrayType) type);
     } else if (type instanceof WildcardType) {
       WildcardType wildcardType = (WildcardType) type;
-      return new Types.WildcardTypeImpl(
-          resolveTypes(wildcardType.getLowerBounds()),
+      return new Types.WildcardTypeImpl(resolveTypes(wildcardType.getLowerBounds()),
           resolveTypes(wildcardType.getUpperBounds()));
     } else {
       // if Class<?>, no resolution needed, we are done.
@@ -186,8 +182,8 @@ class TypeResolver {
   private Type resolveTypeVariable(final TypeVariable<?> var) {
     final TypeResolver unguarded = this;
     TypeResolver guarded = new TypeResolver(typeTable) {
-      @Override Type resolveTypeVariable(
-          TypeVariable<?> intermediateVar, TypeResolver guardedResolver) {
+      @Override
+      Type resolveTypeVariable(TypeVariable<?> intermediateVar, TypeResolver guardedResolver) {
         if (intermediateVar.getGenericDeclaration().equals(var.getGenericDeclaration())) {
           return intermediateVar;
         }
@@ -210,9 +206,7 @@ class TypeResolver {
       if (bounds.length == 0) {
         return var;
       }
-      return Types.newTypeVariable(
-          var.getGenericDeclaration(),
-          var.getName(),
+      return Types.newTypeVariable(var.getGenericDeclaration(), var.getName(),
           guardedResolver.resolveTypes(bounds));
     }
     return guardedResolver.resolveType(type); // in case the type is yet another type variable.
@@ -228,8 +222,8 @@ class TypeResolver {
     for (int i = 0; i < vars.length; i++) {
       resolvedArgs[i] = resolveType(vars[i]);
     }
-    return Types.newParameterizedTypeWithOwner(
-        resolvedOwner, (Class<?>) resolvedRawType, resolvedArgs);
+    return Types.newParameterizedTypeWithOwner(resolvedOwner, (Class<?>) resolvedRawType,
+        resolvedArgs);
   }
 
   private static <T> T checkNonNullArgument(T arg, String format, Object... messageParams) {
@@ -256,8 +250,7 @@ class TypeResolver {
      * Returns type mappings using type parameters and type arguments found in
      * the generic superclass and the super interfaces of {@code contextClass}.
      */
-    static ImmutableMap<TypeVariable<?>, Type> getTypeMappings(
-        Type contextType) {
+    static ImmutableMap<TypeVariable<?>, Type> getTypeMappings(Type contextType) {
       TypeMappingIntrospector introspector = new TypeMappingIntrospector();
       introspector.introspect(wildcardCapturer.capture(contextType));
       return ImmutableMap.copyOf(introspector.mappings);
@@ -289,8 +282,7 @@ class TypeResolver {
       }
     }
 
-    private void introspectParameterizedType(
-        ParameterizedType parameterizedType) {
+    private void introspectParameterizedType(ParameterizedType parameterizedType) {
       Class<?> rawClass = (Class<?>) parameterizedType.getRawType();
       TypeVariable<?>[] vars = rawClass.getTypeParameters();
       Type[] typeArgs = parameterizedType.getActualTypeArguments();
@@ -363,8 +355,7 @@ class TypeResolver {
           Type[] upperBounds = wildcardType.getUpperBounds();
           String name = "capture#" + id.incrementAndGet() + "-of ? extends "
               + Joiner.on('&').join(upperBounds);
-          return Types.newTypeVariable(
-              WildcardCapturer.class, name, wildcardType.getUpperBounds());
+          return Types.newTypeVariable(WildcardCapturer.class, name, wildcardType.getUpperBounds());
         } else {
           // TODO(benyu): handle ? super T somehow.
           return type;

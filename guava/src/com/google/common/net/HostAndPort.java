@@ -62,7 +62,8 @@ import javax.annotation.concurrent.Immutable;
  * @author Paul Marks
  * @since 10.0
  */
-@Beta @Immutable
+@Beta
+@Immutable
 public final class HostAndPort implements Serializable {
   /** Magic value indicating the absence of a port number. */
   private static final int NO_PORT = -1;
@@ -159,7 +160,7 @@ public final class HostAndPort implements Serializable {
       Matcher matcher = BRACKET_PATTERN.matcher(hostPortString);
       checkArgument(matcher.matches(), "Invalid bracketed host/port: %s", hostPortString);
       host = matcher.group(1);
-      portString = matcher.group(2);  // could be null
+      portString = matcher.group(2); // could be null
     } else {
       int colonPos = hostPortString.indexOf(':');
       if (colonPos >= 0 && hostPortString.indexOf(':', colonPos + 1) == -1) {
@@ -234,8 +235,7 @@ public final class HostAndPort implements Serializable {
     }
     if (other instanceof HostAndPort) {
       HostAndPort that = (HostAndPort) other;
-      return Objects.equal(this.host, that.host)
-          && this.port == that.port
+      return Objects.equal(this.host, that.host) && this.port == that.port
           && this.hasBracketlessColons == that.hasBracketlessColons;
     }
     return false;
@@ -247,6 +247,7 @@ public final class HostAndPort implements Serializable {
   }
 
   /** Rebuild the host:port string, including brackets if necessary. */
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder(host.length() + 7);

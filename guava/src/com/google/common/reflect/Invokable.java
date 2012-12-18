@@ -84,8 +84,8 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
    */
   // All subclasses are owned by us and we'll make sure to get the R type right.
   @SuppressWarnings("unchecked")
-  public final R invoke(@Nullable T receiver, Object... args)
-      throws InvocationTargetException, IllegalAccessException {
+  public final R invoke(@Nullable T receiver, Object... args) throws InvocationTargetException,
+      IllegalAccessException {
     return (R) invokeInternal(receiver, checkNotNull(args));
   }
 
@@ -106,8 +106,7 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
     Annotation[][] annotations = getParameterAnnotations();
     ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
     for (int i = 0; i < parameterTypes.length; i++) {
-      builder.add(new Parameter(
-          this, i, TypeToken.of(parameterTypes[i]), annotations[i]));
+      builder.add(new Parameter(this, i, TypeToken.of(parameterTypes[i]), annotations[i]));
     }
     return builder.build();
   }
@@ -116,10 +115,10 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
   public final ImmutableList<TypeToken<? extends Throwable>> getExceptionTypes() {
     ImmutableList.Builder<TypeToken<? extends Throwable>> builder = ImmutableList.builder();
     for (Type type : getGenericExceptionTypes()) {
-       // getGenericExceptionTypes() will never return a type that's not exception
+      // getGenericExceptionTypes() will never return a type that's not exception
       @SuppressWarnings("unchecked")
-      TypeToken<? extends Throwable> exceptionType = (TypeToken<? extends Throwable>)
-          TypeToken.of(type);
+      TypeToken<? extends Throwable> exceptionType = (TypeToken<? extends Throwable>) TypeToken
+          .of(type);
       builder.add(exceptionType);
     }
     return builder.build();
@@ -139,16 +138,19 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
   /** Explicitly specifies the return type of this {@code Invokable}. */
   public final <R1 extends R> Invokable<T, R1> returning(TypeToken<R1> returnType) {
     if (!returnType.isAssignableFrom(getReturnType())) {
-      throw new IllegalArgumentException(
-          "Invokable is known to return " + getReturnType() + ", not " + returnType);
+      throw new IllegalArgumentException("Invokable is known to return " + getReturnType()
+          + ", not " + returnType);
     }
-    @SuppressWarnings("unchecked") // guarded by previous check
+    @SuppressWarnings("unchecked")
+    // guarded by previous check
     Invokable<T, R1> specialized = (Invokable<T, R1>) this;
     return specialized;
   }
 
-  @SuppressWarnings("unchecked") // The declaring class is T's raw class, or one of its supertypes.
-  @Override public final Class<? super T> getDeclaringClass() {
+  @Override
+  @SuppressWarnings("unchecked")
+  // The declaring class is T's raw class, or one of its supertypes.
+  public final Class<? super T> getDeclaringClass() {
     return (Class<? super T>) super.getDeclaringClass();
   }
 
@@ -163,7 +165,7 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
   abstract Annotation[][] getParameterAnnotations();
 
   abstract Type getGenericReturnType();
-  
+
   static class MethodInvokable<T> extends Invokable<T, Object> {
 
     private final Method method;
@@ -173,34 +175,40 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
       this.method = method;
     }
 
-    @Override final Object invokeInternal(@Nullable Object receiver, Object[] args)
+    @Override
+    final Object invokeInternal(@Nullable Object receiver, Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       return method.invoke(receiver, args);
     }
 
-    @Override Type getGenericReturnType() {
+    @Override
+    Type getGenericReturnType() {
       return method.getGenericReturnType();
     }
 
-    @Override Type[] getGenericParameterTypes() {
+    @Override
+    Type[] getGenericParameterTypes() {
       return method.getGenericParameterTypes();
     }
 
-    @Override Type[] getGenericExceptionTypes() {
+    @Override
+    Type[] getGenericExceptionTypes() {
       return method.getGenericExceptionTypes();
     }
 
-    @Override final Annotation[][] getParameterAnnotations() {
+    @Override
+    final Annotation[][] getParameterAnnotations() {
       return method.getParameterAnnotations();
     }
 
-    @Override public final TypeVariable<?>[] getTypeParameters() {
+    public final TypeVariable<?>[] getTypeParameters() {
       return method.getTypeParameters();
     }
 
-    @Override public final boolean isOverridable() {
-      return  !(isFinal() || isPrivate() || isStatic()
-          || Modifier.isFinal(getDeclaringClass().getModifiers()));
+    @Override
+    public final boolean isOverridable() {
+      return !(isFinal() || isPrivate() || isStatic() || Modifier.isFinal(getDeclaringClass()
+          .getModifiers()));
     }
   }
 
@@ -213,7 +221,8 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
       this.constructor = constructor;
     }
 
-    @Override final Object invokeInternal(@Nullable Object receiver, Object[] args)
+    @Override
+    final Object invokeInternal(@Nullable Object receiver, Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       try {
         return constructor.newInstance(args);
@@ -222,11 +231,13 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
       }
     }
 
-    @Override Type getGenericReturnType() {
+    @Override
+    Type getGenericReturnType() {
       return constructor.getDeclaringClass();
     }
 
-    @Override Type[] getGenericParameterTypes() {
+    @Override
+    Type[] getGenericParameterTypes() {
       Type[] types = constructor.getGenericParameterTypes();
       Class<?> declaringClass = constructor.getDeclaringClass();
       if (!Modifier.isStatic(declaringClass.getModifiers())
@@ -239,19 +250,22 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
       return types;
     }
 
-    @Override Type[] getGenericExceptionTypes() {
+    @Override
+    Type[] getGenericExceptionTypes() {
       return constructor.getGenericExceptionTypes();
     }
 
-    @Override final Annotation[][] getParameterAnnotations() {
+    @Override
+    final Annotation[][] getParameterAnnotations() {
       return constructor.getParameterAnnotations();
     }
 
-    @Override public final TypeVariable<?>[] getTypeParameters() {
+    public final TypeVariable<?>[] getTypeParameters() {
       return constructor.getTypeParameters();
     }
 
-    @Override public final boolean isOverridable() {
+    @Override
+    public final boolean isOverridable() {
       return false;
     }
   }

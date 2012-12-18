@@ -76,8 +76,7 @@ import javax.annotation.Nullable;
 @GwtCompatible(emulated = true)
 public final class InternetDomainName {
 
-  private static final CharMatcher DOTS_MATCHER =
-      CharMatcher.anyOf(".\u3002\uFF0E\uFF61");
+  private static final CharMatcher DOTS_MATCHER = CharMatcher.anyOf(".\u3002\uFF0E\uFF61");
   private static final Splitter DOT_SPLITTER = Splitter.on('.');
   private static final Joiner DOT_JOINER = Joiner.on('.');
 
@@ -146,13 +145,11 @@ public final class InternetDomainName {
       name = name.substring(0, name.length() - 1);
     }
 
-    checkArgument(name.length() <= MAX_LENGTH,
-        "Domain name too long: '%s':", name);
+    checkArgument(name.length() <= MAX_LENGTH, "Domain name too long: '%s':", name);
     this.name = name;
 
     this.parts = ImmutableList.copyOf(DOT_SPLITTER.split(name));
-    checkArgument(parts.size() <= MAX_PARTS,
-        "Domain has too many parts: '%s'", name);
+    checkArgument(parts.size() <= MAX_PARTS, "Domain has too many parts: '%s'", name);
     checkArgument(validateSyntax(parts), "Not a valid domain name: '%s'", name);
 
     this.publicSuffixIndex = findPublicSuffix();
@@ -254,8 +251,8 @@ public final class InternetDomainName {
 
   private static final CharMatcher DASH_MATCHER = CharMatcher.anyOf("-_");
 
-  private static final CharMatcher PART_CHAR_MATCHER =
-      CharMatcher.JAVA_LETTER_OR_DIGIT.or(DASH_MATCHER);
+  private static final CharMatcher PART_CHAR_MATCHER = CharMatcher.JAVA_LETTER_OR_DIGIT
+      .or(DASH_MATCHER);
 
   /**
    * Helper method for {@link #validateSyntax(List)}. Validates that one part of
@@ -547,6 +544,7 @@ public final class InternetDomainName {
   }
 
   // TODO: specify this to return the same as name(); remove name()
+
   @Override
   public String toString() {
     return Objects.toStringHelper(this).add("name", name).toString();
@@ -559,6 +557,7 @@ public final class InternetDomainName {
    * of the same domain name would not be considered equal.
    *
    */
+
   @Override
   public boolean equals(@Nullable Object object) {
     if (object == this) {

@@ -26,7 +26,8 @@ import javax.annotation.Nullable;
  *
  * @author Louis Wasserman
  */
-@SuppressWarnings("serial") // Uses writeReplace, not default serialization
+@SuppressWarnings("serial")
+// Uses writeReplace, not default serialization
 final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
   private final ImmutableSortedSet<E> elementSet;
 
@@ -34,17 +35,14 @@ final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
     this.elementSet = ImmutableSortedSet.emptySet(comparator);
   }
 
-  @Override
   public Entry<E> firstEntry() {
     return null;
   }
 
-  @Override
   public Entry<E> lastEntry() {
     return null;
   }
 
-  @Override
   public int count(@Nullable Object element) {
     return 0;
   }
@@ -59,7 +57,6 @@ final class EmptyImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
     return targets.isEmpty();
   }
 
-  @Override
   public int size() {
     return 0;
   }

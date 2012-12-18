@@ -289,8 +289,8 @@ public final class UnsignedBytes {
    */
   @VisibleForTesting
   static class LexicographicalComparatorHolder {
-    static final String UNSAFE_COMPARATOR_NAME =
-        LexicographicalComparatorHolder.class.getName() + "$UnsafeComparator";
+    static final String UNSAFE_COMPARATOR_NAME = LexicographicalComparatorHolder.class.getName()
+        + "$UnsafeComparator";
 
     static final Comparator<byte[]> BEST_COMPARATOR = getBestComparator();
 
@@ -298,8 +298,7 @@ public final class UnsignedBytes {
     enum UnsafeComparator implements Comparator<byte[]> {
       INSTANCE;
 
-      static final boolean littleEndian =
-          ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN);
+      static final boolean littleEndian = ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN);
 
       /*
        * The following static final fields exist for performance reasons.
@@ -326,23 +325,22 @@ public final class UnsignedBytes {
       static final int BYTE_ARRAY_BASE_OFFSET;
 
       static {
-        theUnsafe = (Unsafe) AccessController.doPrivileged(
-            new PrivilegedAction<Object>() {
-              @Override
-              public Object run() {
-                try {
-                  Field f = Unsafe.class.getDeclaredField("theUnsafe");
-                  f.setAccessible(true);
-                  return f.get(null);
-                } catch (NoSuchFieldException e) {
-                  // It doesn't matter what we throw;
-                  // it's swallowed in getBestComparator().
-                  throw new Error();
-                } catch (IllegalAccessException e) {
-                  throw new Error();
-                }
-              }
-            });
+        theUnsafe = (Unsafe) AccessController.doPrivileged(new PrivilegedAction<Object>() {
+
+          public Object run() {
+            try {
+              Field f = Unsafe.class.getDeclaredField("theUnsafe");
+              f.setAccessible(true);
+              return f.get(null);
+            } catch (NoSuchFieldException e) {
+              // It doesn't matter what we throw;
+              // it's swallowed in getBestComparator().
+              throw new Error();
+            } catch (IllegalAccessException e) {
+              throw new Error();
+            }
+          }
+        });
 
         BYTE_ARRAY_BASE_OFFSET = theUnsafe.arrayBaseOffset(byte[].class);
 
@@ -352,7 +350,7 @@ public final class UnsignedBytes {
         }
       }
 
-      @Override public int compare(byte[] left, byte[] right) {
+      public int compare(byte[] left, byte[] right) {
         int minLength = Math.min(left.length, right.length);
         int minWords = minLength / Longs.BYTES;
 
@@ -409,7 +407,7 @@ public final class UnsignedBytes {
     enum PureJavaComparator implements Comparator<byte[]> {
       INSTANCE;
 
-      @Override public int compare(byte[] left, byte[] right) {
+      public int compare(byte[] left, byte[] right) {
         int minLength = Math.min(left.length, right.length);
         for (int i = 0; i < minLength; i++) {
           int result = UnsignedBytes.compare(left[i], right[i]);
@@ -431,8 +429,7 @@ public final class UnsignedBytes {
 
         // yes, UnsafeComparator does implement Comparator<byte[]>
         @SuppressWarnings("unchecked")
-        Comparator<byte[]> comparator =
-            (Comparator<byte[]>) theClass.getEnumConstants()[0];
+        Comparator<byte[]> comparator = (Comparator<byte[]>) theClass.getEnumConstants()[0];
         return comparator;
       } catch (Throwable t) { // ensure we really catch *everything*
         return lexicographicalComparatorJavaImpl();

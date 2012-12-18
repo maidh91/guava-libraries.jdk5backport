@@ -29,10 +29,8 @@ import javax.annotation.Nullable;
  */
 @GwtCompatible(emulated = true)
 @SuppressWarnings("serial")
-final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
-    implements SortedIterable<E> {
-  ImmutableSortedAsList(
-      ImmutableSortedSet<E> backingSet, ImmutableList<E> backingList) {
+final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E> implements SortedIterable<E> {
+  ImmutableSortedAsList(ImmutableSortedSet<E> backingSet, ImmutableList<E> backingList) {
     super(backingSet, backingList);
   }
 
@@ -41,15 +39,16 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
     return (ImmutableSortedSet<E>) super.delegateCollection();
   }
 
-  @Override public Comparator<? super E> comparator() {
+  public Comparator<? super E> comparator() {
     return delegateCollection().comparator();
   }
 
   // Override indexOf() and lastIndexOf() to be O(log N) instead of O(N).
 
+  @Override
   @GwtIncompatible("ImmutableSortedSet.indexOf")
   // TODO(cpovirk): consider manual binary search under GWT to preserve O(log N) lookup
-  @Override public int indexOf(@Nullable Object target) {
+  public int indexOf(@Nullable Object target) {
     int index = delegateCollection().indexOf(target);
 
     // TODO(kevinb): reconsider if it's really worth making feeble attempts at
@@ -60,8 +59,9 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
     return (index >= 0 && get(index).equals(target)) ? index : -1;
   }
 
+  @Override
   @GwtIncompatible("ImmutableSortedSet.indexOf")
-  @Override public int lastIndexOf(@Nullable Object target) {
+  public int lastIndexOf(@Nullable Object target) {
     return indexOf(target);
   }
 
@@ -71,16 +71,15 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
     return indexOf(target) >= 0;
   }
 
+  @Override
   @GwtIncompatible("super.subListUnchecked does not exist; inherited subList is valid if slow")
   /*
    * TODO(cpovirk): if we start to override indexOf/lastIndexOf under GWT, we'll want some way to
    * override subList to return an ImmutableSortedAsList for better performance. Right now, I'm not
    * sure there's any performance hit from our failure to override subListUnchecked under GWT
    */
-  @Override
   ImmutableList<E> subListUnchecked(int fromIndex, int toIndex) {
-    return new RegularImmutableSortedSet<E>(
-        super.subListUnchecked(fromIndex, toIndex), comparator())
-        .asList();
+    return new RegularImmutableSortedSet<E>(super.subListUnchecked(fromIndex, toIndex),
+        comparator()).asList();
   }
 }

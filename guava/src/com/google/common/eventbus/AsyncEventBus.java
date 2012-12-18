@@ -35,8 +35,7 @@ public class AsyncEventBus extends EventBus {
   private final Executor executor;
 
   /** the queue of events is shared across all threads */
-  private final ConcurrentLinkedQueue<EventWithHandler> eventsToDispatch =
-      new ConcurrentLinkedQueue<EventWithHandler>();
+  private final ConcurrentLinkedQueue<EventWithHandler> eventsToDispatch = new ConcurrentLinkedQueue<EventWithHandler>();
 
   /**
    * Creates a new AsyncEventBus that will use {@code executor} to dispatch
@@ -73,8 +72,9 @@ public class AsyncEventBus extends EventBus {
    * Dispatch {@code events} in the order they were posted, regardless of
    * the posting thread.
    */
-  @SuppressWarnings("deprecation") // only deprecated for external subclasses
   @Override
+  @SuppressWarnings("deprecation")
+  // only deprecated for external subclasses
   protected void dispatchQueuedEvents() {
     while (true) {
       EventWithHandler eventWithHandler = eventsToDispatch.poll();
@@ -89,16 +89,16 @@ public class AsyncEventBus extends EventBus {
   /**
    * Calls the {@link #executor} to dispatch {@code event} to {@code handler}.
    */
+
   @Override
   void dispatch(final Object event, final EventHandler handler) {
     checkNotNull(event);
     checkNotNull(handler);
-    executor.execute(
-        new Runnable() {
-          @Override
-          public void run() {
-            AsyncEventBus.super.dispatch(event, handler);
-          }
-        });
+    executor.execute(new Runnable() {
+
+      public void run() {
+        AsyncEventBus.super.dispatch(event, handler);
+      }
+    });
   }
 }

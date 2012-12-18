@@ -156,7 +156,8 @@ public abstract class Striped<L> {
      * If we only held the int[] stripes, translating it on the fly to L's, the original locks
      * might be garbage collected after locking them, ending up in a huge mess.
      */
-    @SuppressWarnings("unchecked") // we carefully replaced all keys with their respective L's
+    @SuppressWarnings("unchecked")
+    // we carefully replaced all keys with their respective L's
     List<L> asList = (List<L>) Arrays.asList(array);
     return Collections.unmodifiableList(asList);
   }
@@ -248,8 +249,7 @@ public abstract class Striped<L> {
   }
 
   // ReentrantReadWriteLock is large enough to make padding probably unnecessary
-  private static final Supplier<ReadWriteLock> READ_WRITE_LOCK_SUPPLIER =
-      new Supplier<ReadWriteLock>() {
+  private static final Supplier<ReadWriteLock> READ_WRITE_LOCK_SUPPLIER = new Supplier<ReadWriteLock>() {
     public ReadWriteLock get() {
       return new ReentrantReadWriteLock();
     }
@@ -264,12 +264,14 @@ public abstract class Striped<L> {
       this.mask = stripes > Ints.MAX_POWER_OF_TWO ? ALL_SET : ceilToPowerOfTwo(stripes) - 1;
     }
 
-    @Override final int indexFor(Object key) {
+    @Override
+    final int indexFor(Object key) {
       int hash = smear(key.hashCode());
       return hash & mask;
     }
 
-    @Override public final L get(Object key) {
+    @Override
+    public final L get(Object key) {
       return getAt(indexFor(key));
     }
   }
@@ -292,12 +294,15 @@ public abstract class Striped<L> {
       }
     }
 
-    @SuppressWarnings("unchecked") // we only put L's in the array
-    @Override public L getAt(int index) {
+    @Override
+    @SuppressWarnings("unchecked")
+    // we only put L's in the array
+    public L getAt(int index) {
       return (L) array[index];
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return array.length;
     }
   }
@@ -317,12 +322,14 @@ public abstract class Striped<L> {
       this.cache = new MapMaker().weakValues().makeComputingMap(Functions.forSupplier(supplier));
     }
 
-    @Override public L getAt(int index) {
+    @Override
+    public L getAt(int index) {
       Preconditions.checkElementIndex(index, size());
       return cache.get(index);
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return size;
     }
   }

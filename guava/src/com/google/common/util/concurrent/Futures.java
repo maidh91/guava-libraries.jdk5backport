@@ -85,13 +85,10 @@ public final class Futures {
     return new MappingCheckedFuture<V, X>(checkNotNull(future), mapper);
   }
 
-  private abstract static class ImmediateFuture<V>
-      implements ListenableFuture<V> {
+  private abstract static class ImmediateFuture<V> implements ListenableFuture<V> {
 
-    private static final Logger log =
-        Logger.getLogger(ImmediateFuture.class.getName());
+    private static final Logger log = Logger.getLogger(ImmediateFuture.class.getName());
 
-    @Override
     public void addListener(Runnable listener, Executor executor) {
       checkNotNull(listener, "Runnable was null.");
       checkNotNull(executor, "Executor was null.");
@@ -100,31 +97,26 @@ public final class Futures {
       } catch (RuntimeException e) {
         // ListenableFuture's contract is that it will not throw unchecked
         // exceptions, so log the bad runnable and/or executor and swallow it.
-        log.log(Level.SEVERE, "RuntimeException while executing runnable "
-            + listener + " with executor " + executor, e);
+        log.log(Level.SEVERE, "RuntimeException while executing runnable " + listener
+            + " with executor " + executor, e);
       }
     }
 
-    @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
       return false;
     }
 
-    @Override
     public abstract V get() throws ExecutionException;
 
-    @Override
     public V get(long timeout, TimeUnit unit) throws ExecutionException {
       checkNotNull(unit);
       return get();
     }
 
-    @Override
     public boolean isCancelled() {
       return false;
     }
 
-    @Override
     public boolean isDone() {
       return true;
     }
@@ -132,7 +124,8 @@ public final class Futures {
 
   private static class ImmediateSuccessfulFuture<V> extends ImmediateFuture<V> {
 
-    @Nullable private final V value;
+    @Nullable
+    private final V value;
 
     ImmediateSuccessfulFuture(@Nullable V value) {
       this.value = value;
@@ -144,10 +137,11 @@ public final class Futures {
     }
   }
 
-  private static class ImmediateSuccessfulCheckedFuture<V, X extends Exception>
-      extends ImmediateFuture<V> implements CheckedFuture<V, X> {
+  private static class ImmediateSuccessfulCheckedFuture<V, X extends Exception> extends
+      ImmediateFuture<V> implements CheckedFuture<V, X> {
 
-    @Nullable private final V value;
+    @Nullable
+    private final V value;
 
     ImmediateSuccessfulCheckedFuture(@Nullable V value) {
       this.value = value;
@@ -158,12 +152,10 @@ public final class Futures {
       return value;
     }
 
-    @Override
     public V checkedGet() {
       return value;
     }
 
-    @Override
     public V checkedGet(long timeout, TimeUnit unit) {
       checkNotNull(unit);
       return value;
@@ -199,13 +191,12 @@ public final class Futures {
 
     @Override
     public V get() {
-      throw AbstractFuture.cancellationExceptionWithCause(
-          "Task was cancelled.", thrown);
+      throw AbstractFuture.cancellationExceptionWithCause("Task was cancelled.", thrown);
     }
   }
 
-  private static class ImmediateFailedCheckedFuture<V, X extends Exception>
-      extends ImmediateFuture<V> implements CheckedFuture<V, X> {
+  private static class ImmediateFailedCheckedFuture<V, X extends Exception> extends
+      ImmediateFuture<V> implements CheckedFuture<V, X> {
 
     private final X thrown;
 
@@ -218,12 +209,10 @@ public final class Futures {
       throw new ExecutionException(thrown);
     }
 
-    @Override
     public V checkedGet() throws X {
       throw thrown;
     }
 
-    @Override
     public V checkedGet(long timeout, TimeUnit unit) throws X {
       checkNotNull(unit);
       throw thrown;
@@ -249,8 +238,8 @@ public final class Futures {
    * checkedGet()} will immediately return the provided value.
    */
   @Beta
-  public static <V, X extends Exception> CheckedFuture<V, X>
-      immediateCheckedFuture(@Nullable V value) {
+  public static <V, X extends Exception> CheckedFuture<V, X> immediateCheckedFuture(
+      @Nullable V value) {
     return new ImmediateSuccessfulCheckedFuture<V, X>(value);
   }
 
@@ -263,8 +252,7 @@ public final class Futures {
    * throw the provided {@code Throwable} wrapped in an {@code
    * ExecutionException}.
    */
-  public static <V> ListenableFuture<V> immediateFailedFuture(
-      Throwable throwable) {
+  public static <V> ListenableFuture<V> immediateFailedFuture(Throwable throwable) {
     checkNotNull(throwable);
     return new ImmediateFailedFuture<V>(throwable);
   }
@@ -291,8 +279,8 @@ public final class Futures {
    * provided exception itself.
    */
   @Beta
-  public static <V, X extends Exception> CheckedFuture<V, X>
-      immediateFailedCheckedFuture(X exception) {
+  public static <V, X extends Exception> CheckedFuture<V, X> immediateFailedCheckedFuture(
+      X exception) {
     checkNotNull(exception);
     return new ImmediateFailedCheckedFuture<V, X>(exception);
   }
@@ -372,8 +360,7 @@ public final class Futures {
    * @since 14.0
    */
   @Beta
-  public static <V> ListenableFuture<V> withFallback(
-      ListenableFuture<? extends V> input,
+  public static <V> ListenableFuture<V> withFallback(ListenableFuture<? extends V> input,
       FutureFallback<? extends V> fallback) {
     return withFallback(input, fallback, sameThreadExecutor());
   }
@@ -439,8 +426,7 @@ public final class Futures {
    * @since 14.0
    */
   @Beta
-  public static <V> ListenableFuture<V> withFallback(
-      ListenableFuture<? extends V> input,
+  public static <V> ListenableFuture<V> withFallback(ListenableFuture<? extends V> input,
       FutureFallback<? extends V> fallback, Executor executor) {
     checkNotNull(fallback);
     return new FallbackFuture<V>(input, fallback, executor);
@@ -454,17 +440,15 @@ public final class Futures {
 
     private volatile ListenableFuture<? extends V> running;
 
-    FallbackFuture(ListenableFuture<? extends V> input,
-        final FutureFallback<? extends V> fallback,
+    FallbackFuture(ListenableFuture<? extends V> input, final FutureFallback<? extends V> fallback,
         final Executor executor) {
       running = input;
       addCallback(running, new FutureCallback<V>() {
-        @Override
+
         public void onSuccess(V value) {
           set(value);
         }
 
-        @Override
         public void onFailure(Throwable t) {
           if (isCancelled()) {
             return;
@@ -476,12 +460,11 @@ public final class Futures {
               return;
             }
             addCallback(running, new FutureCallback<V>() {
-              @Override
+
               public void onSuccess(V value) {
                 set(value);
               }
 
-              @Override
               public void onFailure(Throwable t) {
                 if (running.isCancelled()) {
                   cancel(false);
@@ -611,10 +594,8 @@ public final class Futures {
    * @since 11.0
    */
   public static <I, O> ListenableFuture<O> transform(ListenableFuture<I> input,
-      AsyncFunction<? super I, ? extends O> function,
-      Executor executor) {
-    ChainingListenableFuture<I, O> output =
-        new ChainingListenableFuture<I, O>(function, input);
+      AsyncFunction<? super I, ? extends O> function, Executor executor) {
+    ChainingListenableFuture<I, O> output = new ChainingListenableFuture<I, O>(function, input);
     input.addListener(output, executor);
     return output;
   }
@@ -719,13 +700,12 @@ public final class Futures {
   public static <I, O> ListenableFuture<O> transform(ListenableFuture<I> input,
       final Function<? super I, ? extends O> function, Executor executor) {
     checkNotNull(function);
-    AsyncFunction<I, O> wrapperFunction
-        = new AsyncFunction<I, O>() {
-            @Override public ListenableFuture<O> apply(I input) {
-              O output = function.apply(input);
-              return immediateFuture(output);
-            }
-        };
+    AsyncFunction<I, O> wrapperFunction = new AsyncFunction<I, O>() {
+      public ListenableFuture<O> apply(I input) {
+        O output = function.apply(input);
+        return immediateFuture(output);
+      }
+    };
     return transform(input, wrapperFunction, executor);
   }
 
@@ -759,29 +739,24 @@ public final class Futures {
     checkNotNull(function);
     return new Future<O>() {
 
-      @Override
       public boolean cancel(boolean mayInterruptIfRunning) {
         return input.cancel(mayInterruptIfRunning);
       }
 
-      @Override
       public boolean isCancelled() {
         return input.isCancelled();
       }
 
-      @Override
       public boolean isDone() {
         return input.isDone();
       }
 
-      @Override
       public O get() throws InterruptedException, ExecutionException {
         return applyTransformation(input.get());
       }
 
-      @Override
-      public O get(long timeout, TimeUnit unit)
-          throws InterruptedException, ExecutionException, TimeoutException {
+      public O get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException,
+          TimeoutException {
         return applyTransformation(input.get(timeout, unit));
       }
 
@@ -805,16 +780,14 @@ public final class Futures {
    * in a {@code UndeclaredThrowableException} so that this class can get
    * access to the cause.
    */
-  private static class ChainingListenableFuture<I, O>
-      extends AbstractFuture<O> implements Runnable {
+  private static class ChainingListenableFuture<I, O> extends AbstractFuture<O> implements Runnable {
 
     private AsyncFunction<? super I, ? extends O> function;
     private ListenableFuture<? extends I> inputFuture;
     private volatile ListenableFuture<? extends O> outputFuture;
     private final CountDownLatch outputCreated = new CountDownLatch(1);
 
-    private ChainingListenableFuture(
-        AsyncFunction<? super I, ? extends O> function,
+    private ChainingListenableFuture(AsyncFunction<? super I, ? extends O> function,
         ListenableFuture<? extends I> inputFuture) {
       this.function = checkNotNull(function);
       this.inputFuture = checkNotNull(inputFuture);
@@ -836,14 +809,12 @@ public final class Futures {
       return false;
     }
 
-    private void cancel(@Nullable Future<?> future,
-        boolean mayInterruptIfRunning) {
+    private void cancel(@Nullable Future<?> future, boolean mayInterruptIfRunning) {
       if (future != null) {
         future.cancel(mayInterruptIfRunning);
       }
     }
 
-    @Override
     public void run() {
       try {
         I sourceResult;
@@ -861,36 +832,36 @@ public final class Futures {
           return;
         }
 
-        final ListenableFuture<? extends O> outputFuture = this.outputFuture =
-            function.apply(sourceResult);
+        final ListenableFuture<? extends O> outputFuture = this.outputFuture = function
+            .apply(sourceResult);
         if (isCancelled()) {
           outputFuture.cancel(wasInterrupted());
           this.outputFuture = null;
           return;
         }
         outputFuture.addListener(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                // Here it would have been nice to have had an
-                // UninterruptibleListenableFuture, but we don't want to start a
-                // combinatorial explosion of interfaces, so we have to make do.
-                set(getUninterruptibly(outputFuture));
-              } catch (CancellationException e) {
-                // Cancel this future and return.
-                // At this point, inputFuture and outputFuture are done, so the
-                // value of mayInterruptIfRunning is irrelevant.
-                cancel(false);
-                return;
-              } catch (ExecutionException e) {
-                // Set the cause of the exception as this future's exception
-                setException(e.getCause());
-              } finally {
-                // Don't pin inputs beyond completion
-                ChainingListenableFuture.this.outputFuture = null;
-              }
+
+          public void run() {
+            try {
+              // Here it would have been nice to have had an
+              // UninterruptibleListenableFuture, but we don't want to start a
+              // combinatorial explosion of interfaces, so we have to make do.
+              set(getUninterruptibly(outputFuture));
+            } catch (CancellationException e) {
+              // Cancel this future and return.
+              // At this point, inputFuture and outputFuture are done, so the
+              // value of mayInterruptIfRunning is irrelevant.
+              cancel(false);
+              return;
+            } catch (ExecutionException e) {
+              // Set the cause of the exception as this future's exception
+              setException(e.getCause());
+            } finally {
+              // Don't pin inputs beyond completion
+              ChainingListenableFuture.this.outputFuture = null;
             }
-          }, MoreExecutors.sameThreadExecutor());
+          }
+        }, MoreExecutors.sameThreadExecutor());
       } catch (UndeclaredThrowableException e) {
         // Set the cause of the exception as this future's exception
         setException(e.getCause());
@@ -933,7 +904,7 @@ public final class Futures {
    * @since 13.0
    */
   @Beta
-  @SuppressWarnings({"rawtypes", "unchecked"})
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public static <V> ListenableFuture<V> dereference(
       ListenableFuture<? extends ListenableFuture<? extends V>> nested) {
     return Futures.transform((ListenableFuture) nested, (AsyncFunction) DEREFERENCER);
@@ -942,12 +913,11 @@ public final class Futures {
   /**
    * Helper {@code Function} for {@link #dereference}.
    */
-  private static final AsyncFunction<ListenableFuture<Object>, Object> DEREFERENCER =
-      new AsyncFunction<ListenableFuture<Object>, Object>() {
-        @Override public ListenableFuture<Object> apply(ListenableFuture<Object> input) {
-          return input;
-        }
-      };
+  private static final AsyncFunction<ListenableFuture<Object>, Object> DEREFERENCER = new AsyncFunction<ListenableFuture<Object>, Object>() {
+    public ListenableFuture<Object> apply(ListenableFuture<Object> input) {
+      return input;
+    }
+  };
 
   /**
    * Creates a new {@code ListenableFuture} whose value is a list containing the
@@ -966,10 +936,8 @@ public final class Futures {
    * @since 10.0
    */
   @Beta
-  public static <V> ListenableFuture<List<V>> allAsList(
-      ListenableFuture<? extends V>... futures) {
-    return listFuture(ImmutableList.copyOf(futures), true,
-        MoreExecutors.sameThreadExecutor());
+  public static <V> ListenableFuture<List<V>> allAsList(ListenableFuture<? extends V>... futures) {
+    return listFuture(ImmutableList.copyOf(futures), true, MoreExecutors.sameThreadExecutor());
   }
 
   /**
@@ -991,8 +959,7 @@ public final class Futures {
   @Beta
   public static <V> ListenableFuture<List<V>> allAsList(
       Iterable<? extends ListenableFuture<? extends V>> futures) {
-    return listFuture(ImmutableList.copyOf(futures), true,
-        MoreExecutors.sameThreadExecutor());
+    return listFuture(ImmutableList.copyOf(futures), true, MoreExecutors.sameThreadExecutor());
   }
 
   /**
@@ -1013,8 +980,7 @@ public final class Futures {
   @Beta
   public static <V> ListenableFuture<List<V>> successfulAsList(
       ListenableFuture<? extends V>... futures) {
-    return listFuture(ImmutableList.copyOf(futures), false,
-        MoreExecutors.sameThreadExecutor());
+    return listFuture(ImmutableList.copyOf(futures), false, MoreExecutors.sameThreadExecutor());
   }
 
   /**
@@ -1035,8 +1001,7 @@ public final class Futures {
   @Beta
   public static <V> ListenableFuture<List<V>> successfulAsList(
       Iterable<? extends ListenableFuture<? extends V>> futures) {
-    return listFuture(ImmutableList.copyOf(futures), false,
-        MoreExecutors.sameThreadExecutor());
+    return listFuture(ImmutableList.copyOf(futures), false, MoreExecutors.sameThreadExecutor());
   }
 
   /**
@@ -1088,8 +1053,7 @@ public final class Futures {
    * @param callback The callback to invoke when {@code future} is completed.
    * @since 10.0
    */
-  public static <V> void addCallback(ListenableFuture<V> future,
-      FutureCallback<? super V> callback) {
+  public static <V> void addCallback(ListenableFuture<V> future, FutureCallback<? super V> callback) {
     addCallback(future, callback, MoreExecutors.sameThreadExecutor());
   }
 
@@ -1134,7 +1098,7 @@ public final class Futures {
       final FutureCallback<? super V> callback, Executor executor) {
     Preconditions.checkNotNull(callback);
     Runnable callbackListener = new Runnable() {
-      @Override
+
       public void run() {
         final V value;
         try {
@@ -1205,12 +1169,10 @@ public final class Futures {
    * @since 10.0
    */
   @Beta
-  public static <V, X extends Exception> V get(
-      Future<V> future, Class<X> exceptionClass) throws X {
+  public static <V, X extends Exception> V get(Future<V> future, Class<X> exceptionClass) throws X {
     checkNotNull(future);
     checkArgument(!RuntimeException.class.isAssignableFrom(exceptionClass),
-        "Futures.get exception type (%s) must not be a RuntimeException",
-        exceptionClass);
+        "Futures.get exception type (%s) must not be a RuntimeException", exceptionClass);
     try {
       return future.get();
     } catch (InterruptedException e) {
@@ -1271,14 +1233,12 @@ public final class Futures {
    * @since 10.0
    */
   @Beta
-  public static <V, X extends Exception> V get(
-      Future<V> future, long timeout, TimeUnit unit, Class<X> exceptionClass)
-      throws X {
+  public static <V, X extends Exception> V get(Future<V> future, long timeout, TimeUnit unit,
+      Class<X> exceptionClass) throws X {
     checkNotNull(future);
     checkNotNull(unit);
     checkArgument(!RuntimeException.class.isAssignableFrom(exceptionClass),
-        "Futures.get exception type (%s) must not be a RuntimeException",
-        exceptionClass);
+        "Futures.get exception type (%s) must not be a RuntimeException", exceptionClass);
     try {
       return future.get(timeout, unit);
     } catch (InterruptedException e) {
@@ -1292,8 +1252,8 @@ public final class Futures {
     }
   }
 
-  private static <X extends Exception> void wrapAndThrowExceptionOrError(
-      Throwable cause, Class<X> exceptionClass) throws X {
+  private static <X extends Exception> void wrapAndThrowExceptionOrError(Throwable cause,
+      Class<X> exceptionClass) throws X {
     if (cause instanceof Error) {
       throw new ExecutionError((Error) cause);
     }
@@ -1380,14 +1340,13 @@ public final class Futures {
    * If you think you would use this method, let us know.
    */
 
-  private static <X extends Exception> X newWithCause(
-      Class<X> exceptionClass, Throwable cause) {
+  private static <X extends Exception> X newWithCause(Class<X> exceptionClass, Throwable cause) {
     // getConstructors() guarantees this as long as we don't modify the array.
     @SuppressWarnings("unchecked")
-    List<Constructor<X>> constructors =
-        (List) Arrays.asList(exceptionClass.getConstructors());
+    List<Constructor<X>> constructors = (List) Arrays.asList(exceptionClass.getConstructors());
     for (Constructor<X> constructor : preferringStrings(constructors)) {
-      @Nullable X instance = newFromConstructor(constructor, cause);
+      @Nullable
+      X instance = newFromConstructor(constructor, cause);
       if (instance != null) {
         if (instance.getCause() == null) {
           instance.initCause(cause);
@@ -1395,25 +1354,24 @@ public final class Futures {
         return instance;
       }
     }
-    throw new IllegalArgumentException(
-        "No appropriate constructor for exception of type " + exceptionClass
-            + " in response to chained exception", cause);
+    throw new IllegalArgumentException("No appropriate constructor for exception of type "
+        + exceptionClass + " in response to chained exception", cause);
   }
 
-  private static <X extends Exception> List<Constructor<X>>
-      preferringStrings(List<Constructor<X>> constructors) {
+  private static <X extends Exception> List<Constructor<X>> preferringStrings(
+      List<Constructor<X>> constructors) {
     return WITH_STRING_PARAM_FIRST.sortedCopy(constructors);
   }
 
-  private static final Ordering<Constructor<?>> WITH_STRING_PARAM_FIRST =
-      Ordering.natural().onResultOf(new Function<Constructor<?>, Boolean>() {
-        @Override public Boolean apply(Constructor<?> input) {
+  private static final Ordering<Constructor<?>> WITH_STRING_PARAM_FIRST = Ordering.natural()
+      .onResultOf(new Function<Constructor<?>, Boolean>() {
+        public Boolean apply(Constructor<?> input) {
           return asList(input.getParameterTypes()).contains(String.class);
         }
       }).reverse();
 
-  @Nullable private static <X> X newFromConstructor(
-      Constructor<X> constructor, Throwable cause) {
+  @Nullable
+  private static <X> X newFromConstructor(Constructor<X> constructor, Throwable cause) {
     Class<?>[] paramTypes = constructor.getParameterTypes();
     Object[] params = new Object[paramTypes.length];
     for (int i = 0; i < paramTypes.length; i++) {
@@ -1450,10 +1408,8 @@ public final class Futures {
     FutureCombiner<V, C> combiner;
     List<Optional<V>> values;
 
-    CombinedFuture(
-        ImmutableCollection<? extends ListenableFuture<? extends V>> futures,
-        boolean allMustSucceed, Executor listenerExecutor,
-        FutureCombiner<V, C> combiner) {
+    CombinedFuture(ImmutableCollection<? extends ListenableFuture<? extends V>> futures,
+        boolean allMustSucceed, Executor listenerExecutor, FutureCombiner<V, C> combiner) {
       this.futures = futures;
       this.allMustSucceed = allMustSucceed;
       this.remaining = new AtomicInteger(futures.size());
@@ -1468,7 +1424,7 @@ public final class Futures {
     protected void init(final Executor listenerExecutor) {
       // First, schedule cleanup to execute when the Future is done.
       addListener(new Runnable() {
-        @Override
+
         public void run() {
           // Cancel all the component futures.
           if (CombinedFuture.this.isCancelled()) {
@@ -1493,7 +1449,7 @@ public final class Futures {
 
       // Corner case: List is empty.
       if (futures.isEmpty()) {
-        set(combiner.combine(ImmutableList.<Optional<V>>of()));
+        set(combiner.combine(ImmutableList.<Optional<V>> of()));
         return;
       }
 
@@ -1514,7 +1470,7 @@ public final class Futures {
       for (final ListenableFuture<? extends V> listenable : futures) {
         final int index = i++;
         listenable.addListener(new Runnable() {
-          @Override
+
           public void run() {
             setOneValue(index, listenable);
           }
@@ -1537,8 +1493,7 @@ public final class Futures {
       }
 
       try {
-        checkState(future.isDone(),
-            "Tried to set value from future which is not done");
+        checkState(future.isDone(), "Tried to set value from future which is not done");
         V returnValue = getUninterruptibly(future);
         localValues.set(index, Optional.fromNullable(returnValue));
       } catch (CancellationException e) {
@@ -1580,12 +1535,11 @@ public final class Futures {
 
   /** Used for {@link #allAsList} and {@link #successfulAsList}. */
   private static <V> ListenableFuture<List<V>> listFuture(
-      ImmutableList<ListenableFuture<? extends V>> futures,
-      boolean allMustSucceed, Executor listenerExecutor) {
-    return new CombinedFuture<V, List<V>>(
-        futures, allMustSucceed, listenerExecutor,
+      ImmutableList<ListenableFuture<? extends V>> futures, boolean allMustSucceed,
+      Executor listenerExecutor) {
+    return new CombinedFuture<V, List<V>>(futures, allMustSucceed, listenerExecutor,
         new FutureCombiner<V, List<V>>() {
-          @Override
+
           public List<V> combine(List<Optional<V>> values) {
             List<V> result = Lists.newArrayList();
             for (Optional<V> element : values) {
@@ -1606,8 +1560,7 @@ public final class Futures {
 
     final Function<Exception, X> mapper;
 
-    MappingCheckedFuture(ListenableFuture<V> delegate,
-        Function<Exception, X> mapper) {
+    MappingCheckedFuture(ListenableFuture<V> delegate, Function<Exception, X> mapper) {
       super(delegate);
 
       this.mapper = checkNotNull(mapper);

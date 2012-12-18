@@ -122,8 +122,7 @@ public final class Longs {
   }
 
   // TODO(kevinb): consider making this public
-  private static int indexOf(
-      long[] array, long target, int start, int end) {
+  private static int indexOf(long[] array, long target, int start, int end) {
     for (int i = start; i < end; i++) {
       if (array[i] == target) {
         return i;
@@ -150,8 +149,7 @@ public final class Longs {
       return 0;
     }
 
-    outer:
-    for (int i = 0; i < array.length - target.length + 1; i++) {
+    outer: for (int i = 0; i < array.length - target.length + 1; i++) {
       for (int j = 0; j < target.length; j++) {
         if (array[i + j] != target[j]) {
           continue outer;
@@ -176,8 +174,7 @@ public final class Longs {
   }
 
   // TODO(kevinb): consider making this public
-  private static int lastIndexOf(
-      long[] array, long target, int start, int end) {
+  private static int lastIndexOf(long[] array, long target, int start, int end) {
     for (int i = end - 1; i >= start; i--) {
       if (array[i] == target) {
         return i;
@@ -283,10 +280,8 @@ public final class Longs {
    *     elements
    */
   public static long fromByteArray(byte[] bytes) {
-    checkArgument(bytes.length >= BYTES,
-        "array too small: %s < %s", bytes.length, BYTES);
-    return fromBytes(bytes[0], bytes[1], bytes[2], bytes[3],
-        bytes[4], bytes[5], bytes[6], bytes[7]) ;
+    checkArgument(bytes.length >= BYTES, "array too small: %s < %s", bytes.length, BYTES);
+    return fromBytes(bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]);
   }
 
   /**
@@ -296,16 +291,10 @@ public final class Longs {
    *
    * @since 7.0
    */
-  public static long fromBytes(byte b1, byte b2, byte b3, byte b4,
-      byte b5, byte b6, byte b7, byte b8) {
-    return (b1 & 0xFFL) << 56
-        | (b2 & 0xFFL) << 48
-        | (b3 & 0xFFL) << 40
-        | (b4 & 0xFFL) << 32
-        | (b5 & 0xFFL) << 24
-        | (b6 & 0xFFL) << 16
-        | (b7 & 0xFFL) << 8
-        | (b8 & 0xFFL);
+  public static long fromBytes(byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8) {
+    return (b1 & 0xFFL) << 56 | (b2 & 0xFFL) << 48 | (b3 & 0xFFL) << 40 | (b4 & 0xFFL) << 32
+        | (b5 & 0xFFL) << 24 | (b6 & 0xFFL) << 16 | (b7 & 0xFFL) << 8 | (b8 & 0xFFL);
   }
 
   /**
@@ -378,13 +367,10 @@ public final class Longs {
    * @return an array containing the values of {@code array}, with guaranteed
    *     minimum length {@code minLength}
    */
-  public static long[] ensureCapacity(
-      long[] array, int minLength, int padding) {
+  public static long[] ensureCapacity(long[] array, int minLength, int padding) {
     checkArgument(minLength >= 0, "Invalid minLength: %s", minLength);
     checkArgument(padding >= 0, "Invalid padding: %s", padding);
-    return (array.length < minLength)
-        ? copyOf(array, minLength + padding)
-        : array;
+    return (array.length < minLength) ? copyOf(array, minLength + padding) : array;
   }
 
   // Arrays.copyOf() requires Java 6
@@ -441,7 +427,6 @@ public final class Longs {
   private enum LexicographicalComparator implements Comparator<long[]> {
     INSTANCE;
 
-    @Override
     public int compare(long[] left, long[] right) {
       int minLength = Math.min(left.length, right.length);
       for (int i = 0; i < minLength; i++) {
@@ -506,8 +491,8 @@ public final class Longs {
   }
 
   @GwtCompatible
-  private static class LongArrayAsList extends AbstractList<Long>
-      implements RandomAccess, Serializable {
+  private static class LongArrayAsList extends AbstractList<Long> implements RandomAccess,
+      Serializable {
     final long[] array;
     final int start;
     final int end;
@@ -522,26 +507,30 @@ public final class Longs {
       this.end = end;
     }
 
-    @Override public int size() {
+    @Override
+    public int size() {
       return end - start;
     }
 
-    @Override public boolean isEmpty() {
+    @Override
+    public boolean isEmpty() {
       return false;
     }
 
-    @Override public Long get(int index) {
+    @Override
+    public Long get(int index) {
       checkElementIndex(index, size());
       return array[start + index];
     }
 
-    @Override public boolean contains(Object target) {
+    @Override
+    public boolean contains(Object target) {
       // Overridden to prevent a ton of boxing
-      return (target instanceof Long)
-          && Longs.indexOf(array, (Long) target, start, end) != -1;
+      return (target instanceof Long) && Longs.indexOf(array, (Long) target, start, end) != -1;
     }
 
-    @Override public int indexOf(Object target) {
+    @Override
+    public int indexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Long) {
         int i = Longs.indexOf(array, (Long) target, start, end);
@@ -552,7 +541,8 @@ public final class Longs {
       return -1;
     }
 
-    @Override public int lastIndexOf(Object target) {
+    @Override
+    public int lastIndexOf(Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Long) {
         int i = Longs.lastIndexOf(array, (Long) target, start, end);
@@ -563,7 +553,8 @@ public final class Longs {
       return -1;
     }
 
-    @Override public Long set(int index, Long element) {
+    @Override
+    public Long set(int index, Long element) {
       checkElementIndex(index, size());
       long oldValue = array[start + index];
       // checkNotNull for GWT (do not optimize)
@@ -571,7 +562,8 @@ public final class Longs {
       return oldValue;
     }
 
-    @Override public List<Long> subList(int fromIndex, int toIndex) {
+    @Override
+    public List<Long> subList(int fromIndex, int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
       if (fromIndex == toIndex) {
@@ -580,7 +572,8 @@ public final class Longs {
       return new LongArrayAsList(array, start + fromIndex, start + toIndex);
     }
 
-    @Override public boolean equals(Object object) {
+    @Override
+    public boolean equals(Object object) {
       if (object == this) {
         return true;
       }
@@ -600,7 +593,8 @@ public final class Longs {
       return super.equals(object);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
       int result = 1;
       for (int i = start; i < end; i++) {
         result = 31 * result + Longs.hashCode(array[i]);
@@ -608,7 +602,8 @@ public final class Longs {
       return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       StringBuilder builder = new StringBuilder(size() * 10);
       builder.append('[').append(array[start]);
       for (int i = start + 1; i < end; i++) {

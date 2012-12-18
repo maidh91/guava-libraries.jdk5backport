@@ -135,8 +135,8 @@ public abstract class CacheLoader<K, V> {
     return new FunctionToCacheLoader<K, V>(function);
   }
 
-  private static final class FunctionToCacheLoader<K, V>
-      extends CacheLoader<K, V> implements Serializable {
+  private static final class FunctionToCacheLoader<K, V> extends CacheLoader<K, V> implements
+      Serializable {
     private final Function<K, V> computingFunction;
 
     public FunctionToCacheLoader(Function<K, V> computingFunction) {
@@ -165,8 +165,8 @@ public abstract class CacheLoader<K, V> {
     return new SupplierToCacheLoader<V>(supplier);
   }
 
-  private static final class SupplierToCacheLoader<V>
-      extends CacheLoader<Object, V> implements Serializable {
+  private static final class SupplierToCacheLoader<V> extends CacheLoader<Object, V> implements
+      Serializable {
     private final Supplier<V> computingSupplier;
 
     public SupplierToCacheLoader(Supplier<V> computingSupplier) {
