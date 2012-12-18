@@ -16,11 +16,8 @@
 
 package com.google.common.io;
 
-import static com.google.common.io.SourceSinkFactory.CharSourceFactory;
-
 import com.google.common.collect.ImmutableList;
-
-import junit.framework.TestSuite;
+import com.google.common.io.SourceSinkFactory.CharSourceFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,6 +26,8 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+
+import junit.framework.TestSuite;
 
 /**
  * A generator of {@code TestSuite} instances for testing {@code CharSource} implementations.

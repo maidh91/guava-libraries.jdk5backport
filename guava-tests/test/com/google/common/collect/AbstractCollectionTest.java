@@ -23,10 +23,10 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.TestCase;
-
 import java.util.Collection;
 import java.util.Collections;
+
+import junit.framework.TestCase;
 
 /**
  * Common tests for a {@code Collection}.
@@ -221,6 +221,6 @@ public abstract class AbstractCollectionTest extends TestCase {
   }
 
   protected void assertContents(String... expected) {
-    ASSERT.that(c).has().allFrom(asList(expected));
+    ASSERT.<String, Collection<String>>that(c).has().allFrom(asList(expected));
   }
 }

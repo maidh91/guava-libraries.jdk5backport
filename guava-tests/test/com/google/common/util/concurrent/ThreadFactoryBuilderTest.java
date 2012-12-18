@@ -16,15 +16,14 @@
 
 package com.google.common.util.concurrent;
 
-import static org.truth0.Truth.ASSERT;
-
+import com.google.common.testing.FluentAsserts;
 import com.google.common.testing.NullPointerTester;
-
-import junit.framework.TestCase;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for ThreadFactoryBuilder.
@@ -83,7 +82,7 @@ public class ThreadFactoryBuilderTest extends TestCase {
     ThreadFactory threadFactory2 = builder.build();
     Thread thread3 = threadFactory2.newThread(monitoredRunnable);
     checkThreadPoolName(thread3, 1);
-    ASSERT.that(
+    FluentAsserts.assertThat(
         thread2.getName().substring(0, thread.getName().lastIndexOf('-')))
         .isNotEqualTo(
             thread3.getName().substring(0, thread.getName().lastIndexOf('-')));

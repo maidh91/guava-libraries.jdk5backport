@@ -25,8 +25,6 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Service.Listener;
 import com.google.common.util.concurrent.Service.State;
 
-import junit.framework.TestCase;
-
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -34,6 +32,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.concurrent.GuardedBy;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link AbstractService}.

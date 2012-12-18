@@ -29,13 +29,16 @@ import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.google.MultisetTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringMultisetGenerator;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Unit test for {@link LinkedHashMultiset}.
@@ -153,14 +156,14 @@ public class LinkedHashMultisetTest extends AbstractMultisetTest {
     ms.add("a");
     ms.add("b", 2);
     ms.add("c");
-    ASSERT.that(ms.elementSet()).has().allOf("a", "b", "c").inOrder();
+    assertThat(ms.elementSet()).has().allOf("a", "b", "c").inOrder();
     ms.remove("b");
-    ASSERT.that(ms.elementSet()).has().allOf("a", "b", "c").inOrder();
+    assertThat(ms.elementSet()).has().allOf("a", "b", "c").inOrder();
     ms.add("b");
-    ASSERT.that(ms.elementSet()).has().allOf("a", "b", "c").inOrder();
+    assertThat(ms.elementSet()).has().allOf("a", "b", "c").inOrder();
     ms.remove("b", 2);
     ms.add("b");
-    ASSERT.that(ms.elementSet()).has().allOf("a", "c", "b").inOrder();
+    assertThat(ms.elementSet()).has().allOf("a", "c", "b").inOrder();
   }
 
   public void testIteratorRemoveConcurrentModification() {
@@ -177,5 +180,11 @@ public class LinkedHashMultisetTest extends AbstractMultisetTest {
     } catch (ConcurrentModificationException expected) {}
     assertEquals(1, ms.size());
     assertTrue(ms.contains("b"));
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

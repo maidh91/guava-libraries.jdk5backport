@@ -20,12 +20,12 @@ import com.google.common.collect.Lists;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.NullPointerTester.Visibility;
 
-import junit.framework.TestCase;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for RateLimiter.

@@ -20,9 +20,9 @@ import com.google.common.base.Function;
 import com.google.common.testing.GcFinalization;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.TestCase;
-
 import java.lang.ref.WeakReference;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link Interners}.

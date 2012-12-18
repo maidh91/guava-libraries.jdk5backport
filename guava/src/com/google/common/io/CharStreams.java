@@ -120,7 +120,7 @@ public final class CharStreams {
               if (lines.hasNext()) {
                 String next = lines.next();
                 // skip last line if it's empty
-                if (lines.hasNext() || !next.isEmpty()) {
+                if (lines.hasNext() || next.length() != 0) {
                   return next;
                 }
               }

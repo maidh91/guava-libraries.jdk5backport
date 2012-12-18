@@ -18,11 +18,11 @@ package com.google.common.eventbus;
 
 import com.google.common.collect.Lists;
 
-import junit.framework.Assert;
-
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import junit.framework.Assert;
 
 /**
  * A simple EventHandler mock that records Strings.

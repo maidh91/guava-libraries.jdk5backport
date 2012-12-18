@@ -19,9 +19,9 @@ package com.google.common.base;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 
-import junit.framework.TestCase;
-
 import java.nio.charset.Charset;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link Charsets}.

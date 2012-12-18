@@ -162,7 +162,8 @@ public final class Files {
 
         if (off < size) {
           // encountered EOF early; truncate the result
-          result = Arrays.copyOf(bytes, off);
+          result = new byte[off];
+          System.arraycopy(bytes, 0, result, 0, off);
         } else if (read != -1) {
           // we read size bytes... if the last read didn't return -1, the file got larger
           // so we just read the rest normally and then create a new array

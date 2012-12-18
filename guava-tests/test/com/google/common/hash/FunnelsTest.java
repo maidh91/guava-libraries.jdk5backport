@@ -21,10 +21,10 @@ import static org.mockito.Mockito.verify;
 
 import com.google.common.hash.AbstractStreamingHashFunction.AbstractStreamingHasher;
 
-import junit.framework.TestCase;
-
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for HashExtractors.

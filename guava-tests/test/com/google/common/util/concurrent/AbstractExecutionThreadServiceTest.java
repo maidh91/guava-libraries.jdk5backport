@@ -20,8 +20,6 @@ import com.google.common.base.Throwables;
 import com.google.common.testing.TearDown;
 import com.google.common.testing.TearDownStack;
 
-import junit.framework.TestCase;
-
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -31,6 +29,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link AbstractExecutionThreadService}.

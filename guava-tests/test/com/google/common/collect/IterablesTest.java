@@ -23,7 +23,6 @@ import static com.google.common.collect.testing.IteratorFeature.MODIFIABLE;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -33,9 +32,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.testing.IteratorTester;
 import com.google.common.testing.ClassSanityTester;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.testing.NullPointerTester;
-
-import junit.framework.TestCase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +48,8 @@ import java.util.RandomAccess;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@code Iterables}.
@@ -283,7 +283,7 @@ public class IterablesTest extends TestCase {
     Iterable<TypeA> alist = Lists
         .newArrayList(new TypeA(), new TypeA(), hasBoth, new TypeA());
     Iterable<TypeB> blist = Iterables.filter(alist, TypeB.class);
-    ASSERT.that(blist).iteratesOverSequence(hasBoth);
+    FluentAsserts.assertThat(blist).iteratesOverSequence(hasBoth);
   }
 
   public void testTransform() {
@@ -411,7 +411,7 @@ public class IterablesTest extends TestCase {
     int n = 4;
     Iterable<Integer> repeated
         = Iterables.concat(Collections.nCopies(n, iterable));
-    ASSERT.that(repeated).iteratesOverSequence(
+    FluentAsserts.assertThat(repeated).iteratesOverSequence(
         1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3);
   }
 
@@ -510,7 +510,7 @@ public class IterablesTest extends TestCase {
     List<String> freshlyAdded = newArrayList("freshly", "added");
 
     boolean changed = Iterables.addAll(alreadyThere, freshlyAdded);
-    ASSERT.that(alreadyThere).has().allOf(
+    FluentAsserts.assertThat(alreadyThere).has().allOf(
         "already", "there", "freshly", "added").inOrder();
     assertTrue(changed);
   }
@@ -656,7 +656,7 @@ public class IterablesTest extends TestCase {
     Iterable<String> tail = skip(set, 1);
     set.remove("b");
     set.addAll(newArrayList("A", "B", "C"));
-    ASSERT.that(tail).iteratesOverSequence("c", "A", "B", "C");
+    FluentAsserts.assertThat(tail).iteratesOverSequence("c", "A", "B", "C");
   }
 
   public void testSkip_structurallyModifiedSkipSomeList() throws Exception {
@@ -664,7 +664,7 @@ public class IterablesTest extends TestCase {
     Iterable<String> tail = skip(list, 1);
     list.subList(1, 3).clear();
     list.addAll(0, newArrayList("A", "B", "C"));
-    ASSERT.that(tail).iteratesOverSequence("B", "C", "a");
+    FluentAsserts.assertThat(tail).iteratesOverSequence("B", "C", "a");
   }
 
   public void testSkip_structurallyModifiedSkipAll() throws Exception {
@@ -1102,16 +1102,16 @@ public class IterablesTest extends TestCase {
     Iterable<String> consumingIterable = Iterables.consumingIterable(list);
     Iterator<String> consumingIterator = consumingIterable.iterator();
 
-    ASSERT.that(list).has().allOf("a", "b").inOrder();
+    FluentAsserts.assertThat(list).has().allOf("a", "b").inOrder();
 
     assertTrue(consumingIterator.hasNext());
-    ASSERT.that(list).has().allOf("a", "b").inOrder();
+    FluentAsserts.assertThat(list).has().allOf("a", "b").inOrder();
     assertEquals("a", consumingIterator.next());
-    ASSERT.that(list).has().item("b");
+    FluentAsserts.assertThat(list).has().item("b");
 
     assertTrue(consumingIterator.hasNext());
     assertEquals("b", consumingIterator.next());
-    ASSERT.that(list).isEmpty();
+    FluentAsserts.assertThat(list).isEmpty();
 
     assertFalse(consumingIterator.hasNext());
   }

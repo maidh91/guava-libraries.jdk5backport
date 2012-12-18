@@ -18,10 +18,10 @@ package com.google.common.eventbus;
 
 import com.google.common.testing.EqualsTester;
 
-import junit.framework.TestCase;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import junit.framework.TestCase;
 
 /**
  * Test case for {@link EventHandler}.

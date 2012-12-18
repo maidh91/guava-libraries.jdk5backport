@@ -27,13 +27,16 @@ import com.google.common.collect.testing.features.MapFeature;
 import com.google.common.collect.testing.google.ListMultimapTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringListMultimapGenerator;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.RandomAccess;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Unit tests for {@code ArrayListMultimap}.
@@ -116,9 +119,9 @@ public class ArrayListMultimapTest extends AbstractListMultimapTest {
     ListMultimap<String, Integer> multimap = create();
     multimap.putAll("foo", asList(1, 2, 3, 4, 5));
     List<Integer> list = multimap.get("foo");
-    ASSERT.that(multimap.get("foo")).has().allOf(1, 2, 3, 4, 5).inOrder();
+    assertThat(multimap.get("foo")).has().allOf(1, 2, 3, 4, 5).inOrder();
     List<Integer> sublist = list.subList(0, 5);
-    ASSERT.that(sublist).has().allOf(1, 2, 3, 4, 5).inOrder();
+    assertThat(sublist).has().allOf(1, 2, 3, 4, 5).inOrder();
 
     sublist.clear();
     assertTrue(sublist.isEmpty());
@@ -184,7 +187,13 @@ public class ArrayListMultimapTest extends AbstractListMultimapTest {
     multimap.put("bar", 3);
     multimap.trimToSize();
     assertEquals(3, multimap.size());
-    ASSERT.that(multimap.get("foo")).has().allOf(1, 2).inOrder();
-    ASSERT.that(multimap.get("bar")).has().item(3);
+    assertThat(multimap.get("foo")).has().allOf(1, 2).inOrder();
+    assertThat(multimap.get("bar")).has().item(3);
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

@@ -129,7 +129,7 @@ public class MultimapRemoveEntryTester<K, V> extends AbstractMultimapTester<K, V
       multimap().remove(key, value);
       expectedCollection.remove(value);
 
-      ASSERT.that(collection).has().allFrom(expectedCollection);
+      ASSERT.<V, Collection<V>>that(collection).has().allFrom(expectedCollection);
       assertEquals(!expectedCollection.isEmpty(), multimap().containsKey(key));
     }
   }
@@ -150,7 +150,7 @@ public class MultimapRemoveEntryTester<K, V> extends AbstractMultimapTester<K, V
       multimap().remove(key, value);
       expectedCollection.remove(value);
 
-      ASSERT.that(collection).has().allFrom(expectedCollection);
+      ASSERT.<V, Collection<V>>that(collection).has().allFrom(expectedCollection);
       assertEquals(!expectedCollection.isEmpty(), multimap().containsKey(key));
     }
   }
@@ -180,7 +180,7 @@ public class MultimapRemoveEntryTester<K, V> extends AbstractMultimapTester<K, V
       multimap().remove(key, value);
       expectedCollection.remove(value);
 
-      ASSERT.that(collection).has().allFrom(expectedCollection);
+      ASSERT.<V, Collection<V>>that(collection).has().allFrom(expectedCollection);
       assertEquals(!expectedCollection.isEmpty(), multimap().containsKey(key));
     }
   }

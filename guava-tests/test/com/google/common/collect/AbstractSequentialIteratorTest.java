@@ -23,11 +23,11 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.testing.IteratorTester;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
 
 /** Tests for {@link AbstractSequentialIterator}. */
 @GwtCompatible(emulated = true)
@@ -50,7 +50,7 @@ public class AbstractSequentialIteratorTest extends TestCase {
         return newDoubler(2, 32);
       }
     };
-    ASSERT.that(doubled).iteratesOverSequence(2, 4, 8, 16, 32);
+    ASSERT.<Integer, Iterable<Integer>>that(doubled).iteratesOverSequence(2, 4, 8, 16, 32);
   }
 
   public void testSampleCode() {
@@ -58,6 +58,7 @@ public class AbstractSequentialIteratorTest extends TestCase {
       @Override
       public Iterator<Integer> iterator() {
         Iterator<Integer> powersOfTwo = new AbstractSequentialIterator<Integer>(1) {
+          @Override
           protected Integer computeNext(Integer previous) {
             return (previous == 1 << 30) ? null : previous * 2;
           }
@@ -65,9 +66,10 @@ public class AbstractSequentialIteratorTest extends TestCase {
         return powersOfTwo;
       }
     };
-    ASSERT.that(actual).iteratesOverSequence(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048,
-        4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304,
-        8388608, 16777216, 33554432, 67108864, 134217728, 268435456, 536870912, 1073741824);
+    ASSERT.<Integer, Iterable<Integer>>that(actual).iteratesOverSequence(1, 2, 4, 8, 16, 32, 64,
+        128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288,
+        1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728, 268435456,
+        536870912, 1073741824);
   }
 
   public void testEmpty() {
@@ -76,13 +78,11 @@ public class AbstractSequentialIteratorTest extends TestCase {
     try {
       empty.next();
       fail();
-    } catch (NoSuchElementException expected) {
-    }
+    } catch (NoSuchElementException expected) {}
     try {
       empty.remove();
       fail();
-    } catch (UnsupportedOperationException expected) {
-    }
+    } catch (UnsupportedOperationException expected) {}
   }
 
   public void testBroken() {
@@ -92,13 +92,11 @@ public class AbstractSequentialIteratorTest extends TestCase {
     try {
       broken.next();
       fail();
-    } catch (MyException expected) {
-    }
+    } catch (MyException expected) {}
     try {
       broken.next();
       fail();
-    } catch (MyException expected) {
-    }
+    } catch (MyException expected) {}
   }
 
   private static Iterator<Integer> newDoubler(int first, final int last) {

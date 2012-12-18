@@ -17,22 +17,22 @@
 package com.google.common.primitives;
 
 import static java.lang.Double.NaN;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.testing.Helpers;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
-
-import junit.framework.TestCase;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link Doubles}.
@@ -363,7 +363,7 @@ public class DoublesTest extends TestCase {
     list.set(0, (double) 2);
     assertTrue(Arrays.equals(new double[] {(double) 2, (double) 1}, array));
     array[1] = (double) 3;
-    ASSERT.that(list).has().allOf((double) 2, (double) 3).inOrder();
+    FluentAsserts.assertThat(list).has().allOf((double) 2, (double) 3).inOrder();
   }
 
   public void testAsList_toArray_roundTrip() {

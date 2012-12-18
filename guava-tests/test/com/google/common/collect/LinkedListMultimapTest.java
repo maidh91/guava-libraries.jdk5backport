@@ -36,9 +36,6 @@ import com.google.common.collect.testing.google.ListMultimapTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringListMultimapGenerator;
 import com.google.common.testing.EqualsTester;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +46,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.RandomAccess;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for {@code LinkedListMultimap}.
@@ -230,10 +232,10 @@ public class LinkedListMultimapTest extends AbstractListMultimapTest {
     List<Integer> foos = map.get("foo");
     Collection<Integer> values = map.values();
     assertEquals(asList(1, 2), foos);
-    ASSERT.that(values).has().allOf(1, 2, 3).inOrder();
+    assertThat(values).has().allOf(1, 2, 3).inOrder();
     map.clear();
     assertEquals(Collections.emptyList(), foos);
-    ASSERT.that(values).isEmpty();
+    assertThat(values).isEmpty();
     assertEquals("[]", map.entries().toString());
     assertEquals("{}", map.toString());
   }
@@ -257,7 +259,7 @@ public class LinkedListMultimapTest extends AbstractListMultimapTest {
     map.put("bar", 4);
     assertEquals("[bar=1, foo=2, bar=3, bar=4]",
         map.entries().toString());
-    ASSERT.that(map.keys()).has().allOf("bar", "foo", "bar", "bar").inOrder();
+    assertThat(map.keys()).has().allOf("bar", "foo", "bar", "bar").inOrder();
     map.keys().remove("bar"); // bar is no longer the first key!
     assertEquals("{foo=[2], bar=[3, 4]}", map.toString());
   }
@@ -303,7 +305,7 @@ public class LinkedListMultimapTest extends AbstractListMultimapTest {
         = map.asMap().entrySet().iterator();
     Map.Entry<String, Collection<Integer>> entry = entries.next();
     assertEquals("bar", entry.getKey());
-    ASSERT.that(entry.getValue()).has().allOf(1, 3).inOrder();
+    assertThat(entry.getValue()).has().allOf(1, 3).inOrder();
     try {
       entry.setValue(Arrays.<Integer>asList());
       fail("UnsupportedOperationException expected");
@@ -311,7 +313,7 @@ public class LinkedListMultimapTest extends AbstractListMultimapTest {
     entries.remove(); // clear
     entry = entries.next();
     assertEquals("foo", entry.getKey());
-    ASSERT.that(entry.getValue()).has().item(2);
+    assertThat(entry.getValue()).has().item(2);
     assertFalse(entries.hasNext());
     assertEquals("{foo=[2]}", map.toString());
   }
@@ -513,5 +515,11 @@ public class LinkedListMultimapTest extends AbstractListMultimapTest {
             LinkedListMultimap.create(),
             LinkedListMultimap.create(1))
         .testEquals();
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

@@ -116,6 +116,12 @@ public final class InetAddresses {
   private static final int IPV6_PART_COUNT = 8;
   private static final Inet4Address LOOPBACK4 = (Inet4Address) forString("127.0.0.1");
   private static final Inet4Address ANY4 = (Inet4Address) forString("0.0.0.0");
+  
+  private static byte[] copy4(byte[] bytes, int offset) {
+    byte[] result = new byte[4];
+    System.arraycopy(bytes, offset, result, 0, 4);
+    return result;
+  }
 
   private InetAddresses() {}
 
@@ -568,7 +574,7 @@ public final class InetAddresses {
     Preconditions.checkArgument(isCompatIPv4Address(ip), "Address '%s' is not IPv4-compatible.",
         toAddrString(ip));
 
-    return getInet4Address(Arrays.copyOfRange(ip.getAddress(), 12, 16));
+    return getInet4Address(copy4(ip.getAddress(), 12));
   }
 
   /**
@@ -601,7 +607,7 @@ public final class InetAddresses {
     Preconditions.checkArgument(is6to4Address(ip), "Address '%s' is not a 6to4 address.",
         toAddrString(ip));
 
-    return getInet4Address(Arrays.copyOfRange(ip.getAddress(), 2, 6));
+    return getInet4Address(copy4(ip.getAddress(), 2));
   }
 
   /**
@@ -693,14 +699,13 @@ public final class InetAddresses {
         toAddrString(ip));
 
     byte[] bytes = ip.getAddress();
-    Inet4Address server = getInet4Address(Arrays.copyOfRange(bytes, 4, 8));
-
+    Inet4Address server = getInet4Address(copy4(bytes, 4));
     int flags = ByteStreams.newDataInput(bytes, 8).readShort() & 0xffff;
 
     // Teredo obfuscates the mapped client port, per section 4 of the RFC.
     int port = ~ByteStreams.newDataInput(bytes, 10).readShort() & 0xffff;
 
-    byte[] clientBytes = Arrays.copyOfRange(bytes, 12, 16);
+    byte[] clientBytes = copy4(bytes, 12);
     for (int i = 0; i < clientBytes.length; i++) {
       // Teredo obfuscates the mapped client IP, per section 4 of the RFC.
       clientBytes[i] = (byte) ~clientBytes[i];
@@ -756,7 +761,7 @@ public final class InetAddresses {
     Preconditions.checkArgument(isIsatapAddress(ip), "Address '%s' is not an ISATAP address.",
         toAddrString(ip));
 
-    return getInet4Address(Arrays.copyOfRange(ip.getAddress(), 12, 16));
+    return getInet4Address(copy4(ip.getAddress(), 12));
   }
 
   /**

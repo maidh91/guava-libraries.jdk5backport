@@ -40,10 +40,6 @@ import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.features.ListFeature;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,6 +52,12 @@ import java.util.NoSuchElementException;
 import java.util.RandomAccess;
 import java.util.Set;
 import java.util.Vector;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Unit test for {@code Iterators}.
@@ -750,7 +752,7 @@ public class IteratorsTest extends TestCase {
 
     boolean changed = Iterators.addAll(alreadyThere,
                                        Iterators.<String>emptyIterator());
-    ASSERT.that(alreadyThere).has().allOf("already", "there").inOrder();
+    assertThat(alreadyThere).has().allOf("already", "there").inOrder();
     assertFalse(changed);
   }
 
@@ -760,7 +762,7 @@ public class IteratorsTest extends TestCase {
 
     boolean changed = Iterators.addAll(alreadyThere, freshlyAdded.iterator());
 
-    ASSERT.that(alreadyThere).has().allOf("already", "there", "freshly", "added");
+    assertThat(alreadyThere).has().allOf("already", "there", "freshly", "added");
     assertTrue(changed);
   }
 
@@ -770,7 +772,7 @@ public class IteratorsTest extends TestCase {
     List<String> oneMore = Lists.newArrayList("there");
 
     boolean changed = Iterators.addAll(alreadyThere, oneMore.iterator());
-    ASSERT.that(alreadyThere).has().allOf("already", "there").inOrder();
+    assertThat(alreadyThere).has().allOf("already", "there").inOrder();
     assertFalse(changed);
   }
 
@@ -1506,16 +1508,16 @@ public class IteratorsTest extends TestCase {
     Iterator<String> consumingIterator =
         Iterators.consumingIterator(list.iterator());
 
-    ASSERT.that(list).has().allOf("a", "b").inOrder();
+    assertThat(list).has().allOf("a", "b").inOrder();
 
     assertTrue(consumingIterator.hasNext());
-    ASSERT.that(list).has().allOf("a", "b").inOrder();
+    assertThat(list).has().allOf("a", "b").inOrder();
     assertEquals("a", consumingIterator.next());
-    ASSERT.that(list).has().item("b");
+    assertThat(list).has().item("b");
 
     assertTrue(consumingIterator.hasNext());
     assertEquals("b", consumingIterator.next());
-    ASSERT.that(list).isEmpty();
+    assertThat(list).isEmpty();
 
     assertFalse(consumingIterator.hasNext());
   }
@@ -1579,5 +1581,11 @@ public class IteratorsTest extends TestCase {
     assertNotSame(peek, nonpeek);
     assertSame(peek, Iterators.peekingIterator(peek));
     assertSame(peek, Iterators.peekingIterator((Iterator<String>) peek));
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

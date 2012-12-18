@@ -32,7 +32,22 @@ final class DoubleUtils {
   private DoubleUtils() {}
 
   static double nextDown(double d) {
-    return -Math.nextUp(-d);
+    return -nextUp(-d);
+  }
+  
+  static double nextUp(double d) {
+    if (Double.isNaN(d)) {
+      return d;
+    } else if (d == 0.0) {
+      return Double.MIN_VALUE;
+    } else if (d == Double.POSITIVE_INFINITY) {
+      return d;
+    } else {
+      long bits = Double.doubleToRawLongBits(d);
+      bits += (bits >> 63) | 1;
+      return Double.longBitsToDouble(bits);
+    }
+    
   }
 
   // The mask for the significand, according to the {@link
@@ -50,11 +65,20 @@ final class DoubleUtils {
   static final int SIGNIFICAND_BITS = 52;
 
   static final int EXPONENT_BIAS = 1023;
+  
+  static final int MAX_EXPONENT = 1023;
+  
+  static final int MIN_EXPONENT = -1022;
 
   /**
    * The implicit 1 bit that is omitted in significands of normal doubles.
    */
   static final long IMPLICIT_BIT = SIGNIFICAND_MASK + 1;
+  
+  static int getExponent(double d) {
+    long bits = Double.doubleToRawLongBits(d) & EXPONENT_MASK;
+    return (int) (bits >>> SIGNIFICAND_BITS) - EXPONENT_BIAS;
+  }
 
   static long getSignificand(double d) {
     checkArgument(isFinite(d), "not a normal value");
@@ -62,6 +86,12 @@ final class DoubleUtils {
     long bits = doubleToRawLongBits(d);
     bits &= SIGNIFICAND_MASK;
     return (exponent == MIN_EXPONENT - 1) ? bits << 1 : bits | IMPLICIT_BIT;
+  }
+  
+  static double copySign(double mag, double sgn) {
+    long bits = Double.doubleToRawLongBits(mag) & ~SIGN_MASK;
+    bits |= Double.doubleToRawLongBits(sgn) & SIGN_MASK;
+    return Double.longBitsToDouble(bits);
   }
 
   static boolean isFinite(double d) {

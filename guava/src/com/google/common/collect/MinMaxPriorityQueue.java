@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
@@ -780,7 +781,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
         MoveDesc<E> moved = removeAt(cursor);
         if (moved != null) {
           if (forgetMeNot == null) {
-            forgetMeNot = new ArrayDeque<E>();
+            forgetMeNot = new LinkedList<E>();
             skipMe = new ArrayList<E>(3);
           }
           forgetMeNot.add(moved.toTrickle);

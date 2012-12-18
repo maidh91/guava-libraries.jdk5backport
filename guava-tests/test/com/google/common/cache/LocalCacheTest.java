@@ -30,7 +30,6 @@ import static com.google.common.collect.Maps.immutableEntry;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.easymock.EasyMock.createMock;
 
 import com.google.common.base.Equivalence;
 import com.google.common.base.Ticker;
@@ -54,8 +53,6 @@ import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 import com.google.common.testing.TestLogHandler;
 
-import junit.framework.TestCase;
-
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -69,6 +66,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.logging.LogRecord;
+
+import junit.framework.TestCase;
 
 /**
  * @author Charles Fry

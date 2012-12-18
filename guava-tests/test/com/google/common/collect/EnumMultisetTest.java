@@ -29,13 +29,13 @@ import com.google.common.testing.ClassSanityTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * Tests for an {@link EnumMultiset}.

@@ -16,16 +16,16 @@
 
 package com.google.common.util.concurrent;
 
-import static org.truth0.Truth.ASSERT;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import com.google.common.testing.FluentAsserts;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
 
 /**
  * Tests for {@link AbstractFuture}.
@@ -153,11 +153,11 @@ public class AbstractFutureTest extends TestCase {
     int index = findStackFrame(
         e, getClass().getName(), "getExpectingExecutionException");
 
-    ASSERT.that(index).isNotEqualTo(0);
+    FluentAsserts.assertThat(index).isNotEqualTo(0);
 
     // Above our method should be the call to get(). Don't assert on the class
     // because it could be some superclass.
-    ASSERT.that(e.getStackTrace()[index - 1].getMethodName()).isEqualTo("get");
+    FluentAsserts.assertThat(e.getStackTrace()[index - 1].getMethodName()).isEqualTo("get");
   }
 
   private static int findStackFrame(

@@ -39,11 +39,14 @@ import com.google.common.collect.testing.google.SetGenerators.ContiguousSetSubse
 import com.google.common.collect.testing.google.SetGenerators.ContiguousSetTailsetGenerator;
 import com.google.common.testing.EqualsTester;
 
+import java.util.Collection;
+import java.util.Set;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import java.util.Set;
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * @author Gregory Kick
@@ -120,53 +123,53 @@ public class ContiguousSetTest extends TestCase {
 
   public void testHeadSet() {
     ImmutableSortedSet<Integer> set = ContiguousSet.create(Range.closed(1, 3), integers());
-    ASSERT.that(set.headSet(1)).isEmpty();
-    ASSERT.that(set.headSet(2)).has().item(1);
-    ASSERT.that(set.headSet(3)).has().allOf(1, 2).inOrder();
-    ASSERT.that(set.headSet(4)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.headSet(Integer.MAX_VALUE)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.headSet(1, true)).has().item(1);
-    ASSERT.that(set.headSet(2, true)).has().allOf(1, 2).inOrder();
-    ASSERT.that(set.headSet(3, true)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.headSet(4, true)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.headSet(Integer.MAX_VALUE, true)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.headSet(1)).isEmpty();
+    assertThat(set.headSet(2)).has().item(1);
+    assertThat(set.headSet(3)).has().allOf(1, 2).inOrder();
+    assertThat(set.headSet(4)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.headSet(Integer.MAX_VALUE)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.headSet(1, true)).has().item(1);
+    assertThat(set.headSet(2, true)).has().allOf(1, 2).inOrder();
+    assertThat(set.headSet(3, true)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.headSet(4, true)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.headSet(Integer.MAX_VALUE, true)).has().allOf(1, 2, 3).inOrder();
   }
 
   public void testHeadSet_tooSmall() {
-    ASSERT.that(ContiguousSet.create(Range.closed(1, 3), integers()).headSet(0)).isEmpty();
+    assertThat(ContiguousSet.create(Range.closed(1, 3), integers()).headSet(0)).isEmpty();
   }
 
   public void testTailSet() {
     ImmutableSortedSet<Integer> set = ContiguousSet.create(Range.closed(1, 3), integers());
-    ASSERT.that(set.tailSet(Integer.MIN_VALUE)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.tailSet(1)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.tailSet(2)).has().allOf(2, 3).inOrder();
-    ASSERT.that(set.tailSet(3)).has().item(3);
-    ASSERT.that(set.tailSet(Integer.MIN_VALUE, false)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.tailSet(1, false)).has().allOf(2, 3).inOrder();
-    ASSERT.that(set.tailSet(2, false)).has().item(3);
-    ASSERT.that(set.tailSet(3, false)).isEmpty();
+    assertThat(set.tailSet(Integer.MIN_VALUE)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.tailSet(1)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.tailSet(2)).has().allOf(2, 3).inOrder();
+    assertThat(set.tailSet(3)).has().item(3);
+    assertThat(set.tailSet(Integer.MIN_VALUE, false)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.tailSet(1, false)).has().allOf(2, 3).inOrder();
+    assertThat(set.tailSet(2, false)).has().item(3);
+    assertThat(set.tailSet(3, false)).isEmpty();
   }
 
   public void testTailSet_tooLarge() {
-    ASSERT.that(ContiguousSet.create(Range.closed(1, 3), integers()).tailSet(4)).isEmpty();
+    assertThat(ContiguousSet.create(Range.closed(1, 3), integers()).tailSet(4)).isEmpty();
   }
 
   public void testSubSet() {
     ImmutableSortedSet<Integer> set = ContiguousSet.create(Range.closed(1, 3), integers());
-    ASSERT.that(set.subSet(1, 4)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.subSet(2, 4)).has().allOf(2, 3).inOrder();
-    ASSERT.that(set.subSet(3, 4)).has().item(3);
-    ASSERT.that(set.subSet(3, 3)).isEmpty();
-    ASSERT.that(set.subSet(2, 3)).has().item(2);
-    ASSERT.that(set.subSet(1, 3)).has().allOf(1, 2).inOrder();
-    ASSERT.that(set.subSet(1, 2)).has().item(1);
-    ASSERT.that(set.subSet(2, 2)).isEmpty();
-    ASSERT.that(set.subSet(Integer.MIN_VALUE, Integer.MAX_VALUE)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.subSet(1, true, 3, true)).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(set.subSet(1, false, 3, true)).has().allOf(2, 3).inOrder();
-    ASSERT.that(set.subSet(1, true, 3, false)).has().allOf(1, 2).inOrder();
-    ASSERT.that(set.subSet(1, false, 3, false)).has().item(2);
+    assertThat(set.subSet(1, 4)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.subSet(2, 4)).has().allOf(2, 3).inOrder();
+    assertThat(set.subSet(3, 4)).has().item(3);
+    assertThat(set.subSet(3, 3)).isEmpty();
+    assertThat(set.subSet(2, 3)).has().item(2);
+    assertThat(set.subSet(1, 3)).has().allOf(1, 2).inOrder();
+    assertThat(set.subSet(1, 2)).has().item(1);
+    assertThat(set.subSet(2, 2)).isEmpty();
+    assertThat(set.subSet(Integer.MIN_VALUE, Integer.MAX_VALUE)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.subSet(1, true, 3, true)).has().allOf(1, 2, 3).inOrder();
+    assertThat(set.subSet(1, false, 3, true)).has().allOf(2, 3).inOrder();
+    assertThat(set.subSet(1, true, 3, false)).has().allOf(1, 2).inOrder();
+    assertThat(set.subSet(1, false, 3, false)).has().item(2);
   }
 
   public void testSubSet_outOfOrder() {
@@ -178,11 +181,11 @@ public class ContiguousSetTest extends TestCase {
   }
 
   public void testSubSet_tooLarge() {
-    ASSERT.that(ContiguousSet.create(Range.closed(1, 3), integers()).subSet(4, 6)).isEmpty();
+    assertThat(ContiguousSet.create(Range.closed(1, 3), integers()).subSet(4, 6)).isEmpty();
   }
 
   public void testSubSet_tooSmall() {
-    ASSERT.that(ContiguousSet.create(Range.closed(1, 3), integers()).subSet(-1, 0)).isEmpty();
+    assertThat(ContiguousSet.create(Range.closed(1, 3), integers()).subSet(-1, 0)).isEmpty();
   }
 
   public void testFirst() {
@@ -339,5 +342,11 @@ public class ContiguousSetTest extends TestCase {
 
       return suite;
     }
+  }
+
+  // Hack for JDK5 type inference.
+  private <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

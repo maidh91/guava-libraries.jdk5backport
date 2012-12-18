@@ -26,13 +26,13 @@ import com.google.common.collect.testing.Helpers;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.TestCase;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link Floats}.
@@ -354,7 +354,7 @@ public class FloatsTest extends TestCase {
     list.set(0, (float) 2);
     assertTrue(Arrays.equals(new float[] {(float) 2, (float) 1}, array));
     array[1] = (float) 3;
-    ASSERT.that(list).has().allOf((float) 2, (float) 3).inOrder();
+    ASSERT.<Float, List<Float>>that(list).has().allOf((float) 2, (float) 3).inOrder();
   }
 
   public void testAsList_toArray_roundTrip() {

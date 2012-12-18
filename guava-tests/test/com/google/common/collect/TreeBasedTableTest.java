@@ -27,15 +27,18 @@ import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.features.MapFeature;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Test cases for {@link TreeBasedTable}.
@@ -150,8 +153,8 @@ public class TreeBasedTableTest extends AbstractTableTest {
     table.put("foo", 12, 'b');
     table.put("bar", 5, 'c');
     table.put("cat", 8, 'd');
-    ASSERT.that(table.rowKeySet()).has().allOf("foo", "cat", "bar").inOrder();
-    ASSERT.that(table.row("foo").keySet()).has().allOf(12, 3).inOrder();
+    assertThat(table.rowKeySet()).has().allOf("foo", "cat", "bar").inOrder();
+    assertThat(table.row("foo").keySet()).has().allOf(12, 3).inOrder();
   }
 
   public void testCreateCopy() {
@@ -162,8 +165,8 @@ public class TreeBasedTableTest extends AbstractTableTest {
     original.put("bar", 5, 'c');
     original.put("cat", 8, 'd');
     table = TreeBasedTable.create(original);
-    ASSERT.that(table.rowKeySet()).has().allOf("foo", "cat", "bar").inOrder();
-    ASSERT.that(table.row("foo").keySet()).has().allOf(12, 3).inOrder();
+    assertThat(table.rowKeySet()).has().allOf("foo", "cat", "bar").inOrder();
+    assertThat(table.row("foo").keySet()).has().allOf(12, 3).inOrder();
     assertEquals(original, table);
   }
 
@@ -444,5 +447,11 @@ public class TreeBasedTableTest extends AbstractTableTest {
     table.put("foo", 5, 'x');
     assertEquals(ImmutableMap.of(5, 'x'), row);
     assertEquals(ImmutableMap.of(5, 'x'), subRow);
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

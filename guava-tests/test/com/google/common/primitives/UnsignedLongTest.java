@@ -21,9 +21,9 @@ import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.TestCase;
-
 import java.math.BigInteger;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for {@code UnsignedLong}.

@@ -146,18 +146,18 @@ public abstract class AbstractMultimapTester<K, V, M extends Multimap<K, V>>
   }
 
   protected void assertGet(K key, Collection<V> values) {
-    ASSERT.that(multimap().get(key)).has().allFrom(values);
+    ASSERT.<V, Collection<V>>that(multimap().get(key)).has().allFrom(values);
 
     if (!values.isEmpty()) {
-      ASSERT.that(multimap().asMap().get(key)).has().allFrom(values);
+      ASSERT.<V, Collection<V>>that(multimap().asMap().get(key)).has().allFrom(values);
       assertFalse(multimap().isEmpty());
     } else {
-      ASSERT.that(multimap().asMap().get(key)).isNull();
+      ASSERT.<V, Collection<V>>that(multimap().asMap().get(key)).isNull();
     }
 
     // TODO(user): Add proper overrides to prevent autoboxing.
     // Truth+autoboxing == compile error. Cast int to long to fix:
-    ASSERT.that(multimap().get(key).size()).is((long) values.size());
+    assertEquals(values.size(), multimap().get(key).size());
 
     assertEquals(values.size() > 0, multimap().containsKey(key));
     assertEquals(values.size() > 0, multimap().keySet().contains(key));

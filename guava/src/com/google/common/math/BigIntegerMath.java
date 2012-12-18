@@ -18,6 +18,7 @@ package com.google.common.math;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.math.DoubleUtils.MAX_EXPONENT;
 import static com.google.common.math.MathPreconditions.checkNonNegative;
 import static com.google.common.math.MathPreconditions.checkPositive;
 import static com.google.common.math.MathPreconditions.checkRoundingUnnecessary;
@@ -258,7 +259,7 @@ public final class BigIntegerMath {
      */
     BigInteger sqrt0;
     int log2 = log2(x, FLOOR);
-    if (log2 < Double.MAX_EXPONENT) {
+    if (log2 < MAX_EXPONENT) {
       sqrt0 = sqrtApproxWithDoubles(x);
     } else {
       int shift = (log2 - DoubleUtils.SIGNIFICAND_BITS) & ~1; // even!

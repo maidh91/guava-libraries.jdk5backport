@@ -22,6 +22,7 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.SortedSet;
 
 /**
  * A {@link Multiset} which maintains the ordering of its elements, according to
@@ -78,9 +79,9 @@ public interface SortedMultiset<E> extends SortedMultisetBridge<E>, SortedIterab
   /**
    * Returns a {@link NavigableSet} view of the distinct elements in this multiset.
    * 
-   * @since 14.0 (present with return type {@code SortedSet} since 11.0)
+   * @since 11.0
    */
-  NavigableSet<E> elementSet();
+  SortedSet<E> elementSet();
 
   /**
    * {@inheritDoc}

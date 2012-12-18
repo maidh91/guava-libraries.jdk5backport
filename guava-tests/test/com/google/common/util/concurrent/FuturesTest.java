@@ -38,16 +38,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.testing.ClassSanityTester;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.util.concurrent.ForwardingFuture.SimpleForwardingFuture;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -64,6 +60,13 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import javax.annotation.Nullable;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+
+import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Unit tests for {@link Futures}.
@@ -840,7 +843,7 @@ public class FuturesTest extends TestCase {
     assertTrue(listener.wasCalled());
 
     List<String> results = compound.get();
-    ASSERT.that(results).has().allOf(DATA1, DATA2, DATA3).inOrder();
+    assertThat(results).has().allOf(DATA1, DATA2, DATA3).inOrder();
   }
 
   public void testAllAsList_emptyList() throws Exception {
@@ -1021,7 +1024,7 @@ public class FuturesTest extends TestCase {
     assertTrue(listener.wasCalled());
 
     List<String> results = compound.get();
-    ASSERT.that(results).has().allOf(DATA1, DATA2, DATA3).inOrder();
+    assertThat(results).has().allOf(DATA1, DATA2, DATA3).inOrder();
   }
 
   private static String createCombinedResult(Integer i, Boolean b) {
@@ -1441,7 +1444,7 @@ public class FuturesTest extends TestCase {
     assertTrue(listener.wasCalled());
 
     List<String> results = compound.get();
-    ASSERT.that(results).has().allOf(DATA1, DATA2, DATA3).inOrder();
+    assertThat(results).has().allOf(DATA1, DATA2, DATA3).inOrder();
   }
 
   public void testSuccessfulAsList_emptyList() throws Exception {
@@ -1484,7 +1487,7 @@ public class FuturesTest extends TestCase {
     assertTrue(listener.wasCalled());
 
     List<String> results = compound.get();
-    ASSERT.that(results).has().allOf(null, DATA2).inOrder();
+    assertThat(results).has().allOf(null, DATA2).inOrder();
   }
 
   public void testSuccessfulAsList_totalFailure() throws Exception {
@@ -1505,7 +1508,7 @@ public class FuturesTest extends TestCase {
     assertTrue(listener.wasCalled());
 
     List<String> results = compound.get();
-    ASSERT.that(results).has().allOf(null, null).inOrder();
+    assertThat(results).has().allOf(null, null).inOrder();
   }
 
   public void testSuccessfulAsList_cancelled() throws Exception {
@@ -1526,7 +1529,7 @@ public class FuturesTest extends TestCase {
     assertTrue(listener.wasCalled());
 
     List<String> results = compound.get();
-    ASSERT.that(results).has().allOf(null, DATA2).inOrder();
+    assertThat(results).has().allOf(null, DATA2).inOrder();
   }
 
   public void testSuccessfulAsList_resultCancelled() throws Exception {
@@ -1652,7 +1655,7 @@ public class FuturesTest extends TestCase {
     assertTrue(listener.wasCalled());
 
     List<String> results = compound.get();
-    ASSERT.that(results).has().allOf(null, null, DATA3).inOrder();
+    assertThat(results).has().allOf(null, null, DATA3).inOrder();
   }
 
   private static class TestException extends Exception {
@@ -2235,7 +2238,7 @@ public class FuturesTest extends TestCase {
           ExceptionWithoutThrowableConstructor.class);
       fail();
     } catch (ExceptionWithoutThrowableConstructor expected) {
-      ASSERT.that(expected.getMessage()).contains("mymessage");
+      FluentAsserts.assertThat(expected.getMessage()).contains("mymessage");
       assertEquals(CHECKED_EXCEPTION, expected.getCause());
     }
   }
@@ -2357,5 +2360,11 @@ public class FuturesTest extends TestCase {
     AssertionFailedError failure = new AssertionFailedError(message);
     failure.initCause(cause);
     throw failure;
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

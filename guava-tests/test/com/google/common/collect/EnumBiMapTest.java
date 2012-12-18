@@ -32,16 +32,19 @@ import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for {@code EnumBiMap}.
@@ -195,16 +198,16 @@ public class EnumBiMapTest extends TestCase {
     EnumBiMap<Currency, Country> bimap = EnumBiMap.create(map);
 
     // forward map ordered by currency
-    ASSERT.that(bimap.keySet())
+    assertThat(bimap.keySet())
         .has().allOf(Currency.DOLLAR, Currency.FRANC, Currency.PESO).inOrder();
     // forward map ordered by currency (even for country values)
-    ASSERT.that(bimap.values())
+    assertThat(bimap.values())
         .has().allOf(Country.CANADA, Country.SWITZERLAND, Country.CHILE).inOrder();
     // backward map ordered by country
-    ASSERT.that(bimap.inverse().keySet())
+    assertThat(bimap.inverse().keySet())
         .has().allOf(Country.CANADA, Country.CHILE, Country.SWITZERLAND).inOrder();
     // backward map ordered by country (even for currency values)
-    ASSERT.that(bimap.inverse().values())
+    assertThat(bimap.inverse().values())
         .has().allOf(Currency.DOLLAR, Currency.PESO, Currency.FRANC).inOrder();
   }
 
@@ -222,16 +225,16 @@ public class EnumBiMapTest extends TestCase {
     iter.remove();
 
     // forward map ordered by currency
-    ASSERT.that(bimap.keySet())
+    assertThat(bimap.keySet())
         .has().allOf(Currency.FRANC, Currency.PESO).inOrder();
     // forward map ordered by currency (even for country values)
-    ASSERT.that(bimap.values())
+    assertThat(bimap.values())
         .has().allOf(Country.SWITZERLAND, Country.CHILE).inOrder();
     // backward map ordered by country
-    ASSERT.that(bimap.inverse().keySet())
+    assertThat(bimap.inverse().keySet())
         .has().allOf(Country.CHILE, Country.SWITZERLAND).inOrder();
     // backward map ordered by country (even for currency values)
-    ASSERT.that(bimap.inverse().values())
+    assertThat(bimap.inverse().values())
         .has().allOf(Currency.PESO, Currency.FRANC).inOrder();
   }
 
@@ -250,16 +253,16 @@ public class EnumBiMapTest extends TestCase {
     iter.remove();
 
     // forward map ordered by currency
-    ASSERT.that(bimap.keySet())
+    assertThat(bimap.keySet())
         .has().allOf(Currency.DOLLAR, Currency.PESO).inOrder();
     // forward map ordered by currency (even for country values)
-    ASSERT.that(bimap.values())
+    assertThat(bimap.values())
         .has().allOf(Country.CANADA, Country.CHILE).inOrder();
     // backward map ordered by country
-    ASSERT.that(bimap.inverse().keySet())
+    assertThat(bimap.inverse().keySet())
         .has().allOf(Country.CANADA, Country.CHILE).inOrder();
     // backward map ordered by country (even for currency values)
-    ASSERT.that(bimap.inverse().values())
+    assertThat(bimap.inverse().values())
         .has().allOf(Currency.DOLLAR, Currency.PESO).inOrder();
   }
 
@@ -297,6 +300,12 @@ public class EnumBiMapTest extends TestCase {
         .addEqualityGroup(EnumBiMap.create(ImmutableMap.of(Currency.DOLLAR, Country.CHILE)))
         .addEqualityGroup(EnumBiMap.create(ImmutableMap.of(Currency.FRANC, Country.CANADA)))
         .testEquals();
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 
   /* Remaining behavior tested by AbstractBiMapTest. */

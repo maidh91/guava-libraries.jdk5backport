@@ -18,6 +18,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Funnels for common types. All implementations are serializable.
@@ -110,6 +111,26 @@ public final class Funnels {
     @Override
     public String toString() {
       return "Funnels.longFunnel()";
+    }
+  }
+  
+  static Funnel<ByteBuffer> byteBufferFunnel() {
+    return ByteBufferFunnel.INSTANCE;
+  }
+  
+  private enum ByteBufferFunnel implements Funnel<ByteBuffer> {
+    INSTANCE;
+
+    public void funnel(ByteBuffer from, PrimitiveSink into) {
+      if (from.hasArray()) {
+        into.putBytes(from.array(), from.arrayOffset() + from.position(), from.remaining());
+      } else {
+        int position = from.position();
+        while (from.hasRemaining()) {
+          into.putByte(from.get());
+        }
+        from.position(position);
+      }
     }
   }
 

@@ -19,8 +19,6 @@ package com.google.common.util.concurrent;
 import com.google.common.util.concurrent.AbstractScheduledService.Scheduler;
 import com.google.common.util.concurrent.Service.State;
 
-import junit.framework.TestCase;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
@@ -32,6 +30,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link AbstractScheduledService}.

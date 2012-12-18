@@ -21,6 +21,8 @@ import com.google.common.base.Throwables;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
 /**
@@ -55,7 +57,8 @@ abstract class AbstractNonStreamingHashFunction implements HashFunction {
   }
 
   public HashCode hashString(CharSequence input, Charset charset) {
-    return hashBytes(input.toString().getBytes(charset));
+    ByteBuffer bytes = charset.encode(CharBuffer.wrap(input));
+    return hashObject(bytes, Funnels.byteBufferFunnel());
   }
 
   public HashCode hashInt(int input) {

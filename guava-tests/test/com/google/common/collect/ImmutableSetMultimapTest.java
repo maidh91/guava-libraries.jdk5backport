@@ -30,14 +30,16 @@ import com.google.common.collect.testing.google.UnmodifiableCollectionTests;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map.Entry;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for {@link ImmutableSetMultimap}.
@@ -249,10 +251,10 @@ public class ImmutableSetMultimapTest extends TestCase {
     builder.put("a", 2);
     builder.put("b", 6);
     ImmutableSetMultimap<String, Integer> multimap = builder.build();
-    ASSERT.that(multimap.keySet()).has().allOf("d", "c", "b", "a").inOrder();
-    ASSERT.that(multimap.values()).has().allOf(2, 4, 3, 6, 5, 2).inOrder();
-    ASSERT.that(multimap.get("a")).has().allOf(5, 2).inOrder();
-    ASSERT.that(multimap.get("b")).has().allOf(3, 6).inOrder();
+    assertThat(multimap.keySet()).has().allOf("d", "c", "b", "a").inOrder();
+    assertThat(multimap.values()).has().allOf(2, 4, 3, 6, 5, 2).inOrder();
+    assertThat(multimap.get("a")).has().allOf(5, 2).inOrder();
+    assertThat(multimap.get("b")).has().allOf(3, 6).inOrder();
     assertFalse(multimap.get("a") instanceof ImmutableSortedSet);
     assertFalse(multimap.get("x") instanceof ImmutableSortedSet);
     assertFalse(multimap.asMap().get("a") instanceof ImmutableSortedSet);
@@ -274,10 +276,10 @@ public class ImmutableSetMultimapTest extends TestCase {
     builder.put("a", 2);
     builder.put("bb", 6);
     ImmutableSetMultimap<String, Integer> multimap = builder.build();
-    ASSERT.that(multimap.keySet()).has().allOf("d", "a", "bb", "cc").inOrder();
-    ASSERT.that(multimap.values()).has().allOf(2, 5, 2, 3, 6, 4).inOrder();
-    ASSERT.that(multimap.get("a")).has().allOf(5, 2).inOrder();
-    ASSERT.that(multimap.get("bb")).has().allOf(3, 6).inOrder();
+    assertThat(multimap.keySet()).has().allOf("d", "a", "bb", "cc").inOrder();
+    assertThat(multimap.values()).has().allOf(2, 5, 2, 3, 6, 4).inOrder();
+    assertThat(multimap.get("a")).has().allOf(5, 2).inOrder();
+    assertThat(multimap.get("bb")).has().allOf(3, 6).inOrder();
     assertFalse(multimap.get("a") instanceof ImmutableSortedSet);
     assertFalse(multimap.get("x") instanceof ImmutableSortedSet);
     assertFalse(multimap.asMap().get("a") instanceof ImmutableSortedSet);
@@ -294,10 +296,10 @@ public class ImmutableSetMultimapTest extends TestCase {
     builder.put("a", 2);
     builder.put("b", 6);
     ImmutableSetMultimap<String, Integer> multimap = builder.build();
-    ASSERT.that(multimap.keySet()).has().allOf("b", "d", "a", "c").inOrder();
-    ASSERT.that(multimap.values()).has().allOf(6, 3, 2, 5, 2, 4).inOrder();
-    ASSERT.that(multimap.get("a")).has().allOf(5, 2).inOrder();
-    ASSERT.that(multimap.get("b")).has().allOf(6, 3).inOrder();
+    assertThat(multimap.keySet()).has().allOf("b", "d", "a", "c").inOrder();
+    assertThat(multimap.values()).has().allOf(6, 3, 2, 5, 2, 4).inOrder();
+    assertThat(multimap.get("a")).has().allOf(5, 2).inOrder();
+    assertThat(multimap.get("b")).has().allOf(6, 3).inOrder();
     assertTrue(multimap.get("a") instanceof ImmutableSortedSet);
     assertEquals(Collections.reverseOrder(),
         ((ImmutableSortedSet<Integer>) multimap.get("a")).comparator());
@@ -321,10 +323,10 @@ public class ImmutableSetMultimapTest extends TestCase {
     builder.put("a", 2);
     builder.put("b", 6);
     ImmutableSetMultimap<String, Integer> multimap = builder.build();
-    ASSERT.that(multimap.keySet()).has().allOf("d", "c", "b", "a").inOrder();
-    ASSERT.that(multimap.values()).has().allOf(2, 4, 6, 3, 5, 2).inOrder();
-    ASSERT.that(multimap.get("a")).has().allOf(5, 2).inOrder();
-    ASSERT.that(multimap.get("b")).has().allOf(6, 3).inOrder();
+    assertThat(multimap.keySet()).has().allOf("d", "c", "b", "a").inOrder();
+    assertThat(multimap.values()).has().allOf(2, 4, 6, 3, 5, 2).inOrder();
+    assertThat(multimap.get("a")).has().allOf(5, 2).inOrder();
+    assertThat(multimap.get("b")).has().allOf(6, 3).inOrder();
     assertTrue(multimap.get("a") instanceof ImmutableSortedSet);
     assertEquals(Collections.reverseOrder(),
         ((ImmutableSortedSet<Integer>) multimap.get("a")).comparator());
@@ -529,5 +531,11 @@ public class ImmutableSetMultimapTest extends TestCase {
   private ImmutableSetMultimap<String, Integer> createMultimap() {
     return ImmutableSetMultimap.<String, Integer>builder()
         .put("foo", 1).put("bar", 2).put("foo", 3).build();
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

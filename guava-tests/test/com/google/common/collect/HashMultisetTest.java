@@ -26,11 +26,11 @@ import com.google.common.collect.testing.google.MultisetTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringMultisetGenerator;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import java.io.Serializable;
 import java.util.Arrays;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Unit test for {@link HashMultiset}.

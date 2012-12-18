@@ -93,7 +93,7 @@ import javax.annotation.Nullable;
 @SuppressWarnings("serial")
 // we're overriding default serialization
 public abstract class ImmutableSortedSet<E> extends ImmutableSortedSetFauxverideShim<E> implements
-    NavigableSet<E>, SortedIterable<E> {
+    SortedSet<E>, SortedIterable<E> {
 
   private static final Comparator<Comparable> NATURAL_ORDER = Ordering.natural();
 

@@ -31,18 +31,19 @@ import com.google.common.collect.testing.google.UnmodifiableCollectionTests;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.easymock.EasyMock;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.easymock.EasyMock;
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for {@link ImmutableSortedMultiset}.
@@ -420,13 +421,13 @@ public class ImmutableSortedMultisetTest extends TestCase {
   public void testSerialization_multiple() {
     Collection<String> c = ImmutableSortedMultiset.of("a", "b", "a");
     Collection<String> copy = SerializableTester.reserializeAndAssert(c);
-    ASSERT.that(copy).has().allOf("a", "a", "b").inOrder();
+    assertThat(copy).has().allOf("a", "a", "b").inOrder();
   }
 
   public void testSerialization_elementSet() {
     Multiset<String> c = ImmutableSortedMultiset.of("a", "b", "a");
     Collection<String> copy = SerializableTester.reserializeAndAssert(c.elementSet());
-    ASSERT.that(copy).has().allOf("a", "b").inOrder();
+    assertThat(copy).has().allOf("a", "b").inOrder();
   }
 
   public void testSerialization_entrySet() {
@@ -438,13 +439,13 @@ public class ImmutableSortedMultisetTest extends TestCase {
     Collection<String> c = ImmutableSortedMultiset.of("a", "b", "a");
     assertEquals(c, ImmutableSortedMultiset.of("a", "b", "a"));
     assertEquals(c, ImmutableSortedMultiset.of("a", "a", "b"));
-    ASSERT.that(c).isNotEqualTo(ImmutableSortedMultiset.of("a", "b"));
-    ASSERT.that(c).isNotEqualTo(ImmutableSortedMultiset.of("a", "b", "c", "d"));
+    assertThat(c).isNotEqualTo(ImmutableSortedMultiset.of("a", "b"));
+    assertThat(c).isNotEqualTo(ImmutableSortedMultiset.of("a", "b", "c", "d"));
   }
 
   public void testIterationOrder() {
     Collection<String> c = ImmutableSortedMultiset.of("a", "b", "a");
-    ASSERT.that(c).has().allOf("a", "a", "b").inOrder();
+    assertThat(c).has().allOf("a", "a", "b").inOrder();
   }
 
   public void testMultisetWrites() {
@@ -519,5 +520,11 @@ public class ImmutableSortedMultisetTest extends TestCase {
     Multiset<IntegerDiv10> copy = ImmutableSortedMultiset.copyOf(original);
     assertTrue(copy.contains(eleven));
     assertTrue(copy.contains(twelve));
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

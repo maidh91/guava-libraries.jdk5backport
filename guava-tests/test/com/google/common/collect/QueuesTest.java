@@ -18,8 +18,6 @@ package com.google.common.collect;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 
-import junit.framework.TestCase;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -31,6 +29,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for {@link Queues}.
@@ -193,6 +193,7 @@ public class QueuesTest extends TestCase {
   private void testDrainUninterruptibly_doesNotThrow(final BlockingQueue<Object> q) {
     final Thread mainThread = Thread.currentThread();
     threadPool.submit(new Runnable() {
+      @Override
       public void run() {
         new Producer(q, 50).run();
         new Interrupter(mainThread).run();

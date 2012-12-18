@@ -16,12 +16,11 @@
 
 package com.google.common.collect;
 
-import static org.truth0.Truth.ASSERT;
-
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.RegularImmutableTable.DenseImmutableTable;
 import com.google.common.collect.RegularImmutableTable.SparseImmutableTable;
 import com.google.common.collect.Table.Cell;
+import com.google.common.testing.FluentAsserts;
 
 /**
  * @author Gregory Kick
@@ -64,7 +63,7 @@ public class RegularImmutableTableTest extends AbstractImmutableTableTest {
   public void testValues() {
     for (ImmutableTable<Character, Integer, String> testInstance :
         getTestInstances()) {
-      ASSERT.that(testInstance.values())
+      FluentAsserts.assertThat(testInstance.values())
           .has().allOf("foo", "bar", "baz")
           .inOrder();
     }

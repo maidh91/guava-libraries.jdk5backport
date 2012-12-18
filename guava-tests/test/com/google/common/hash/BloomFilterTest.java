@@ -22,11 +22,11 @@ import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.TestCase;
-
 import java.util.Random;
 
 import javax.annotation.Nullable;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for SimpleGenericBloomFilter and derived BloomFilter views.

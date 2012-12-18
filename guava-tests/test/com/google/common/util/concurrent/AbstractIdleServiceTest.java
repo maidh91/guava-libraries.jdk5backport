@@ -19,13 +19,17 @@ package com.google.common.util.concurrent;
 import static org.truth0.Truth.ASSERT;
 
 import com.google.common.collect.Lists;
+import com.google.common.testing.FluentAsserts;
 
-import junit.framework.TestCase;
-
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import junit.framework.TestCase;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for {@link AbstractIdleService}.
@@ -93,7 +97,7 @@ public class AbstractIdleServiceTest extends TestCase {
     service.startAndWait();
     assertEquals(1, service.startUpCalled);
     assertEquals(Service.State.RUNNING, service.state());
-    ASSERT.that(service.transitionStates).has().allOf(Service.State.STARTING).inOrder();
+    assertThat(service.transitionStates).has().allOf(Service.State.STARTING).inOrder();
   }
 
   public void testStart_failed() {
@@ -113,7 +117,7 @@ public class AbstractIdleServiceTest extends TestCase {
     }
     assertEquals(1, service.startUpCalled);
     assertEquals(Service.State.FAILED, service.state());
-    ASSERT.that(service.transitionStates).has().allOf(Service.State.STARTING).inOrder();
+    assertThat(service.transitionStates).has().allOf(Service.State.STARTING).inOrder();
   }
 
   public void testStop_withoutStart() {
@@ -122,7 +126,7 @@ public class AbstractIdleServiceTest extends TestCase {
     assertEquals(0, service.startUpCalled);
     assertEquals(0, service.shutDownCalled);
     assertEquals(Service.State.TERMINATED, service.state());
-    ASSERT.that(service.transitionStates).isEmpty();
+    assertThat(service.transitionStates).isEmpty();
   }
 
   public void testStop_afterStart() {
@@ -134,7 +138,7 @@ public class AbstractIdleServiceTest extends TestCase {
     assertEquals(1, service.startUpCalled);
     assertEquals(1, service.shutDownCalled);
     assertEquals(Service.State.TERMINATED, service.state());
-    ASSERT.that(service.transitionStates)
+    assertThat(service.transitionStates)
         .has().allOf(Service.State.STARTING, Service.State.STOPPING).inOrder();
   }
 
@@ -158,7 +162,7 @@ public class AbstractIdleServiceTest extends TestCase {
     assertEquals(1, service.startUpCalled);
     assertEquals(1, service.shutDownCalled);
     assertEquals(Service.State.FAILED, service.state());
-    ASSERT.that(service.transitionStates)
+    assertThat(service.transitionStates)
         .has().allOf(Service.State.STARTING, Service.State.STOPPING).inOrder();
   }
 
@@ -184,7 +188,7 @@ public class AbstractIdleServiceTest extends TestCase {
       service.start().get(1, TimeUnit.MILLISECONDS);
       fail("Expected timeout");
     } catch (TimeoutException e) {
-      ASSERT.that(e.getMessage()).contains(Service.State.STARTING.toString());
+      FluentAsserts.assertThat(e.getMessage()).contains(Service.State.STARTING.toString());
     }
   }
 
@@ -211,5 +215,11 @@ public class AbstractIdleServiceTest extends TestCase {
       transitionStates.add(state());
       return MoreExecutors.sameThreadExecutor();
     }
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

@@ -22,8 +22,6 @@ import com.google.common.util.concurrent.CycleDetectingLockFactory.Policies;
 import com.google.common.util.concurrent.CycleDetectingLockFactory.Policy;
 import com.google.common.util.concurrent.CycleDetectingLockFactory.PotentialDeadlockException;
 
-import junit.framework.TestCase;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -31,6 +29,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import junit.framework.TestCase;
 
 /**
  * Unittests for {@link CycleDetectingLockFactory}.

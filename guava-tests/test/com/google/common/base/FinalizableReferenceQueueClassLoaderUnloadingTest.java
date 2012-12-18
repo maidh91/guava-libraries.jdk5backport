@@ -17,10 +17,8 @@
 package com.google.common.base;
 
 import com.google.common.testing.GcFinalization;
+
 import java.io.Closeable;
-
-import junit.framework.TestCase;
-
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -33,6 +31,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+
+import junit.framework.TestCase;
 
 /**
  * Tests that the {@code ClassLoader} of {@link FinalizableReferenceQueue} can be unloaded. These
@@ -65,6 +65,7 @@ public class FinalizableReferenceQueueClassLoaderUnloadingTest extends TestCase 
       super(x, queue);
     }
 
+    @Override
     public void finalizeReferent() {
     }
   }

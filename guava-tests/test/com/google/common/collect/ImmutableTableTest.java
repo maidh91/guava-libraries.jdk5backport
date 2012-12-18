@@ -20,6 +20,10 @@ import static org.truth0.Truth.ASSERT;
 
 import com.google.common.annotations.GwtCompatible;
 
+import java.util.Collection;
+
+import org.truth0.subjects.CollectionSubject;
+
 /**
  * Tests common methods in {@link ImmutableTable}
  *
@@ -184,8 +188,8 @@ public class ImmutableTableTest extends AbstractTableReadTest {
     validateTableCopies(table);
     // Even though rowKeySet, columnKeySet, and cellSet have the same
     // iteration ordering, row has an inconsistent ordering.
-    ASSERT.that(table.row('b').keySet()).has().allOf(1, 2).inOrder();
-    ASSERT.that(ImmutableTable.copyOf(table).row('b').keySet())
+    assertThat(table.row('b').keySet()).has().allOf(1, 2).inOrder();
+    assertThat(ImmutableTable.copyOf(table).row('b').keySet())
         .has().allOf(2, 1).inOrder();
   }
 
@@ -227,10 +231,10 @@ public class ImmutableTableTest extends AbstractTableReadTest {
         = builder.orderRowsBy(Ordering.natural())
             .orderColumnsBy(Ordering.natural())
             .putAll(table).build();
-    ASSERT.that(copy.rowKeySet()).has().allOf('a', 'b').inOrder();
-    ASSERT.that(copy.columnKeySet()).has().allOf(1, 2).inOrder();
-    ASSERT.that(copy.values()).has().allOf("baz", "bar", "foo").inOrder();
-    ASSERT.that(copy.row('b').keySet()).has().allOf(1, 2).inOrder();
+    assertThat(copy.rowKeySet()).has().allOf('a', 'b').inOrder();
+    assertThat(copy.columnKeySet()).has().allOf(1, 2).inOrder();
+    assertThat(copy.values()).has().allOf("baz", "bar", "foo").inOrder();
+    assertThat(copy.row('b').keySet()).has().allOf(1, 2).inOrder();
   }
 
   public void testBuilder_orderRowsAndColumnsBy_sparse() {
@@ -248,12 +252,12 @@ public class ImmutableTableTest extends AbstractTableReadTest {
     builder.put('r', 4, "foo");
     builder.put('x', 5, "bar");
     Table<Character, Integer, String> table = builder.build();
-    ASSERT.that(table.rowKeySet()).has().allOf('b', 'c', 'e', 'r', 'x').inOrder();
-    ASSERT.that(table.columnKeySet()).has().allOf(0, 1, 2, 3, 4, 5, 7).inOrder();
-    ASSERT.that(table.values()).has().allOf("cat", "axe", "baz", "tub",
+    assertThat(table.rowKeySet()).has().allOf('b', 'c', 'e', 'r', 'x').inOrder();
+    assertThat(table.columnKeySet()).has().allOf(0, 1, 2, 3, 4, 5, 7).inOrder();
+    assertThat(table.values()).has().allOf("cat", "axe", "baz", "tub",
         "dog", "bar", "foo", "foo", "bar").inOrder();
-    ASSERT.that(table.row('c').keySet()).has().allOf(0, 3).inOrder();
-    ASSERT.that(table.column(5).keySet()).has().allOf('e', 'x').inOrder();
+    assertThat(table.row('c').keySet()).has().allOf(0, 3).inOrder();
+    assertThat(table.column(5).keySet()).has().allOf('e', 'x').inOrder();
   }
 
   public void testBuilder_orderRowsAndColumnsBy_dense() {
@@ -270,12 +274,12 @@ public class ImmutableTableTest extends AbstractTableReadTest {
     builder.put('a', 2, "bar");
     builder.put('a', 1, "baz");
     Table<Character, Integer, String> table = builder.build();
-    ASSERT.that(table.rowKeySet()).has().allOf('a', 'b', 'c').inOrder();
-    ASSERT.that(table.columnKeySet()).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(table.values()).has().allOf("baz", "bar", "foo", "dog",
+    assertThat(table.rowKeySet()).has().allOf('a', 'b', 'c').inOrder();
+    assertThat(table.columnKeySet()).has().allOf(1, 2, 3).inOrder();
+    assertThat(table.values()).has().allOf("baz", "bar", "foo", "dog",
         "cat", "baz", "bar", "foo").inOrder();
-    ASSERT.that(table.row('c').keySet()).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(table.column(1).keySet()).has().allOf('a', 'b', 'c').inOrder();
+    assertThat(table.row('c').keySet()).has().allOf(1, 2, 3).inOrder();
+    assertThat(table.column(1).keySet()).has().allOf('a', 'b', 'c').inOrder();
   }
 
   public void testBuilder_orderRowsBy_sparse() {
@@ -292,8 +296,8 @@ public class ImmutableTableTest extends AbstractTableReadTest {
     builder.put('r', 4, "foo");
     builder.put('x', 5, "bar");
     Table<Character, Integer, String> table = builder.build();
-    ASSERT.that(table.rowKeySet()).has().allOf('b', 'c', 'e', 'r', 'x').inOrder();
-    ASSERT.that(table.column(5).keySet()).has().allOf('e', 'x').inOrder();
+    assertThat(table.rowKeySet()).has().allOf('b', 'c', 'e', 'r', 'x').inOrder();
+    assertThat(table.column(5).keySet()).has().allOf('e', 'x').inOrder();
   }
 
   public void testBuilder_orderRowsBy_dense() {
@@ -309,8 +313,8 @@ public class ImmutableTableTest extends AbstractTableReadTest {
     builder.put('a', 2, "bar");
     builder.put('a', 1, "baz");
     Table<Character, Integer, String> table = builder.build();
-    ASSERT.that(table.rowKeySet()).has().allOf('a', 'b', 'c').inOrder();
-    ASSERT.that(table.column(1).keySet()).has().allOf('a', 'b', 'c').inOrder();
+    assertThat(table.rowKeySet()).has().allOf('a', 'b', 'c').inOrder();
+    assertThat(table.column(1).keySet()).has().allOf('a', 'b', 'c').inOrder();
   }
 
   public void testBuilder_orderColumnsBy_sparse() {
@@ -327,8 +331,8 @@ public class ImmutableTableTest extends AbstractTableReadTest {
     builder.put('r', 4, "foo");
     builder.put('x', 5, "bar");
     Table<Character, Integer, String> table = builder.build();
-    ASSERT.that(table.columnKeySet()).has().allOf(0, 1, 2, 3, 4, 5, 7).inOrder();
-    ASSERT.that(table.row('c').keySet()).has().allOf(0, 3).inOrder();
+    assertThat(table.columnKeySet()).has().allOf(0, 1, 2, 3, 4, 5, 7).inOrder();
+    assertThat(table.row('c').keySet()).has().allOf(0, 3).inOrder();
   }
 
   public void testBuilder_orderColumnsBy_dense() {
@@ -344,7 +348,13 @@ public class ImmutableTableTest extends AbstractTableReadTest {
     builder.put('a', 2, "bar");
     builder.put('a', 1, "baz");
     Table<Character, Integer, String> table = builder.build();
-    ASSERT.that(table.columnKeySet()).has().allOf(1, 2, 3).inOrder();
-    ASSERT.that(table.row('c').keySet()).has().allOf(1, 2, 3).inOrder();
+    assertThat(table.columnKeySet()).has().allOf(1, 2, 3).inOrder();
+    assertThat(table.row('c').keySet()).has().allOf(1, 2, 3).inOrder();
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

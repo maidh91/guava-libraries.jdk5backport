@@ -141,7 +141,7 @@ public final class CacheBuilderSpec {
    */
   public static CacheBuilderSpec parse(String cacheBuilderSpecification) {
     CacheBuilderSpec spec = new CacheBuilderSpec(cacheBuilderSpecification);
-    if (!cacheBuilderSpecification.isEmpty()) {
+    if (cacheBuilderSpecification.length() != 0) {
       for (String keyValuePair : KEYS_SPLITTER.split(cacheBuilderSpecification)) {
         List<String> keyAndValue = ImmutableList.copyOf(KEY_VALUE_SPLITTER.split(keyValuePair));
         checkArgument(!keyAndValue.isEmpty(), "blank key-value pair");
@@ -286,7 +286,7 @@ public final class CacheBuilderSpec {
     protected abstract void parseInteger(CacheBuilderSpec spec, int value);
 
     public void parse(CacheBuilderSpec spec, String key, String value) {
-      checkArgument(value != null && !value.isEmpty(), "value of key %s omitted", key);
+      checkArgument(value != null && value.length() != 0, "value of key %s omitted", key);
       try {
         parseInteger(spec, Integer.parseInt(value));
       } catch (NumberFormatException e) {
@@ -301,7 +301,7 @@ public final class CacheBuilderSpec {
     protected abstract void parseLong(CacheBuilderSpec spec, long value);
 
     public void parse(CacheBuilderSpec spec, String key, String value) {
-      checkArgument(value != null && !value.isEmpty(), "value of key %s omitted", key);
+      checkArgument(value != null && value.length() != 0, "value of key %s omitted", key);
       try {
         parseLong(spec, Long.parseLong(value));
       } catch (NumberFormatException e) {
@@ -393,20 +393,18 @@ public final class CacheBuilderSpec {
     protected abstract void parseDuration(CacheBuilderSpec spec, long duration, TimeUnit unit);
 
     public void parse(CacheBuilderSpec spec, String key, String value) {
-      checkArgument(value != null && !value.isEmpty(), "value of key %s omitted", key);
+      checkArgument(value != null && value.length() != 0, "value of key %s omitted", key);
       try {
         char lastChar = value.charAt(value.length() - 1);
         TimeUnit timeUnit;
+        long multiplier = 1;
         switch (lastChar) {
           case 'd':
-            timeUnit = TimeUnit.DAYS;
-            break;
+            multiplier *= 24;
           case 'h':
-            timeUnit = TimeUnit.HOURS;
-            break;
+            multiplier *= 60;
           case 'm':
-            timeUnit = TimeUnit.MINUTES;
-            break;
+            multiplier *= 60;
           case 's':
             timeUnit = TimeUnit.SECONDS;
             break;
@@ -416,7 +414,7 @@ public final class CacheBuilderSpec {
         }
 
         long duration = Long.parseLong(value.substring(0, value.length() - 1));
-        parseDuration(spec, duration, timeUnit);
+        parseDuration(spec, duration * multiplier, timeUnit);
       } catch (NumberFormatException e) {
         throw new IllegalArgumentException(String.format("key %s value set to %s, must be integer",
             key, value));

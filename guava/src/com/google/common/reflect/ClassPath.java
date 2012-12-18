@@ -136,7 +136,7 @@ public final class ClassPath {
     /** Returns the simple name of the underlying class as given in the source code. */
     public String getSimpleName() {
       String packageName = getPackageName();
-      if (packageName.isEmpty()) {
+      if (packageName.length() == 0) {
         return className;
       }
       // Since this is a top level class, its simple name is always the part after package name.

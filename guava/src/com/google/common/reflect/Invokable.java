@@ -244,7 +244,9 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
           && declaringClass.getEnclosingClass() != null) {
         if (types.length == constructor.getParameterTypes().length) {
           // first parameter is the hidden 'this'
-          return Arrays.copyOfRange(types, 1, types.length);
+          Type[] result = new Type[types.length - 1];
+          System.arraycopy(types, 1, result, 0, types.length - 1);
+          return result;
         }
       }
       return types;

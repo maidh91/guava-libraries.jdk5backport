@@ -16,12 +16,13 @@
 
 package com.google.common.math;
 
-import static com.google.common.math.MathTesting.*;
 import static com.google.common.math.MathTesting.ALL_DOUBLE_CANDIDATES;
 import static com.google.common.math.MathTesting.ALL_ROUNDING_MODES;
 import static com.google.common.math.MathTesting.ALL_SAFE_ROUNDING_MODES;
+import static com.google.common.math.MathTesting.DOUBLE_CANDIDATES_EXCEPT_NAN;
 import static com.google.common.math.MathTesting.FINITE_DOUBLE_CANDIDATES;
 import static com.google.common.math.MathTesting.FRACTIONAL_DOUBLE_CANDIDATES;
+import static com.google.common.math.MathTesting.INFINITIES;
 import static com.google.common.math.MathTesting.INTEGRAL_DOUBLE_CANDIDATES;
 import static com.google.common.math.MathTesting.NEGATIVE_INTEGER_CANDIDATES;
 import static com.google.common.math.MathTesting.POSITIVE_FINITE_DOUBLE_CANDIDATES;
@@ -40,13 +41,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.primitives.Doubles;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.TestCase;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for {@code DoubleMath}.

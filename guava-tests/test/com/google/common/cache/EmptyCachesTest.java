@@ -28,12 +28,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.testing.EqualsTester;
 
-import junit.framework.TestCase;
-
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import junit.framework.TestCase;
 
 /**
  * {@link LoadingCache} tests that deal with empty caches.

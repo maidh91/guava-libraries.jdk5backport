@@ -17,12 +17,12 @@
 package com.google.common.io;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.io.SourceSinkFactory.ByteSinkFactory;
-import static com.google.common.io.SourceSinkFactory.ByteSourceFactory;
-import static com.google.common.io.SourceSinkFactory.CharSinkFactory;
-import static com.google.common.io.SourceSinkFactory.CharSourceFactory;
 
 import com.google.common.base.Charsets;
+import com.google.common.io.SourceSinkFactory.ByteSinkFactory;
+import com.google.common.io.SourceSinkFactory.ByteSourceFactory;
+import com.google.common.io.SourceSinkFactory.CharSinkFactory;
+import com.google.common.io.SourceSinkFactory.CharSourceFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

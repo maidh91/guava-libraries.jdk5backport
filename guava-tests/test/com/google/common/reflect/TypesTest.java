@@ -17,14 +17,12 @@
 package com.google.common.reflect;
 
 import static java.util.Arrays.asList;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.testing.EqualsTester;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.NullPointerTester.Visibility;
 import com.google.common.testing.SerializableTester;
-
-import junit.framework.TestCase;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
@@ -36,6 +34,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for {@link Types}.
@@ -65,7 +65,7 @@ public class TypesTest extends TestCase {
     assertEquals(jvmType.toString(), ourType.toString());
     assertEquals(jvmType.hashCode(), ourType.hashCode());
     assertEquals(HashMap.class, ourType.getRawType());
-    ASSERT.that(ourType.getActualTypeArguments())
+    FluentAsserts.assertThat(ourType.getActualTypeArguments())
         .iteratesOverSequence(jvmType.getActualTypeArguments());
     assertEquals(Arrays.asList(
             String.class,
@@ -106,7 +106,7 @@ public class TypesTest extends TestCase {
     assertEquals(jvmType.toString(), ourType.toString());
     assertEquals(Map.class, ourType.getOwnerType());
     assertEquals(Map.Entry.class, ourType.getRawType());
-    ASSERT.that(ourType.getActualTypeArguments())
+    FluentAsserts.assertThat(ourType.getActualTypeArguments())
         .iteratesOverSequence(jvmType.getActualTypeArguments());
   }
 
@@ -267,9 +267,9 @@ public class TypesTest extends TestCase {
       WildcardType expected, WildcardType actual) {
     assertEquals(expected.toString(), actual.toString());
     assertEquals(actual.toString(), expected.hashCode(), actual.hashCode());
-    ASSERT.that(actual.getLowerBounds())
+    FluentAsserts.assertThat(actual.getLowerBounds())
         .has().allFrom(asList(expected.getLowerBounds())).inOrder();
-    ASSERT.that(actual.getUpperBounds())
+    FluentAsserts.assertThat(actual.getUpperBounds())
         .has().allFrom(asList(expected.getUpperBounds())).inOrder();
   }
 
@@ -347,7 +347,7 @@ public class TypesTest extends TestCase {
     assertEquals(
         expected.getGenericDeclaration(), actual.getGenericDeclaration());
     assertEquals(actual.toString(), expected.hashCode(), actual.hashCode());
-    ASSERT.that(actual.getBounds()).has().allFrom(asList(expected.getBounds())).inOrder();
+    FluentAsserts.assertThat(actual.getBounds()).has().allFrom(asList(expected.getBounds())).inOrder();
   }
 
   /**

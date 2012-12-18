@@ -16,11 +16,11 @@
 
 package com.google.common.hash;
 
-import junit.framework.TestCase;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for the MessageDigestHashFunction.

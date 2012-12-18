@@ -27,14 +27,14 @@ import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.features.MapFeature;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.TestSuite;
-
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.SortedMap;
+
+import junit.framework.TestSuite;
 
 /**
  * Tests for {@link Maps#synchronizedNavigableMap(NavigableMap)}.

@@ -26,13 +26,14 @@ import com.google.common.collect.testing.features.MapFeature;
 import com.google.common.collect.testing.testers.MapPutTester;
 import com.google.common.reflect.ImmutableTypeToInstanceMapTest.TestTypeToInstanceMapGenerator;
 
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Unit test of {@link MutableTypeToInstanceMap}.
@@ -164,7 +165,8 @@ public class MutableTypeToInstanceMapTest extends TestCase {
     TypeToken<ImmutableList<Integer>[]> type = new TypeToken<ImmutableList<Integer>[]>() {};
     map.putInstance(type, array);
     assertEquals(1, map.size());
-    ASSERT.that(map.getInstance(type)).has().allOf(array[0]).inOrder();
+    ASSERT.<ImmutableList<Integer>, List<ImmutableList<Integer>>>
+      that(map.getInstance(type)).has().allOf(array[0]).inOrder();
   }
 
   public void testWildcardType() {

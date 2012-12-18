@@ -16,19 +16,18 @@
 
 package com.google.common.hash;
 
-import static com.google.common.hash.Hashing.ConcatenatedHashFunction;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.hash.Hashing.ConcatenatedHashFunction;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.util.concurrent.AtomicLongMap;
-
-import junit.framework.TestCase;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import junit.framework.TestCase;
 
 /**
  * Unit tests for {@link Hashing}.

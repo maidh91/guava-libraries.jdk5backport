@@ -36,16 +36,13 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.testing.ClassSanityTester;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.util.concurrent.MoreExecutors.Application;
-
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,6 +61,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 /**
  * Tests for MoreExecutors.
@@ -258,10 +258,10 @@ public class MoreExecutorsTest extends JSR166TestCase {
     List<Future<String>> results;
 
     results = service.invokeAll(callables);
-    ASSERT.that(getOnlyElement(results)).isA(ListenableFutureTask.class);
+    FluentAsserts.assertThat(getOnlyElement(results)).isA(ListenableFutureTask.class);
 
     results = service.invokeAll(callables, 1, SECONDS);
-    ASSERT.that(getOnlyElement(results)).isA(ListenableFutureTask.class);
+    FluentAsserts.assertThat(getOnlyElement(results)).isA(ListenableFutureTask.class);
 
     /*
      * TODO(cpovirk): move ForwardingTestCase somewhere common, and use it to

@@ -16,8 +16,6 @@
 
 package com.google.common.collect;
 
-import static org.truth0.Truth.ASSERT;
-
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -30,14 +28,15 @@ import com.google.common.collect.testing.google.SetGenerators.ImmutableSetAsList
 import com.google.common.collect.testing.google.SetGenerators.ImmutableSetCopyOfGenerator;
 import com.google.common.collect.testing.google.SetGenerators.ImmutableSetWithBadHashesGenerator;
 import com.google.common.testing.EqualsTester;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import com.google.common.testing.FluentAsserts;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Unit test for {@link ImmutableSet}.
@@ -153,7 +152,7 @@ public class ImmutableSetTest extends AbstractImmutableSetTest {
     // now we'll get the varargs overload
     ImmutableSet<String> set = ImmutableSet.of(
         "a", "b", "c", "c", "c", "c", "b", "b", "a", "a", "c", "c", "c", "a");
-    ASSERT.that(set).has().allOf("a", "b", "c").inOrder();
+    FluentAsserts.assertThat(set).has().allOf("a", "b", "c").inOrder();
   }
 
   public void testCreation_arrayOfArray() {

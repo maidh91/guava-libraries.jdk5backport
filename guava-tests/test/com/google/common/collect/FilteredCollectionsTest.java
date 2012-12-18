@@ -22,8 +22,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.testing.EqualsTester;
 
-import junit.framework.TestCase;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +30,10 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import junit.framework.TestCase;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for filtered collection views.
@@ -101,7 +103,7 @@ public class FilteredCollectionsTest extends TestCase {
         target.add(4);
         C addThenFilter = filter(createUnfiltered(target), EVEN);
 
-        ASSERT.that(filterThenAdd).has().allFrom(addThenFilter);
+        assertThat(filterThenAdd).has().allFrom(addThenFilter);
       }
     }
 
@@ -157,7 +159,7 @@ public class FilteredCollectionsTest extends TestCase {
         } catch (IllegalArgumentException expected) {
         }
 
-        ASSERT.that(filteredToModify).has().allFrom(filtered);
+        assertThat(filteredToModify).has().allFrom(filtered);
       }
     }
 
@@ -191,7 +193,7 @@ public class FilteredCollectionsTest extends TestCase {
             Predicates.not(Predicates.and(EVEN, PRIME_DIGIT)));
 
         filtered2.clear();
-        ASSERT.that(unfiltered).has().allFrom(inverseFiltered);
+        assertThat(unfiltered).has().allFrom(inverseFiltered);
       }
     }
   }
@@ -328,7 +330,7 @@ public class FilteredCollectionsTest extends TestCase {
         NavigableSet<Integer> filtered = filter(createUnfiltered(contents), EVEN);
         NavigableSet<Integer> unfiltered = createUnfiltered(filtered);
 
-        ASSERT.that(filtered.descendingSet()).has().allFrom(unfiltered.descendingSet()).inOrder();
+        assertThat(filtered.descendingSet()).has().allFrom(unfiltered.descendingSet()).inOrder();
       }
     }
 
@@ -442,5 +444,11 @@ public class FilteredCollectionsTest extends TestCase {
 
   /** No-op test so that the class has at least one method, making Maven's test runner happy. */
   public void testNoop() {
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

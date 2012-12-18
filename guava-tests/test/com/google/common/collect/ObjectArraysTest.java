@@ -16,17 +16,16 @@
 
 package com.google.common.collect;
 
-import static org.truth0.Truth.ASSERT;
-
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.testing.NullPointerTester;
-
-import junit.framework.TestCase;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@code ObjectArrays}.
@@ -98,7 +97,7 @@ public class ObjectArraysTest extends TestCase {
     String[] result = ObjectArrays.concat(
         new String[0], new String[] { "a", "b" }, String.class);
     assertEquals(String[].class, result.getClass());
-    ASSERT.that(result).has().allOf("a", "b").inOrder();
+    FluentAsserts.assertThat(result).has().allOf("a", "b").inOrder();
   }
 
   @GwtIncompatible("ObjectArrays.concat(Object[], Object[], Class)")
@@ -106,7 +105,7 @@ public class ObjectArraysTest extends TestCase {
     String[] result = ObjectArrays.concat(
         new String[] { "a", "b" }, new String[0], String.class);
     assertEquals(String[].class, result.getClass());
-    ASSERT.that(result).has().allOf("a", "b").inOrder();
+    FluentAsserts.assertThat(result).has().allOf("a", "b").inOrder();
   }
 
   @GwtIncompatible("ObjectArrays.concat(Object[], Object[], Class)")
@@ -114,7 +113,7 @@ public class ObjectArraysTest extends TestCase {
     String[] result = ObjectArrays.concat(
         new String[] { "a", "b" }, new String[] { "c", "d" }, String.class);
     assertEquals(String[].class, result.getClass());
-    ASSERT.that(result).has().allOf("a", "b", "c", "d").inOrder();
+    FluentAsserts.assertThat(result).has().allOf("a", "b", "c", "d").inOrder();
   }
 
   @GwtIncompatible("ObjectArrays.concat(Object[], Object[], Class)")
@@ -170,32 +169,32 @@ public class ObjectArraysTest extends TestCase {
 
   public void testPrependZeroElements() {
     String[] result = ObjectArrays.concat("foo", new String[] {});
-    ASSERT.that(result).has().item("foo");
+    FluentAsserts.assertThat(result).has().item("foo");
   }
 
   public void testPrependOneElement() {
     String[] result = ObjectArrays.concat("foo", new String[] { "bar" });
-    ASSERT.that(result).has().allOf("foo", "bar").inOrder();
+    FluentAsserts.assertThat(result).has().allOf("foo", "bar").inOrder();
   }
 
   public void testPrependTwoElements() {
     String[] result = ObjectArrays.concat("foo", new String[] { "bar", "baz" });
-    ASSERT.that(result).has().allOf("foo", "bar", "baz").inOrder();
+    FluentAsserts.assertThat(result).has().allOf("foo", "bar", "baz").inOrder();
   }
 
   public void testAppendZeroElements() {
     String[] result = ObjectArrays.concat(new String[] {}, "foo");
-    ASSERT.that(result).has().item("foo");
+    FluentAsserts.assertThat(result).has().item("foo");
   }
 
   public void testAppendOneElement() {
     String[] result = ObjectArrays.concat(new String[] { "foo" }, "bar");
-    ASSERT.that(result).has().allOf("foo", "bar").inOrder();
+    FluentAsserts.assertThat(result).has().allOf("foo", "bar").inOrder();
   }
 
   public void testAppendTwoElements() {
     String[] result = ObjectArrays.concat(new String[] { "foo", "bar" }, "baz");
-    ASSERT.that(result).has().allOf("foo", "bar", "baz").inOrder();
+    FluentAsserts.assertThat(result).has().allOf("foo", "bar", "baz").inOrder();
   }
 
   public void testEmptyArrayToEmpty() {

@@ -25,8 +25,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.Hashing;
 import com.google.common.testing.TestLogHandler;
 
-import junit.framework.TestSuite;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
@@ -42,6 +40,8 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
+
+import junit.framework.TestSuite;
 
 /**
  * Unit test for {@link ByteStreams}.

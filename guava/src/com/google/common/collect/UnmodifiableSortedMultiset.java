@@ -19,7 +19,9 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.collect.Multisets.UnmodifiableMultiset;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.SortedSet;
 
 /**
  * Implementation of {@link Multisets#unmodifiableSortedMultiset(SortedMultiset)},
@@ -45,13 +47,13 @@ final class UnmodifiableSortedMultiset<E> extends UnmodifiableMultiset<E> implem
   }
 
   @Override
-  NavigableSet<E> createElementSet() {
-    return Sets.unmodifiableNavigableSet(delegate().elementSet());
+  SortedSet<E> createElementSet() {
+    return Collections.unmodifiableSortedSet(delegate().elementSet());
   }
 
   @Override
-  public NavigableSet<E> elementSet() {
-    return (NavigableSet<E>) super.elementSet();
+  public SortedSet<E> elementSet() {
+    return (SortedSet<E>) super.elementSet();
   }
 
   private transient UnmodifiableSortedMultiset<E> descendingMultiset;

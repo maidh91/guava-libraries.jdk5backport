@@ -26,8 +26,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.TestLogHandler;
 
-import junit.framework.TestSuite;
-
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.FilterReader;
@@ -39,6 +37,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
+
+import junit.framework.TestSuite;
 
 /**
  * Unit test for {@link CharStreams}.

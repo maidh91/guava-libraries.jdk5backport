@@ -17,13 +17,11 @@
 package com.google.common.io;
 
 import static com.google.common.base.CharMatcher.WHITESPACE;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.testing.NullPointerTester;
-
-import junit.framework.TestSuite;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,6 +30,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import junit.framework.TestSuite;
 
 /**
  * Unit test for {@link Resources}.
@@ -60,7 +60,7 @@ public class ResourcesTest extends IoTestCase {
   public void testToString() throws IOException {
     URL resource = getClass().getResource("testdata/i18n.txt");
     assertEquals(I18N, Resources.toString(resource, Charsets.UTF_8));
-    ASSERT.that(Resources.toString(resource, Charsets.US_ASCII))
+    FluentAsserts.assertThat(Resources.toString(resource, Charsets.US_ASCII))
         .isNotEqualTo(I18N);
   }
 

@@ -22,9 +22,12 @@ import com.google.common.collect.Lists;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.Collection;
+import java.util.List;
+
 import junit.framework.TestCase;
 
-import java.util.List;
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Test that EventBus finds the correct handlers.
@@ -79,11 +82,11 @@ public class AnnotatedHandlerFinderTests {
     }
 
     public void testNonSubscriber() {
-      ASSERT.that(getHandler().nonSubscriberEvents).isEmpty();
+      assertThat(getHandler().nonSubscriberEvents).isEmpty();
     }
 
     public void testSubscriber() {
-      ASSERT.that(getHandler().subscriberEvents).has().item(EVENT);
+      assertThat(getHandler().subscriberEvents).has().item(EVENT);
     }
 
     @Override
@@ -119,11 +122,11 @@ public class AnnotatedHandlerFinderTests {
     }
 
     public void testOverriddenAndAnnotatedInSubclass() {
-      ASSERT.that(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
+      assertThat(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
     }
 
     public void testOverriddenNotAnnotatedInSubclass() {
-      ASSERT.that(getHandler().overriddenInSubclassEvents).has().item(EVENT);
+      assertThat(getHandler().overriddenInSubclassEvents).has().item(EVENT);
     }
 
     @Override
@@ -199,29 +202,27 @@ public class AnnotatedHandlerFinderTests {
     }
 
     public void testNotOverriddenInSubclass() {
-      ASSERT.that(getHandler().notOverriddenInSubclassEvents).has().item(EVENT);
+      assertThat(getHandler().notOverriddenInSubclassEvents).has().item(EVENT);
     }
 
     public void testOverriddenNotAnnotatedInSubclass() {
-      ASSERT.that(getHandler().overriddenNotAnnotatedInSubclassEvents).has().item(EVENT);
+      assertThat(getHandler().overriddenNotAnnotatedInSubclassEvents).has().item(EVENT);
     }
 
     public void testDifferentlyOverriddenNotAnnotatedInSubclass() {
-      ASSERT
-          .that(getHandler().differentlyOverriddenNotAnnotatedInSubclassGoodEvents)
+      assertThat(getHandler().differentlyOverriddenNotAnnotatedInSubclassGoodEvents)
           .has().item(EVENT);
-      ASSERT.that(getHandler().differentlyOverriddenNotAnnotatedInSubclassBadEvents).isEmpty();
+      assertThat(getHandler().differentlyOverriddenNotAnnotatedInSubclassBadEvents).isEmpty();
     }
 
     public void testOverriddenAndAnnotatedInSubclass() {
-      ASSERT.that(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
+      assertThat(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
     }
 
     public void testDifferentlyOverriddenAndAnnotatedInSubclass() {
-      ASSERT
-          .that(getHandler().differentlyOverriddenAnnotatedInSubclassGoodEvents)
+      assertThat(getHandler().differentlyOverriddenAnnotatedInSubclassGoodEvents)
           .has().item(EVENT);
-      ASSERT.that(getHandler().differentlyOverriddenAnnotatedInSubclassBadEvents).isEmpty();
+      assertThat(getHandler().differentlyOverriddenAnnotatedInSubclassBadEvents).isEmpty();
     }
 
     @Override
@@ -255,11 +256,11 @@ public class AnnotatedHandlerFinderTests {
     }
 
     public void testOverriddenAndAnnotatedInSubclass() {
-      ASSERT.that(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
+      assertThat(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
     }
 
     public void testOverriddenInSubclassNowhereAnnotated() {
-      ASSERT.that(getHandler().overriddenInSubclassNowhereAnnotatedEvents).isEmpty();
+      assertThat(getHandler().overriddenInSubclassNowhereAnnotatedEvents).isEmpty();
     }
 
     @Override
@@ -302,15 +303,15 @@ public class AnnotatedHandlerFinderTests {
     }
 
     public void testNeitherOverriddenNorAnnotated() {
-      ASSERT.that(getHandler().neitherOverriddenNorAnnotatedEvents).isEmpty();
+      assertThat(getHandler().neitherOverriddenNorAnnotatedEvents).isEmpty();
     }
 
     public void testOverriddenInSubclassNowhereAnnotated() {
-      ASSERT.that(getHandler().overriddenInSubclassNowhereAnnotatedEvents).isEmpty();
+      assertThat(getHandler().overriddenInSubclassNowhereAnnotatedEvents).isEmpty();
     }
 
     public void testOverriddenAndAnnotatedInSubclass() {
-      ASSERT.that(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
+      assertThat(getHandler().overriddenAndAnnotatedInSubclassEvents).has().item(EVENT);
     }
 
     @Override
@@ -412,40 +413,46 @@ public class AnnotatedHandlerFinderTests {
     }
 
     public void testAnnotatedIn1() {
-      ASSERT.that(getHandler().annotatedIn1Events).has().item(EVENT);
+      assertThat(getHandler().annotatedIn1Events).has().item(EVENT);
     }
 
     public void testAnnotatedIn2() {
-      ASSERT.that(getHandler().annotatedIn2Events).has().item(EVENT);
+      assertThat(getHandler().annotatedIn2Events).has().item(EVENT);
     }
 
     public void testAnnotatedIn1And2() {
-      ASSERT.that(getHandler().annotatedIn1And2Events).has().item(EVENT);
+      assertThat(getHandler().annotatedIn1And2Events).has().item(EVENT);
     }
 
     public void testAnnotatedIn1And2AndClass() {
-      ASSERT.that(getHandler().annotatedIn1And2AndClassEvents).has().item(EVENT);
+      assertThat(getHandler().annotatedIn1And2AndClassEvents).has().item(EVENT);
     }
 
     public void testDeclaredIn1AnnotatedIn2() {
-      ASSERT.that(getHandler().declaredIn1AnnotatedIn2Events).has().item(EVENT);
+      assertThat(getHandler().declaredIn1AnnotatedIn2Events).has().item(EVENT);
     }
 
     public void testDeclaredIn1AnnotatedInClass() {
-      ASSERT.that(getHandler().declaredIn1AnnotatedInClassEvents).has().item(EVENT);
+      assertThat(getHandler().declaredIn1AnnotatedInClassEvents).has().item(EVENT);
     }
 
     public void testDeclaredIn2AnnotatedInClass() {
-      ASSERT.that(getHandler().declaredIn2AnnotatedInClassEvents).has().item(EVENT);
+      assertThat(getHandler().declaredIn2AnnotatedInClassEvents).has().item(EVENT);
     }
 
     public void testNowhereAnnotated() {
-      ASSERT.that(getHandler().nowhereAnnotatedEvents).isEmpty();
+      (getHandler().nowhereAnnotatedEvents).isEmpty();
     }
 
     @Override
     HandlerClass createHandler() {
       return new HandlerClass();
     }
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

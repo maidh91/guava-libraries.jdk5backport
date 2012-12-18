@@ -54,6 +54,7 @@ public class MapsTransformValuesTest extends MapInterfaceTest<String, String> {
     super(false, true, false, true, true);
   }
 
+  @Override
   protected Map<String, String> makeEmptyMap() {
     return Maps.transformValues(Maps.<String, String>newHashMap(), 
         Functions.<String>identity());

@@ -22,7 +22,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.testing.Helpers.nefariousMapEntry;
 import static com.google.common.collect.testing.IteratorFeature.MODIFIABLE;
 import static java.util.Arrays.asList;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
@@ -32,6 +31,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Maps.EntryTransformer;
 import com.google.common.collect.testing.IteratorTester;
 import com.google.common.collect.testing.google.UnmodifiableCollectionTests;
+import com.google.common.testing.FluentAsserts;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
@@ -298,7 +298,7 @@ public class MultimapsTest extends AbstractMultimapTest {
     assertEquals(multimap.hashCode(), unmodifiable.hashCode());
     assertEquals(multimap, unmodifiable);
 
-    ASSERT.that(unmodifiable.asMap().get("bar")).has().allOf(5, -1);
+    FluentAsserts.assertThat(unmodifiable.asMap().get("bar")).has().allOf(5, -1);
     assertNull(unmodifiable.asMap().get("missing"));
 
     assertFalse(unmodifiable.entries() instanceof Serializable);
@@ -430,11 +430,11 @@ public class MultimapsTest extends AbstractMultimapTest {
     assertFalse(map.containsKey("bar"));
     assertEquals(map.keySet(), multimapView.keySet());
     assertEquals(map.keySet(), multimapView.keys().elementSet());
-    ASSERT.that(multimapView.keys()).has().item("foo");
-    ASSERT.that(multimapView.values()).has().item(1);
-    ASSERT.that(multimapView.entries()).has().item(
+    FluentAsserts.assertThat(multimapView.keys()).has().item("foo");
+    FluentAsserts.assertThat(multimapView.values()).has().item(1);
+    FluentAsserts.assertThat(multimapView.entries()).has().item(
         Maps.immutableEntry("foo", 1));
-    ASSERT.that(multimapView.asMap().entrySet()).has().item(
+    FluentAsserts.assertThat(multimapView.asMap().entrySet()).has().item(
         Maps.immutableEntry(
             "foo", (Collection<Integer>) Collections.singleton(1)));
     multimapView.clear();
@@ -592,7 +592,7 @@ public class MultimapsTest extends AbstractMultimapTest {
     } catch (IllegalArgumentException expected) {
       // expected
     }
-    ASSERT.that(multimap.entries()).has().allOf(
+    FluentAsserts.assertThat(multimap.entries()).has().allOf(
         Maps.immutableEntry(Color.RED, 1),
         Maps.immutableEntry(Color.BLUE, 2));
   }
@@ -815,7 +815,7 @@ public class MultimapsTest extends AbstractMultimapTest {
       }
     };
     Multimap<String, Integer> transformed = Multimaps.transformValues(multimap, square);
-    ASSERT.that(transformed.entries()).has().allOf(immutableEntry("a", 4),
+    FluentAsserts.assertThat(transformed.entries()).has().allOf(immutableEntry("a", 4),
         immutableEntry("a", 16), immutableEntry("b", 9), immutableEntry("b", 9),
         immutableEntry("c", 36)).inOrder();
   }
@@ -833,7 +833,7 @@ public class MultimapsTest extends AbstractMultimapTest {
         });
     Entry<String, String> entry = multimap.entries().iterator().next();
     entry.setValue("bbb");
-    ASSERT.that(transformed.entries()).has().allOf(immutableEntry("a", 3)).inOrder();
+    FluentAsserts.assertThat(transformed.entries()).has().allOf(immutableEntry("a", 3)).inOrder();
   }
 
   @GwtIncompatible(value = "untested")
@@ -848,7 +848,7 @@ public class MultimapsTest extends AbstractMultimapTest {
     };
     ListMultimap<String, Integer> transformed =
         Multimaps.transformValues(multimap, square);
-    ASSERT.that(transformed.entries()).has().allOf(immutableEntry("a", 4),
+    FluentAsserts.assertThat(transformed.entries()).has().allOf(immutableEntry("a", 4),
         immutableEntry("a", 16), immutableEntry("b", 9), immutableEntry("b", 9),
         immutableEntry("c", 36)).inOrder();
   }
@@ -866,7 +866,7 @@ public class MultimapsTest extends AbstractMultimapTest {
         };
     Multimap<String, String> transformed =
         Multimaps.transformEntries(multimap, transformer);
-    ASSERT.that(transformed.entries()).has().allOf(immutableEntry("a", "a"),
+    FluentAsserts.assertThat(transformed.entries()).has().allOf(immutableEntry("a", "a"),
         immutableEntry("a", "a"), immutableEntry("b", "nob")).inOrder();
   }
 

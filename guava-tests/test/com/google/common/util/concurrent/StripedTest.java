@@ -27,13 +27,13 @@ import com.google.common.collect.Sets;
 import com.google.common.testing.GcFinalization;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.TestCase;
-
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for Striped.

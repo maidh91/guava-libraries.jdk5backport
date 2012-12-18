@@ -38,10 +38,6 @@ import com.google.common.collect.testing.google.TestStringBiMapGenerator;
 import com.google.common.collect.testing.testers.CollectionIteratorTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -54,6 +50,10 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 
 import javax.annotation.Nullable;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * Test suites for wrappers in {@code Maps}.
@@ -183,7 +183,7 @@ public class MapsCollectionTest extends TestCase {
         .withFeatures(CollectionSize.ANY,
             MapFeature.SUPPORTS_REMOVE)
         .createTestSuite());
-    suite.addTest(SortedMapTestSuiteBuilder
+    suite.addTest(MapTestSuiteBuilder
         .using(new TestMapGenerator<String, Integer>() {
           @Override
           public String[] createKeyArray(int length) {
@@ -243,7 +243,7 @@ public class MapsCollectionTest extends TestCase {
         .withFeatures(CollectionSize.ANY,
             MapFeature.SUPPORTS_REMOVE)
         .createTestSuite());
-    suite.addTest(NavigableMapTestSuiteBuilder
+    suite.addTest(MapTestSuiteBuilder
         .using(new TestMapGenerator<String, Integer>() {
           @Override
           public String[] createKeyArray(int length) {

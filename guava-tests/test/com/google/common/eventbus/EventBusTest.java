@@ -19,14 +19,14 @@ package com.google.common.eventbus;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import junit.framework.TestCase;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import junit.framework.TestCase;
 
 /**
  * Test case for {@link EventBus}.

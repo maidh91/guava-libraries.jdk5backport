@@ -53,12 +53,11 @@ import javax.annotation.Nullable;
  *
  * @author Jared Levy
  * @author Louis Wasserman
- * @since 2.0 (imported from Google Collections Library; implements {@code
- *        NavigableMap} since 12.0)
+ * @since 2.0 (imported from Google Collections Library
  */
 @GwtCompatible(serializable = true, emulated = true)
 public abstract class ImmutableSortedMap<K, V> extends ImmutableSortedMapFauxverideShim<K, V>
-    implements NavigableMap<K, V> {
+    implements SortedMap<K, V> {
   /*
    * TODO(kevinb): Confirm that ImmutableSortedMap is faster to construct and
    * uses less memory than TreeMap; then say so in the class Javadoc.

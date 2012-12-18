@@ -24,6 +24,7 @@ import com.google.common.base.Throwables;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.logging.Level;
 
 /**
@@ -93,7 +94,7 @@ final class Closer implements Closeable {
   final Suppressor suppressor;
 
   // only need space for 2 elements in most cases, so try to use the smallest array possible
-  private final Deque<Closeable> stack = new ArrayDeque<Closeable>(4);
+  private final LinkedList<Closeable> stack = new LinkedList<Closeable>();
   private Throwable thrown;
 
   @VisibleForTesting
@@ -107,7 +108,7 @@ final class Closer implements Closeable {
    * @return the given {@code closeable}
    */
   public <C extends Closeable> C add(C closeable) {
-    stack.push(closeable);
+    stack.addLast(closeable);
     return closeable;
   }
 
@@ -182,7 +183,7 @@ final class Closer implements Closeable {
 
     // close closeables in LIFO order
     while (!stack.isEmpty()) {
-      Closeable closeable = stack.pop();
+      Closeable closeable = stack.removeLast();
       try {
         closeable.close();
       } catch (Throwable e) {

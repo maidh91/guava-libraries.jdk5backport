@@ -25,8 +25,6 @@ import com.google.common.collect.testing.Helpers;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.TestCase;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,6 +32,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link Longs}.

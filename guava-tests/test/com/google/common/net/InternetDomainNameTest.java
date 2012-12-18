@@ -24,10 +24,10 @@ import com.google.common.collect.Iterables;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.TestCase;
-
 import java.util.List;
 import java.util.Locale;
+
+import junit.framework.TestCase;
 
 /**
  * {@link TestCase} for {@link InternetDomainName}.

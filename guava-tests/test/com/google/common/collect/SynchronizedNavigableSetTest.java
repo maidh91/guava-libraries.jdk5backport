@@ -25,8 +25,6 @@ import com.google.common.collect.testing.features.CollectionFeature;
 import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.testing.SerializableTester;
 
-import junit.framework.TestSuite;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -35,6 +33,8 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import junit.framework.TestSuite;
 
 /**
  * Tests for {@link Sets#synchronizedNavigableSet(NavigableSet)}.

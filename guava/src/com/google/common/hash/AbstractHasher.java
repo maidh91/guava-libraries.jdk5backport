@@ -14,6 +14,8 @@
 
 package com.google.common.hash;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
 /**
@@ -44,6 +46,7 @@ abstract class AbstractHasher implements Hasher {
   }
 
   public Hasher putString(CharSequence charSequence, Charset charset) {
-    return putBytes(charSequence.toString().getBytes(charset));
+    ByteBuffer bytes = charset.encode(CharBuffer.wrap(charSequence));
+    return putObject(bytes, Funnels.byteBufferFunnel());
   }
 }

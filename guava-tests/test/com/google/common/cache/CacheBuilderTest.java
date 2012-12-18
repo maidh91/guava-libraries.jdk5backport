@@ -34,8 +34,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.TestCase;
-
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -45,6 +43,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import junit.framework.TestCase;
 
 /**
  * Unit tests for CacheBuilder.

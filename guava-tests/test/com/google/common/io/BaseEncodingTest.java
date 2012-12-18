@@ -26,14 +26,14 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 
-import junit.framework.TestCase;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for {@code BaseEncoding}.

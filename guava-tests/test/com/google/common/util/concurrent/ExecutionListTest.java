@@ -19,15 +19,14 @@ package com.google.common.util.concurrent;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 
 import com.google.common.testing.NullPointerTester;
-import com.google.common.util.concurrent.ExecutionList;
-
-import junit.framework.TestCase;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import junit.framework.TestCase;
 
 /**
  * Unit tests for {@link ExecutionList}.

@@ -21,6 +21,7 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * A skeleton implementation of a descending multiset.  Only needs
@@ -42,13 +43,13 @@ abstract class DescendingMultiset<E> extends ForwardingMultiset<E> implements So
     return result;
   }
 
-  private transient NavigableSet<E> elementSet;
+  private transient SortedSet<E> elementSet;
 
   @Override
-  public NavigableSet<E> elementSet() {
-    NavigableSet<E> result = elementSet;
+  public SortedSet<E> elementSet() {
+    SortedSet<E> result = elementSet;
     if (result == null) {
-      return elementSet = new SortedMultisets.NavigableElementSet<E>(this);
+      return elementSet = new SortedMultisets.ElementSet<E>(this);
     }
     return result;
   }

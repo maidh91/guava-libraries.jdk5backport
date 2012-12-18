@@ -23,10 +23,10 @@ import static java.util.regex.Pattern.quote;
 import com.google.common.collect.Iterables;
 import com.google.common.testing.NullPointerTester;
 
-import junit.framework.TestCase;
-
 import java.io.FileNotFoundException;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * Unit test for {@link Throwables}.

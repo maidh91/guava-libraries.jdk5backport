@@ -40,14 +40,14 @@ import java.util.Collection;
 public class MultimapRemoveAllTester<K, V> extends AbstractMultimapTester<K, V, Multimap<K, V>> {
   @MapFeature.Require(SUPPORTS_REMOVE)
   public void testRemoveAllAbsentKey() {
-    ASSERT.that(multimap().removeAll(sampleKeys().e3)).isEmpty();
+    ASSERT.<V, Collection<V>>that(multimap().removeAll(sampleKeys().e3)).isEmpty();
     expectUnchanged();
   }
 
   @CollectionSize.Require(absent = ZERO)
   @MapFeature.Require(SUPPORTS_REMOVE)
   public void testRemoveAllPresentKey() {
-    ASSERT.that(multimap().removeAll(sampleKeys().e0))
+    ASSERT.<V, Collection<V>>that(multimap().removeAll(sampleKeys().e0))
         .has().allOf(sampleValues().e0).inOrder();
     expectMissing(samples.e0);
   }
@@ -59,7 +59,7 @@ public class MultimapRemoveAllTester<K, V> extends AbstractMultimapTester<K, V, 
 
     multimap().removeAll(sampleKeys().e0);
 
-    ASSERT.that(getResult).isEmpty();
+    ASSERT.<V, Collection<V>>that(getResult).isEmpty();
     expectMissing(samples.e0);
   }
 
@@ -71,7 +71,7 @@ public class MultimapRemoveAllTester<K, V> extends AbstractMultimapTester<K, V, 
         Helpers.mapEntry(sampleKeys().e0, sampleValues().e1),
         Helpers.mapEntry(sampleKeys().e0, sampleValues().e2));
 
-    ASSERT.that(multimap().removeAll(sampleKeys().e0))
+    ASSERT.<V, Collection<V>>that(multimap().removeAll(sampleKeys().e0))
         .has().allOf(sampleValues().e0, sampleValues().e1, sampleValues().e2);
     assertTrue(multimap().isEmpty());
   }
@@ -81,14 +81,14 @@ public class MultimapRemoveAllTester<K, V> extends AbstractMultimapTester<K, V, 
   public void testRemoveAllNullKeyPresent() {
     initMultimapWithNullKey();
 
-    ASSERT.that(multimap().removeAll(null)).has().allOf(getValueForNullKey()).inOrder();
+    ASSERT.<V, Collection<V>>that(multimap().removeAll(null)).has().allOf(getValueForNullKey()).inOrder();
 
     expectMissing(Helpers.mapEntry((K) null, getValueForNullKey()));
   }
 
   @MapFeature.Require({ SUPPORTS_REMOVE, ALLOWS_NULL_QUERIES })
   public void testRemoveAllNullKeyAbsent() {
-    ASSERT.that(multimap().removeAll(null)).isEmpty();
+    ASSERT.<V, Collection<V>>that(multimap().removeAll(null)).isEmpty();
     expectUnchanged();
   }
 }

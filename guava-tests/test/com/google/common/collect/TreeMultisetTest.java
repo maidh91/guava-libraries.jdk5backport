@@ -33,17 +33,20 @@ import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.google.SortedMultisetTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringMultisetGenerator;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.truth0.subjects.CollectionSubject;
 
 /**
  * Unit test for {@link TreeMultiset}.
@@ -215,9 +218,9 @@ public class TreeMultisetTest extends AbstractMultisetTest {
     assertEquals("c", elementSet.last());
     assertEquals(Ordering.natural(), elementSet.comparator());
 
-    ASSERT.that(elementSet.headSet("b")).has().allOf("a").inOrder();
-    ASSERT.that(elementSet.tailSet("b")).has().allOf("b", "c").inOrder();
-    ASSERT.that(elementSet.subSet("a", "c")).has().allOf("a", "b").inOrder();
+    assertThat(elementSet.headSet("b")).has().allOf("a").inOrder();
+    assertThat(elementSet.tailSet("b")).has().allOf("b", "c").inOrder();
+    assertThat(elementSet.subSet("a", "c")).has().allOf("a", "b").inOrder();
   }
 
   public void testElementSetSubsetRemove() {
@@ -230,18 +233,18 @@ public class TreeMultisetTest extends AbstractMultisetTest {
     ms.add("f", 2);
 
     SortedSet<String> elementSet = ms.elementSet();
-    ASSERT.that(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
+    assertThat(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
     SortedSet<String> subset = elementSet.subSet("b", "f");
-    ASSERT.that(subset).has().allOf("b", "c", "d", "e").inOrder();
+    assertThat(subset).has().allOf("b", "c", "d", "e").inOrder();
 
     assertTrue(subset.remove("c"));
-    ASSERT.that(elementSet).has().allOf("a", "b", "d", "e", "f").inOrder();
-    ASSERT.that(subset).has().allOf("b", "d", "e").inOrder();
+    assertThat(elementSet).has().allOf("a", "b", "d", "e", "f").inOrder();
+    assertThat(subset).has().allOf("b", "d", "e").inOrder();
     assertEquals(10, ms.size());
 
     assertFalse(subset.remove("a"));
-    ASSERT.that(elementSet).has().allOf("a", "b", "d", "e", "f").inOrder();
-    ASSERT.that(subset).has().allOf("b", "d", "e").inOrder();
+    assertThat(elementSet).has().allOf("a", "b", "d", "e", "f").inOrder();
+    assertThat(subset).has().allOf("b", "d", "e").inOrder();
     assertEquals(10, ms.size());
   }
 
@@ -255,13 +258,13 @@ public class TreeMultisetTest extends AbstractMultisetTest {
     ms.add("f", 2);
 
     SortedSet<String> elementSet = ms.elementSet();
-    ASSERT.that(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
+    assertThat(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
     SortedSet<String> subset = elementSet.subSet("b", "f");
-    ASSERT.that(subset).has().allOf("b", "c", "d", "e").inOrder();
+    assertThat(subset).has().allOf("b", "c", "d", "e").inOrder();
 
     assertTrue(subset.removeAll(Arrays.asList("a", "c")));
-    ASSERT.that(elementSet).has().allOf("a", "b", "d", "e", "f").inOrder();
-    ASSERT.that(subset).has().allOf("b", "d", "e").inOrder();
+    assertThat(elementSet).has().allOf("a", "b", "d", "e", "f").inOrder();
+    assertThat(subset).has().allOf("b", "d", "e").inOrder();
     assertEquals(10, ms.size());
   }
 
@@ -275,13 +278,13 @@ public class TreeMultisetTest extends AbstractMultisetTest {
     ms.add("f", 2);
 
     SortedSet<String> elementSet = ms.elementSet();
-    ASSERT.that(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
+    assertThat(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
     SortedSet<String> subset = elementSet.subSet("b", "f");
-    ASSERT.that(subset).has().allOf("b", "c", "d", "e").inOrder();
+    assertThat(subset).has().allOf("b", "c", "d", "e").inOrder();
 
     assertTrue(subset.retainAll(Arrays.asList("a", "c")));
-    ASSERT.that(elementSet).has().allOf("a", "c", "f").inOrder();
-    ASSERT.that(subset).has().allOf("c").inOrder();
+    assertThat(elementSet).has().allOf("a", "c", "f").inOrder();
+    assertThat(subset).has().allOf("c").inOrder();
     assertEquals(5, ms.size());
   }
 
@@ -295,13 +298,13 @@ public class TreeMultisetTest extends AbstractMultisetTest {
     ms.add("f", 2);
 
     SortedSet<String> elementSet = ms.elementSet();
-    ASSERT.that(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
+    assertThat(elementSet).has().allOf("a", "b", "c", "d", "e", "f").inOrder();
     SortedSet<String> subset = elementSet.subSet("b", "f");
-    ASSERT.that(subset).has().allOf("b", "c", "d", "e").inOrder();
+    assertThat(subset).has().allOf("b", "c", "d", "e").inOrder();
 
     subset.clear();
-    ASSERT.that(elementSet).has().allOf("a", "f").inOrder();
-    ASSERT.that(subset).isEmpty();
+    assertThat(elementSet).has().allOf("a", "f").inOrder();
+    assertThat(subset).isEmpty();
     assertEquals(3, ms.size());
   }
 
@@ -320,7 +323,7 @@ public class TreeMultisetTest extends AbstractMultisetTest {
     ms.add("b");
     ms.add("d");
 
-    ASSERT.that(ms).has().allOf("d", "c", "b", "b", "a").inOrder();
+    assertThat(ms).has().allOf("d", "c", "b", "b", "a").inOrder();
 
     SortedSet<String> elementSet = ms.elementSet();
     assertEquals("d", elementSet.first());
@@ -338,7 +341,7 @@ public class TreeMultisetTest extends AbstractMultisetTest {
     ms.add("b");
     ms.add(null, 2);
 
-    ASSERT.that(ms).has().allOf(null, null, null, "a", "b", "b").inOrder();
+    assertThat(ms).has().allOf(null, null, null, "a", "b", "b").inOrder();
     assertEquals(3, ms.count(null));
 
     SortedSet<String> elementSet = ms.elementSet();
@@ -417,5 +420,11 @@ public class TreeMultisetTest extends AbstractMultisetTest {
       }
     }
     fail("No bridge method found");
+  }
+
+  // Hack for JDK5 type inference.
+  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
+      Collection<T> collection) {
+    return ASSERT.<T, Collection<T>>that(collection);
   }
 }

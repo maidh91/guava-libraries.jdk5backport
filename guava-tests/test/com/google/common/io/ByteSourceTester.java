@@ -16,16 +16,14 @@
 
 package com.google.common.io;
 
-import static com.google.common.io.SourceSinkFactory.ByteSourceFactory;
-import static com.google.common.io.SourceSinkFactory.CharSourceFactory;
 import static org.junit.Assert.assertArrayEquals;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-
-import junit.framework.TestSuite;
+import com.google.common.io.SourceSinkFactory.ByteSourceFactory;
+import com.google.common.io.SourceSinkFactory.CharSourceFactory;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -36,6 +34,8 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Random;
+
+import junit.framework.TestSuite;
 
 /**
  * A generator of {@code TestSuite} instances for testing {@code ByteSource} implementations.
