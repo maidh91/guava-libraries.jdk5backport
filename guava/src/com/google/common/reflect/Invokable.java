@@ -39,8 +39,18 @@ import javax.annotation.Nullable;
  * Wrapper around either a {@link Method} or a {@link Constructor}.
  * Convenience API is provided to make common reflective operation easier to deal with,
  * such as {@link #isPublic}, {@link #getParameters} etc.
+ *
+ * <p>In addition to convenience methods, {@link TypeToken#method} and {@link
+ * TypeToken#constructor} will resolve the type parameters of the method or constructor in the
+ * context of the owner type, which may be a subtype of the declaring class. For example:
+ * <pre>   {@code
+ *
+ *   Method getMethod = List.class.getMethod("get", int.class);
+ *   Invokable<List<String>, ?> invokable = new TypeToken<List<String>>() {}.method(getMethod);
+ *   assertEquals(TypeToken.of(String.class), invokable.getReturnType()); // Not Object.class!
+ *   assertEquals(new TypeToken<List<String>>() {}, invokable.getOwnerType());}</pre>
  * 
- * @param <T> the type that declares this method or constructor.
+ * @param <T> the type that owns this method or constructor.
  * @param <R> the return type of (or supertype thereof) the method or the declaring type of the
  *            constructor.
  * @author Ben Yu
@@ -68,6 +78,9 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
    * methods, or methods declared by final classes are not overridable.
    */
   public abstract boolean isOverridable();
+
+  /** Returns {@code true} if this was declared to take a variable number of arguments. */
+  public abstract boolean isVarArgs();
 
   /**
    * Invokes with {@code receiver} as 'this' and {@code args} passed to the underlying method
@@ -154,6 +167,13 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
     return (Class<? super T>) super.getDeclaringClass();
   }
 
+  /** Returns the type of {@code T}. */
+  // Overridden in TypeToken#method() and TypeToken#constructor()
+  @SuppressWarnings("unchecked") // The declaring class is T.
+  public TypeToken<T> getOwnerType() {
+    return (TypeToken<T>) TypeToken.of(getDeclaringClass());
+  }
+
   abstract Object invokeInternal(@Nullable Object receiver, Object[] args)
       throws InvocationTargetException, IllegalAccessException;
 
@@ -205,10 +225,13 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
       return method.getTypeParameters();
     }
 
-    @Override
-    public final boolean isOverridable() {
-      return !(isFinal() || isPrivate() || isStatic() || Modifier.isFinal(getDeclaringClass()
-          .getModifiers()));
+    @Override public final boolean isOverridable() {
+      return  !(isFinal() || isPrivate() || isStatic()
+          || Modifier.isFinal(getDeclaringClass().getModifiers()));
+    }
+
+    @Override public final boolean isVarArgs() {
+      return method.isVarArgs();
     }
   }
 
@@ -269,6 +292,10 @@ public abstract class Invokable<T, R> extends Element implements GenericDeclarat
     @Override
     public final boolean isOverridable() {
       return false;
+    }
+
+    @Override public final boolean isVarArgs() {
+      return constructor.isVarArgs();
     }
   }
 }

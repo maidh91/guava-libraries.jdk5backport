@@ -717,7 +717,7 @@ public class LocalCacheTest extends TestCase {
     valueRef.setLoading(true);
     entry.setValueReference(valueRef);
     table.set(index, entry);
-    assertNull(segment.refresh(key, hash, identityLoader()));
+    assertNull(segment.refresh(key, hash, identityLoader(), false));
   }
 
   // Removal listener tests

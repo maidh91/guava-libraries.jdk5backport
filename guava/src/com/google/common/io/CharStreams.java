@@ -144,8 +144,10 @@ public final class CharStreams {
 
     @Override
     public String toString() {
-      String limited = (string.length() <= 15) ? string : string.substring(0, 12) + "...";
-      return "CharStreams.newCharSource(" + limited + ")";
+      String limited = (string.length() <= 15)
+          ? string
+          : string.substring(0, 12) + "...";
+      return "CharStreams.asCharSource(" + limited + ")";
     }
   }
 
@@ -309,10 +311,10 @@ public final class CharStreams {
       throws IOException {
     Closer closer = Closer.create();
     try {
-      R r = closer.add(supplier.getInput());
+      R r = closer.register(supplier.getInput());
       return readLines(r);
     } catch (Throwable e) {
-      throw closer.rethrow(e, IOException.class);
+      throw closer.rethrow(e);
     } finally {
       closer.close();
     }
@@ -382,10 +384,10 @@ public final class CharStreams {
 
     Closer closer = Closer.create();
     try {
-      R r = closer.add(supplier.getInput());
+      R r = closer.register(supplier.getInput());
       return readLines(r, callback);
     } catch (Throwable e) {
-      throw closer.rethrow(e, IOException.class);
+      throw closer.rethrow(e);
     } finally {
       closer.close();
     }

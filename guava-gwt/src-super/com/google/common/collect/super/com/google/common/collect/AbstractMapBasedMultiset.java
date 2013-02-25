@@ -150,7 +150,7 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
 
   /*
    * Not subclassing AbstractMultiset$MultisetIterator because next() needs to
-   * retrieve the Map.Entry<E, AtomicInteger> entry, which can then be used for
+   * retrieve the Map.Entry<E, Count> entry, which can then be used for
    * a more efficient remove() call.
    */
   private class MapBasedMultisetIterator implements Iterator<E> {
@@ -196,14 +196,8 @@ abstract class AbstractMapBasedMultiset<E> extends AbstractMultiset<E>
   }
 
   @Override public int count(@Nullable Object element) {
-    try {
-      Count frequency = backingMap.get(element);
-      return (frequency == null) ? 0 : frequency.get();
-    } catch (NullPointerException e) {
-      return 0;
-    } catch (ClassCastException e) {
-      return 0;
-    }
+    Count frequency = Maps.safeGet(backingMap, element);
+    return (frequency == null) ? 0 : frequency.get();
   }
 
   // Optional Operations - Modification Operations

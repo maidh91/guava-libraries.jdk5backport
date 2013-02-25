@@ -11,6 +11,8 @@
 
 package com.google.common.cache;
 
+import com.google.common.annotations.GwtCompatible;
+
 import java.util.concurrent.atomic.AtomicLong;
 import java.io.IOException;
 import java.io.Serializable;
@@ -43,8 +45,9 @@ import java.io.ObjectInputStream;
  * @since 1.8
  * @author Doug Lea
  */
-final class LongAdder extends Striped64 implements Serializable {
-  private static final long serialVersionUID = 7249069246863182397L;
+@GwtCompatible(emulated = true)
+final class LongAdder extends Striped64 implements Serializable, LongAddable {
+    private static final long serialVersionUID = 7249069246863182397L;
 
   /**
    * Version of plus for use in retryUpdate
@@ -205,7 +208,8 @@ final class LongAdder extends Striped64 implements Serializable {
     s.writeLong(sum());
   }
 
-  private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+  private void readObject(ObjectInputStream s)
+      throws IOException, ClassNotFoundException {
     s.defaultReadObject();
     busy = 0;
     cells = null;

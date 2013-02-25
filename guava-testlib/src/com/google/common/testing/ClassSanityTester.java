@@ -227,6 +227,33 @@ public final class ClassSanityTester {
    * <li>Inequality check is not performed against state mutation methods such as {@link List#add},
    *     or functional update methods such as {@link com.google.common.base.Joiner#skipNulls}.
    * </ul>
+   *
+   * <p>Note that constructors taking a builder object cannot be tested effectively because
+   * semantics of builder can be arbitrarily complex. Still, a factory class can be created in the
+   * test to facilitate equality testing. For example: <pre>
+   * public class FooTest {
+   *
+   *   private static class FooFactoryForTest {
+   *     public static Foo create(String a, String b, int c, boolean d) {
+   *       return Foo.builder()
+   *           .setA(a)
+   *           .setB(b)
+   *           .setC(c)
+   *           .setD(d)
+   *           .build();
+   *     }
+   *   }
+   *
+   *   public void testEquals() {
+   *     new ClassSanityTester()
+   *       .forAllPublicStaticMethods(FooFactoryForTest.class)
+   *       .thatReturn(Foo.class)
+   *       .testEquals();
+   *   }
+   * }
+   * </pre>
+   * It will test that Foo objects created by the {@code create(a, b, c, d)} factory method with
+   * equal parameters are equal and vice versa, thus indirectly tests the builder equality.
    */
   public void testEquals(Class<?> cls) {
     try {
@@ -323,23 +350,30 @@ public final class ClassSanityTester {
     ImmutableList.Builder<Invokable<?, ?>> builder = ImmutableList.builder();
     for (Method method : cls.getDeclaredMethods()) {
       Invokable<?, ?> invokable = Invokable.from(method);
+      invokable.setAccessible(true);
       if (invokable.isPublic() && invokable.isStatic() && !invokable.isSynthetic()) {
         builder.add(invokable);
       }
     }
-    return new FactoryMethodReturnValueTester(cls, builder.build());
+    return new FactoryMethodReturnValueTester(cls, builder.build(), "public static methods");
   }
 
   /** Runs sanity tests against return values of static factory methods declared by a class. */
   public final class FactoryMethodReturnValueTester {
     private final Set<String> packagesToTest = Sets.newHashSet();
+    private final Class<?> declaringClass;
     private final ImmutableList<Invokable<?, ?>> factories;
+    private final String factoryMethodsDescription;
     private Class<?> returnTypeToTest = Object.class;
 
     private FactoryMethodReturnValueTester(
-        Class<?> declaringClass, ImmutableList<Invokable<?, ?>> factories) {
-      packagesToTest.add(Reflection.getPackageName(declaringClass));
+        Class<?> declaringClass,
+        ImmutableList<Invokable<?, ?>> factories,
+        String factoryMethodsDescription) {
+      this.declaringClass = declaringClass;
       this.factories = factories;
+      this.factoryMethodsDescription = factoryMethodsDescription;
+      packagesToTest.add(Reflection.getPackageName(declaringClass));
     }
 
     /**
@@ -467,7 +501,12 @@ public final class ClassSanityTester {
           builder.add(factory);
         }
       }
-      return builder.build();
+      ImmutableList<Invokable<?, ?>> factoriesToTest = builder.build();
+      Assert.assertFalse("No " + factoryMethodsDescription + " that return "
+              + returnTypeToTest.getName() + " or subtype are found in "
+              + declaringClass + ".",
+          factoriesToTest.isEmpty());
+      return factoriesToTest;
     }
   }
 
@@ -499,16 +538,17 @@ public final class ClassSanityTester {
       args.add(generateDummyArg(param, generator));
     }
     Object instance = createInstance(factory, args);
+    List<Object> equalArgs = generateEqualFactoryArguments(factory, params, args);
     // Each group is a List of items, each item has a list of factory args.
     final List<List<List<Object>>> argGroups = Lists.newArrayList();
+    argGroups.add(ImmutableList.of(args, equalArgs));
     EqualsTester tester = new EqualsTester().setItemReporter(new ItemReporter() {
       @Override String reportItem(Item item) {
         List<Object> factoryArgs = argGroups.get(item.groupNumber).get(item.itemNumber);
         return factory.getName() + "(" + Joiner.on(", ").useForNull("null").join(factoryArgs) + ")";
       }
     });
-    tester.addEqualityGroup(instance, createInstance(factory, args));
-    argGroups.add(ImmutableList.of(args, args));
+    tester.addEqualityGroup(instance, createInstance(factory, equalArgs));
     for (int i = 0; i < params.size(); i++) {
       List<Object> newArgs = Lists.newArrayList(args);
       Object newArg = argGenerators.get(i).generate(params.get(i).getType().getRawType());
@@ -521,6 +561,44 @@ public final class ClassSanityTester {
       argGroups.add(ImmutableList.of(newArgs));
     }
     tester.testEquals();
+  }
+
+  /**
+   * Returns dummy factory arguments that are equal to {@code args} but may be different instances,
+   * to be used to construct a second instance of the same equality group.
+   */
+  private List<Object> generateEqualFactoryArguments(
+      Invokable<?, ?> factory, List<Parameter> params, List<Object> args)
+      throws ParameterNotInstantiableException, FactoryMethodReturnsNullException,
+      InvocationTargetException, IllegalAccessException {
+    List<Object> equalArgs = Lists.newArrayList(args);
+    for (int i = 0; i < args.size(); i++) {
+      Parameter param = params.get(i);
+      Object arg = args.get(i);
+      // Use new fresh value generator because 'args' were populated with new fresh generator each.
+      // Two newFreshValueGenerator() instances should normally generate equal value sequence.
+      Object shouldBeEqualArg = generateDummyArg(param, newFreshValueGenerator());
+      if (arg != shouldBeEqualArg
+          && Objects.equal(arg, shouldBeEqualArg)
+          && hashCodeInsensitiveToArgReference(factory, args, i, shouldBeEqualArg)
+          && hashCodeInsensitiveToArgReference(
+              factory, args, i, generateDummyArg(param, newFreshValueGenerator()))) {
+        // If the implementation uses identityHashCode(), referential equality is
+        // probably intended. So no point in using an equal-but-different factory argument.
+        // We check twice to avoid confusion caused by accidental hash collision.
+        equalArgs.set(i, shouldBeEqualArg);
+      }
+    }
+    return equalArgs;
+  }
+
+  private static boolean hashCodeInsensitiveToArgReference(
+      Invokable<?, ?> factory, List<Object> args, int i, Object alternateArg)
+      throws FactoryMethodReturnsNullException, InvocationTargetException, IllegalAccessException {
+    List<Object> tentativeArgs = Lists.newArrayList(args);
+    tentativeArgs.set(i, alternateArg);
+    return createInstance(factory, tentativeArgs).hashCode()
+        == createInstance(factory, args).hashCode();
   }
 
   // sampleInstances is a type-safe class-values mapping, but we don't have a type-safe data

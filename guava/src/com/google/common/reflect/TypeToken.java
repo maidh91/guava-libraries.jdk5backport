@@ -486,6 +486,9 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       Type[] getGenericExceptionTypes() {
         return resolveInPlace(super.getGenericExceptionTypes());
       }
+      @Override public TypeToken<T> getOwnerType() {
+        return TypeToken.this;
+      }
     };
   }
 
@@ -511,6 +514,9 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       @Override
       Type[] getGenericExceptionTypes() {
         return resolveInPlace(super.getGenericExceptionTypes());
+      }
+      @Override public TypeToken<T> getOwnerType() {
+        return TypeToken.this;
       }
     };
   }
@@ -890,8 +896,8 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       return ImmutableSet.<Class<?>> of((Class<?>) type);
     } else if (type instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) type;
-      // JDK implementation declares getRawType() to return Class<?>
-      return ImmutableSet.<Class<?>> of((Class<?>) parameterizedType.getRawType());
+      // JDK implementation declares getRawType() to return Class<?>: http://goo.gl/YzaEd
+      return ImmutableSet.<Class<?>>of((Class<?>) parameterizedType.getRawType());
     } else if (type instanceof GenericArrayType) {
       GenericArrayType genericArrayType = (GenericArrayType) type;
       return ImmutableSet.<Class<?>> of(Types.getArrayClass(getRawType(genericArrayType
@@ -1131,8 +1137,11 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       if (superclass != null) {
         aboveMe = Math.max(aboveMe, collectTypes(superclass, map));
       }
-      // TODO(benyu): should we include Object for interface?
-      // Also, CharSequence[] and Object[] for String[]?
+      /*
+       * TODO(benyu): should we include Object for interface?
+       * Also, CharSequence[] and Object[] for String[]?
+       *
+       */
       map.put(type, aboveMe + 1);
       return aboveMe + 1;
     }

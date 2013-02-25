@@ -391,12 +391,7 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
   }
 
   ImmutableSet<K> createKeySet() {
-    return new ImmutableMapKeySet<K, V>() {
-      @Override
-      ImmutableMap<K, V> map() {
-        return ImmutableMap.this;
-      }
-    };
+    return new ImmutableMapKeySet<K, V>(this);
   }
 
   private transient ImmutableCollection<V> values;
@@ -408,16 +403,7 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
 
   public ImmutableCollection<V> values() {
     ImmutableCollection<V> result = values;
-    return (result == null) ? values = createValues() : result;
-  }
-
-  ImmutableCollection<V> createValues() {
-    return new ImmutableMapValues<K, V>() {
-      @Override
-      ImmutableMap<K, V> map() {
-        return ImmutableMap.this;
-      }
-    };
+    return (result == null) ? values = new ImmutableMapValues<K, V>(this) : result;
   }
 
   // cached so that this.multimapView().inverse() only computes inverse once

@@ -82,10 +82,10 @@ public abstract class CharSink {
 
     Closer closer = Closer.create();
     try {
-      Writer out = closer.add(openStream());
+      Writer out = closer.register(openStream());
       out.append(charSequence);
     } catch (Throwable e) {
-      throw closer.rethrow(e, IOException.class);
+      throw closer.rethrow(e);
     } finally {
       closer.close();
     }
@@ -115,12 +115,12 @@ public abstract class CharSink {
 
     Closer closer = Closer.create();
     try {
-      BufferedWriter out = closer.add(openBufferedStream());
+      BufferedWriter out = closer.register(openBufferedStream());
       for (CharSequence line : lines) {
         out.append(line).append(lineSeparator);
       }
     } catch (Throwable e) {
-      throw closer.rethrow(e, IOException.class);
+      throw closer.rethrow(e);
     } finally {
       closer.close();
     }
@@ -138,10 +138,10 @@ public abstract class CharSink {
 
     Closer closer = Closer.create();
     try {
-      Writer out = closer.add(openStream());
+      Writer out = closer.register(openStream());
       return CharStreams.copy(readable, out);
     } catch (Throwable e) {
-      throw closer.rethrow(e, IOException.class);
+      throw closer.rethrow(e);
     } finally {
       closer.close();
     }

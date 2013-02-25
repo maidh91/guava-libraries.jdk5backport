@@ -147,12 +147,7 @@ abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
   }
 
   Multiset<K> createKeys() {
-    return new Multimaps.Keys<K, V>() {
-      @Override
-      Multimap<K, V> multimap() {
-        return AbstractMultimap.this;
-      }
-    };
+    return new Multimaps.Keys<K, V>(this);
   }
 
   private transient Collection<V> values;
@@ -163,13 +158,7 @@ abstract class AbstractMultimap<K, V> implements Multimap<K, V> {
   }
 
   Collection<V> createValues() {
-    return new Multimaps.Values<K, V>() {
-
-      @Override
-      Multimap<K, V> multimap() {
-        return AbstractMultimap.this;
-      }
-    };
+    return new Multimaps.Values<K, V>(this);
   }
 
   private transient Map<K, Collection<V>> asMap;

@@ -258,7 +258,8 @@ public class TypeTokenTest extends TestCase {
     assertSubtypeBeforeSupertype(types.classes().rawTypes());
   }
 
-  private static void assertSubtypeTokenBeforeSupertypeToken(Iterable<? extends TypeToken<?>> types) {
+  private static void assertSubtypeTokenBeforeSupertypeToken(
+      Iterable<? extends TypeToken<?>> types) {
     int i = 0;
     for (TypeToken<?> left : types) {
       int j = 0;
@@ -450,13 +451,6 @@ public class TypeTokenTest extends TestCase {
   void testGetGenericInterfaces_typeVariable_boundsAreClassWithInterface() {
     assertThat(TypeToken.of(new TypeCapture<T>() {}.capture()).getGenericInterfaces())
         .iteratesOverSequence(new TypeToken<Iterable<String>>() {});
-    assertHasArrayInterfaces(new TypeToken<T[]>() {});
-  }
-
-  public <T extends CharSequence&Iterable<String>>
-  void testGetGenericInterfaces_typeVariable_boundsAreInterfaces() {
-    assertThat(TypeToken.of(new TypeCapture<T>() {}.capture()).getGenericInterfaces())
-        .iteratesOverSequence(TypeToken.of(CharSequence.class), new TypeToken<Iterable<String>>() {});
     assertHasArrayInterfaces(new TypeToken<T[]>() {});
   }
 
@@ -1172,6 +1166,14 @@ public class TypeTokenTest extends TestCase {
     assertEquals(Integer.class, TypeToken.of(Integer.class).getType());
   }
 
+  public void testMethod_getOwnerType() throws NoSuchMethodException {
+    Method sizeMethod = List.class.getMethod("size");
+    assertEquals(TypeToken.of(List.class),
+        TypeToken.of(List.class).method(sizeMethod).getOwnerType());
+    assertEquals(new TypeToken<List<String>>() {},
+        new TypeToken<List<String>>() {}.method(sizeMethod).getOwnerType());
+  }
+
   public void testMethod_notDeclaredByType() throws NoSuchMethodException {
     Method sizeMethod = Map.class.getMethod("size");
     try {
@@ -1214,6 +1216,15 @@ public class TypeTokenTest extends TestCase {
     Method failMethod = Loser.class.getMethod("lose");
     Invokable<T, ?> invokable = new TypeToken<T>(getClass()) {}.method(failMethod);
     assertThat(invokable.getExceptionTypes()).has().item(TypeToken.of(AssertionError.class));
+  }
+
+  public void testConstructor_getOwnerType() throws NoSuchMethodException {
+    @SuppressWarnings("rawtypes") // raw class ArrayList.class
+    Constructor<ArrayList> constructor = ArrayList.class.getConstructor();
+    assertEquals(TypeToken.of(ArrayList.class),
+        TypeToken.of(ArrayList.class).constructor(constructor).getOwnerType());
+    assertEquals(new TypeToken<ArrayList<String>>() {},
+        new TypeToken<ArrayList<String>>() {}.constructor(constructor).getOwnerType());
   }
 
   public void testConstructor_notDeclaredByType() throws NoSuchMethodException {

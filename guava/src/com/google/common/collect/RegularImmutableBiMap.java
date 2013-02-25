@@ -75,7 +75,9 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
       return nextInVToKBucket;
     }
   }
-
+  
+  static final double MAX_LOAD_FACTOR = 1.2;
+  
   private transient final BiMapEntry<K, V>[] kToVTable;
   private transient final BiMapEntry<K, V>[] vToKTable;
   private transient final BiMapEntry<K, V>[] entries;
@@ -84,7 +86,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
 
   RegularImmutableBiMap(Collection<? extends Entry<? extends K, ? extends V>> entriesToAdd) {
     int n = entriesToAdd.size();
-    int tableSize = RegularImmutableMap.chooseTableSize(n);
+    int tableSize = Hashing.closedTableSize(n, MAX_LOAD_FACTOR);
     this.mask = tableSize - 1;
     BiMapEntry<K, V>[] kToVTable = createEntryArray(tableSize);
     BiMapEntry<K, V>[] vToKTable = createEntryArray(tableSize);

@@ -178,12 +178,12 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     switch (n) {
       case 0:
         return of();
-      case 1: {
-        @SuppressWarnings("unchecked")
-        // safe; elements contains only E's
+      case 1:
+        @SuppressWarnings("unchecked") // safe; elements contains only E's
         E elem = (E) elements[0];
         return of(elem);
-      }
+      default:
+        // continue below to handle the general case
     }
     int tableSize = chooseTableSize(n);
     Object[] table = new Object[tableSize];

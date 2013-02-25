@@ -112,7 +112,7 @@ public final class Hashing {
     return MURMUR3_32;
   }
 
-  private static final Murmur3_32HashFunction MURMUR3_32 = new Murmur3_32HashFunction(0);
+  private static final HashFunction MURMUR3_32 = new Murmur3_32HashFunction(0);
 
   /**
    * Returns a hash function implementing the
@@ -138,7 +138,7 @@ public final class Hashing {
     return MURMUR3_128;
   }
 
-  private static final Murmur3_128HashFunction MURMUR3_128 = new Murmur3_128HashFunction(0);
+  private static final HashFunction MURMUR3_128 = new Murmur3_128HashFunction(0);
 
   /**
    * Returns a hash function implementing the MD5 hash algorithm (128 hash bits) by delegating to
@@ -148,7 +148,7 @@ public final class Hashing {
     return MD5;
   }
 
-  private static final HashFunction MD5 = new MessageDigestHashFunction("MD5");
+  private static final HashFunction MD5 = new MessageDigestHashFunction("MD5", "Hashing.md5()");
 
   /**
    * Returns a hash function implementing the SHA-1 algorithm (160 hash bits) by delegating to the
@@ -158,7 +158,8 @@ public final class Hashing {
     return SHA_1;
   }
 
-  private static final HashFunction SHA_1 = new MessageDigestHashFunction("SHA-1");
+  private static final HashFunction SHA_1 =
+      new MessageDigestHashFunction("SHA-1", "Hashing.sha1()");
 
   /**
    * Returns a hash function implementing the SHA-256 algorithm (256 hash bits) by delegating to
@@ -168,7 +169,8 @@ public final class Hashing {
     return SHA_256;
   }
 
-  private static final HashFunction SHA_256 = new MessageDigestHashFunction("SHA-256");
+  private static final HashFunction SHA_256 =
+      new MessageDigestHashFunction("SHA-256", "Hashing.sha256()");
 
   /**
    * Returns a hash function implementing the SHA-512 algorithm (512 hash bits) by delegating to the
@@ -178,7 +180,8 @@ public final class Hashing {
     return SHA_512;
   }
 
-  private static final HashFunction SHA_512 = new MessageDigestHashFunction("SHA-512");
+  private static final HashFunction SHA_512 =
+      new MessageDigestHashFunction("SHA-512", "Hashing.sha512()");
 
   /**
    * Returns a hash function implementing the CRC-32 checksum algorithm (32 hash bits) by delegating
@@ -193,7 +196,8 @@ public final class Hashing {
     return CRC_32;
   }
 
-  private static final HashFunction CRC_32 = checksumHashFunction(ChecksumType.CRC_32);
+  private static final HashFunction CRC_32 =
+      checksumHashFunction(ChecksumType.CRC_32, "Hashing.crc32()");
 
   /**
    * Returns a hash function implementing the Adler-32 checksum algorithm (32 hash bits) by
@@ -208,10 +212,11 @@ public final class Hashing {
     return ADLER_32;
   }
 
-  private static final HashFunction ADLER_32 = checksumHashFunction(ChecksumType.ADLER_32);
+  private static final HashFunction ADLER_32 =
+      checksumHashFunction(ChecksumType.ADLER_32, "Hashing.adler32()");
 
-  private static HashFunction checksumHashFunction(ChecksumType type) {
-    return new ChecksumHashFunction(type, type.bits);
+  private static HashFunction checksumHashFunction(ChecksumType type, String toString) {
+    return new ChecksumHashFunction(type, type.bits, toString);
   }
 
   enum ChecksumType implements Supplier<Checksum> {
@@ -396,6 +401,10 @@ public final class Hashing {
     }
   }
 
+  /**
+   * Linear CongruentialGenerator to use for consistent hashing.
+   * See http://en.wikipedia.org/wiki/Linear_congruential_generator
+   */
   private static final class LinearCongruentialGenerator {
     private long state;
 

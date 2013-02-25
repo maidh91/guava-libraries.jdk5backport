@@ -4,8 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.guava</groupId>
-    <artifactId>guava-parent</artifactId>
-    <version>14.0-rc1</version>
+    <artifactId>guava-parent-jdk5</artifactId>
+    <version>14.0-rc3</version>
   </parent>
   <artifactId>guava-testlib</artifactId>
   <name>Guava Testing Library</name>

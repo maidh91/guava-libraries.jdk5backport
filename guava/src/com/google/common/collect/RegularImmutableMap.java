@@ -39,7 +39,6 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
   private final transient LinkedEntry<K, V>[] table;
   // 'and' with an int to get a table index
   private final transient int mask;
-  private final transient int keySetHashCode;
 
   // TODO(gak): investigate avoiding the creation of ImmutableEntries since we
   // re-copy them anyway.
@@ -47,18 +46,16 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
     int size = immutableEntries.length;
     entries = createEntryArray(size);
 
-    int tableSize = chooseTableSize(size);
+    int tableSize = Hashing.closedTableSize(size, MAX_LOAD_FACTOR);
     table = createEntryArray(tableSize);
     mask = tableSize - 1;
 
-    int keySetHashCodeMutable = 0;
     for (int entryIndex = 0; entryIndex < size; entryIndex++) {
       // each of our 6 callers carefully put only Entry<K, V>s into the array!
       @SuppressWarnings("unchecked")
       Entry<K, V> entry = (Entry<K, V>) immutableEntries[entryIndex];
       K key = entry.getKey();
       int keyHashCode = key.hashCode();
-      keySetHashCodeMutable += keyHashCode;
       int tableIndex = Hashing.smear(keyHashCode) & mask;
       @Nullable
       LinkedEntry<K, V> existing = table[tableIndex];
@@ -71,7 +68,6 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
         existing = existing.next();
       }
     }
-    keySetHashCode = keySetHashCodeMutable;
   }
 
   /**
@@ -80,23 +76,6 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
    * relatively sparse (hence it misses fast) while saving space.
    */
   private static final double MAX_LOAD_FACTOR = 1.2;
-
-  /**
-   * Give a good hash table size for the given number of keys.
-   *
-   * @param size The number of keys to be inserted. Must be greater than or equal to 2.
-   */
-  static int chooseTableSize(int size) {
-    // Get the recommended table size.
-    // Round down to the nearest power of 2.
-    int tableSize = Integer.highestOneBit(size);
-    // Check to make sure that we will not exceed the maximum load factor.
-    if ((double) size / tableSize > MAX_LOAD_FACTOR) {
-      tableSize <<= 1;
-      checkArgument(tableSize > 0, "table too large: %s", size);
-    }
-    return tableSize;
-  }
 
   /**
    * Creates a {@link LinkedEntry} array to hold parameterized entries. The
@@ -229,33 +208,6 @@ final class RegularImmutableMap<K, V> extends ImmutableMap<K, V> {
     ImmutableList<Entry<K, V>> createAsList() {
       return new RegularImmutableAsList<Entry<K, V>>(this, entries);
     }
-  }
-
-  @Override
-  ImmutableSet<K> createKeySet() {
-    return new ImmutableMapKeySet<K, V>() {
-      @Override
-      ImmutableMap<K, V> map() {
-        return RegularImmutableMap.this;
-      }
-
-      @Override
-      boolean isHashCodeFast() {
-        return true;
-      }
-
-      @Override
-      public int hashCode() {
-        return keySetHashCode;
-      }
-    };
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder result = Collections2.newStringBuilderForCollection(size()).append('{');
-    Collections2.STANDARD_JOINER.appendTo(result, entries);
-    return result.append('}').toString();
   }
 
   // This class is never actually serialized directly, but we have to make the

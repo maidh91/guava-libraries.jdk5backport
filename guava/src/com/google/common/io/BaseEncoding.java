@@ -181,12 +181,26 @@ public abstract class BaseEncoding {
    */
   @GwtIncompatible("Writer,OutputStream")
   public final OutputSupplier<OutputStream> encodingStream(
-      final OutputSupplier<Writer> writerSupplier) {
+      final OutputSupplier<? extends Writer> writerSupplier) {
     checkNotNull(writerSupplier);
     return new OutputSupplier<OutputStream>() {
 
       public OutputStream getOutput() throws IOException {
         return encodingStream(writerSupplier.getOutput());
+      }
+    };
+  }
+
+  /**
+   * Returns a {@code ByteSink} that writes base-encoded bytes to the specified {@code CharSink}.
+   */
+  @GwtIncompatible("ByteSink,CharSink")
+  public final ByteSink encodingSink(final CharSink encodedSink) {
+    checkNotNull(encodedSink);
+    return new ByteSink() {
+      @Override
+      public OutputStream openStream() throws IOException {
+        return encodingStream(encodedSink.openStream());
       }
     };
   }
@@ -211,6 +225,7 @@ public abstract class BaseEncoding {
    *         encoding.
    */
   public final byte[] decode(CharSequence chars) {
+    chars = padding().trimTrailingFrom(chars);
     ByteInput decodedInput = decodingStream(asCharInput(chars));
     byte[] tmp = new byte[maxDecodedSize(chars.length())];
     int index = 0;
@@ -238,12 +253,28 @@ public abstract class BaseEncoding {
    * from readers from the specified supplier.
    */
   @GwtIncompatible("Reader,InputStream")
-  public InputSupplier<InputStream> decodingStream(final InputSupplier<Reader> readerSupplier) {
+  public final InputSupplier<InputStream> decodingStream(
+      final InputSupplier<? extends Reader> readerSupplier) {
     checkNotNull(readerSupplier);
     return new InputSupplier<InputStream>() {
 
       public InputStream getInput() throws IOException {
         return decodingStream(readerSupplier.getInput());
+      }
+    };
+  }
+
+  /**
+   * Returns a {@code ByteSource} that reads base-encoded bytes from the specified
+   * {@code CharSource}.
+   */
+  @GwtIncompatible("ByteSource,CharSource")
+  public final ByteSource decodingSource(final CharSource encodedSource) {
+    checkNotNull(encodedSource);
+    return new ByteSource() {
+      @Override
+      public InputStream openStream() throws IOException {
+        return decodingStream(encodedSource.openStream());
       }
     };
   }
@@ -257,6 +288,8 @@ public abstract class BaseEncoding {
   abstract int maxDecodedSize(int chars);
 
   abstract ByteInput decodingStream(CharInput charInput);
+
+  abstract CharMatcher padding();
 
   // Modified encoding generators
 
@@ -546,7 +579,8 @@ public abstract class BaseEncoding {
       this.paddingChar = paddingChar;
     }
 
-    private CharMatcher paddingMatcher() {
+    @Override
+    CharMatcher padding() {
       return (paddingChar == null) ? CharMatcher.NONE : CharMatcher.is(paddingChar.charValue());
     }
 
@@ -598,7 +632,7 @@ public abstract class BaseEncoding {
 
     @Override
     int maxDecodedSize(int chars) {
-      return alphabet.bytesPerChunk * divide(chars, alphabet.charsPerChunk, CEILING);
+      return (int) ((alphabet.bitsPerChar * (long) chars + 7L) / 8L);
     }
 
     @Override
@@ -609,7 +643,7 @@ public abstract class BaseEncoding {
         int bitBufferLength = 0;
         int readChars = 0;
         boolean hitPadding = false;
-        final CharMatcher paddingMatcher = paddingMatcher();
+        final CharMatcher paddingMatcher = padding();
 
         public int read() throws IOException {
           while (true) {
@@ -668,7 +702,7 @@ public abstract class BaseEncoding {
     @Override
     public BaseEncoding withSeparator(String separator, int afterEveryChars) {
       checkNotNull(separator);
-      checkArgument(paddingMatcher().or(alphabet).matchesNoneOf(separator),
+      checkArgument(padding().or(alphabet).matchesNoneOf(separator),
           "Separator cannot contain alphabet or padding characters");
       return new SeparatedBaseEncoding(this, separator, afterEveryChars);
     }
@@ -774,6 +808,11 @@ public abstract class BaseEncoding {
       checkArgument(afterEveryChars > 0, "Cannot add a separator after every %s chars",
           afterEveryChars);
       this.separatorChars = CharMatcher.anyOf(separator).precomputed();
+    }
+
+    @Override
+    CharMatcher padding() {
+      return delegate.padding();
     }
 
     @Override

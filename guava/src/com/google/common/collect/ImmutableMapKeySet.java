@@ -31,36 +31,30 @@ import javax.annotation.Nullable;
  * @author Kevin Bourrillion
  */
 @GwtCompatible(emulated = true)
-abstract class ImmutableMapKeySet<K, V> extends ImmutableSet<K> {
-  abstract ImmutableMap<K, V> map();
+final class ImmutableMapKeySet<K, V> extends ImmutableSet<K> {
+  private final ImmutableMap<K, V> map;
+
+  ImmutableMapKeySet(ImmutableMap<K, V> map) {
+    this.map = map;
+  }
 
   public int size() {
-    return map().size();
+    return map.size();
   }
 
   @Override
   public UnmodifiableIterator<K> iterator() {
-    return new UnmodifiableIterator<K>() {
-      final UnmodifiableIterator<Entry<K, V>> entryIterator = map().entrySet().iterator();
-
-      public boolean hasNext() {
-        return entryIterator.hasNext();
-      }
-
-      public K next() {
-        return entryIterator.next().getKey();
-      }
-    };
+    return asList().iterator();
   }
 
   @Override
   public boolean contains(@Nullable Object object) {
-    return map().containsKey(object);
+    return map.containsKey(object);
   }
 
   @Override
   ImmutableList<K> createAsList() {
-    final ImmutableList<Entry<K, V>> entryList = map().entrySet().asList();
+    final ImmutableList<Entry<K, V>> entryList = map.entrySet().asList();
     return new ImmutableAsList<K>() {
 
       public K get(int index) {
@@ -80,10 +74,9 @@ abstract class ImmutableMapKeySet<K, V> extends ImmutableSet<K> {
     return true;
   }
 
-  @Override
   @GwtIncompatible("serialization")
-  Object writeReplace() {
-    return new KeySetSerializedForm<K>(map());
+  @Override Object writeReplace() {
+    return new KeySetSerializedForm<K>(map);
   }
 
   @GwtIncompatible("serialization")

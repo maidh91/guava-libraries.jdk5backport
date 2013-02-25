@@ -759,10 +759,6 @@ public final class Maps {
       backingSet().clear();
     }
 
-    protected Entry<K, V> entry(K key) {
-      return immutableEntry(key, function.apply(key));
-    }
-
     @Override
     protected Set<Entry<K, V>> createEntrySet() {
       return new EntrySet<K, V>() {
@@ -774,24 +770,20 @@ public final class Maps {
 
         @Override
         public Iterator<Entry<K, V>> iterator() {
-          final Iterator<K> backingIterator = backingSet().iterator();
-          return new Iterator<Entry<K, V>>() {
-
-            public boolean hasNext() {
-              return backingIterator.hasNext();
-            }
-
-            public Entry<K, V> next() {
-              return entry(backingIterator.next());
-            }
-
-            public void remove() {
-              backingIterator.remove();
-            }
-          };
+          return asSetEntryIterator(backingSet(), function);
         }
       };
     }
+  }
+
+  private static <K, V> Iterator<Entry<K, V>> asSetEntryIterator(
+      Set<K> set, final Function<? super K, V> function) {
+    return new TransformedIterator<K, Entry<K,V>>(set.iterator()) {
+      @Override
+      Entry<K, V> transform(K key) {
+        return Maps.immutableEntry(key, function.apply(key));
+      }
+    };
   }
 
   private static class SortedAsMapView<K, V> extends AsMapView<K, V> implements SortedMap<K, V> {
@@ -2478,25 +2470,46 @@ public final class Maps {
 
   /**
    * Delegates to {@link Map#get}. Returns {@code null} on {@code
-   * ClassCastException}.
+   * ClassCastException} and {@code NullPointerException}.
    */
   static <V> V safeGet(Map<?, V> map, Object key) {
+    checkNotNull(map);
     try {
       return map.get(key);
     } catch (ClassCastException e) {
+      return null;
+    } catch (NullPointerException e) {
       return null;
     }
   }
 
   /**
    * Delegates to {@link Map#containsKey}. Returns {@code false} on {@code
-   * ClassCastException}
+   * ClassCastException} and {@code NullPointerException}.
    */
   static boolean safeContainsKey(Map<?, ?> map, Object key) {
+    checkNotNull(map);
     try {
       return map.containsKey(key);
     } catch (ClassCastException e) {
       return false;
+    } catch (NullPointerException e) {
+      return false;
+    }
+  }
+
+  /**
+   * Delegates to {@link Map#remove}. Returns {@code null} on {@code
+   * ClassCastException} and {@code NullPointerException}.
+   */
+  static <V> V safeRemove(Map<?, V> map, Object key) {
+    checkNotNull(map);
+    try {
+      return map.remove(key);
+    } catch (ClassCastException e) {
+      return null;
+    } catch (NullPointerException e) {
+      return null;
     }
   }
 
@@ -2576,24 +2589,14 @@ public final class Maps {
    * An admittedly inefficient implementation of {@link Map#containsKey}.
    */
   static boolean containsKeyImpl(Map<?, ?> map, @Nullable Object key) {
-    for (Entry<?, ?> entry : map.entrySet()) {
-      if (Objects.equal(entry.getKey(), key)) {
-        return true;
-      }
-    }
-    return false;
+    return Iterators.contains(keyIterator(map.entrySet().iterator()), key);
   }
 
   /**
    * An implementation of {@link Map#containsValue}.
    */
   static boolean containsValueImpl(Map<?, ?> map, @Nullable Object value) {
-    for (Entry<?, ?> entry : map.entrySet()) {
-      if (Objects.equal(entry.getValue(), value)) {
-        return true;
-      }
-    }
-    return false;
+    return Iterators.contains(valueIterator(map.entrySet().iterator()), value);
   }
 
   static <K, V> Iterator<K> keyIterator(Iterator<Entry<K, V>> entryIterator) {

@@ -138,6 +138,11 @@ public final class MediaType {
   public static final MediaType TEXT_JAVASCRIPT_UTF_8 = createConstantUtf8(TEXT_TYPE, "javascript");
   public static final MediaType VCARD_UTF_8 = createConstantUtf8(TEXT_TYPE, "vcard");
   public static final MediaType WML_UTF_8 = createConstantUtf8(TEXT_TYPE, "vnd.wap.wml");
+  /**
+   * As described in <a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>, this constant
+   * ({@code text/xml}) is used for XML documents that are "readable by casual users."
+   * {@link #APPLICATION_XML_UTF_8} is provided for documents that are intended for applications.
+   */
   public static final MediaType XML_UTF_8 = createConstantUtf8(TEXT_TYPE, "xml");
 
   /* image types */
@@ -165,10 +170,28 @@ public final class MediaType {
   public static final MediaType WMV = createConstant(VIDEO_TYPE, "x-ms-wmv");
 
   /* application types */
+  /**
+   * As described in <a href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3023</a>, this constant
+   * ({@code application/xml}) is used for XML documents that are "unreadable by casual users."
+   * {@link #XML_UTF_8} is provided for documents that may be read by users.
+   */
+  public static final MediaType APPLICATION_XML_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "xml");
   public static final MediaType ATOM_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "atom+xml");
   public static final MediaType BZIP2 = createConstant(APPLICATION_TYPE, "x-bzip2");
   public static final MediaType FORM_DATA = createConstant(APPLICATION_TYPE,
       "x-www-form-urlencoded");
+  /**
+   * This is a non-standard media type, but is commonly used in serving hosted binary files as it is
+   * <a href="http://code.google.com/p/browsersec/wiki/Part2#Survey_of_content_sniffing_behaviors">
+   * known not to trigger content sniffing in current browsers</a>. It <i>should not</i> be used in
+   * other situations as it is not specified by any RFC and does not appear in the <a href=
+   * "http://www.iana.org/assignments/media-types">/IANA MIME Media Types</a> list. Consider
+   * {@link #OCTET_STREAM} for binary data that is not being served to a browser.
+   *
+   *
+   * @since 14.0
+   */
+  public static final MediaType APPLICATION_BINARY = createConstant(APPLICATION_TYPE, "binary");
   public static final MediaType GZIP = createConstant(APPLICATION_TYPE, "x-gzip");
   /**
    * <a href="http://www.rfc-editor.org/rfc/rfc4329.txt">RFC 4329</a> declares this to be the
@@ -203,46 +226,98 @@ public final class MediaType {
       "vnd.oasis.opendocument.text");
   public static final MediaType PDF = createConstant(APPLICATION_TYPE, "pdf");
   public static final MediaType POSTSCRIPT = createConstant(APPLICATION_TYPE, "postscript");
+  public static final MediaType RDF_XML_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "rdf+xml");
   public static final MediaType RTF_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "rtf");
   public static final MediaType SHOCKWAVE_FLASH = createConstant(APPLICATION_TYPE,
       "x-shockwave-flash");
   public static final MediaType SKETCHUP = createConstant(APPLICATION_TYPE, "vnd.sketchup.skp");
   public static final MediaType TAR = createConstant(APPLICATION_TYPE, "x-tar");
   public static final MediaType XHTML_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "xhtml+xml");
+  /**
+   * Media type for Extensible Resource Descriptors. This is not yet registered with the IANA, but
+   * it is specified by OASIS in the
+   * <a href="http://docs.oasis-open.org/xri/xrd/v1.0/cd02/xrd-1.0-cd02.html"> XRD definition</a>
+   * and implemented in projects such as
+   * <a href="http://code.google.com/p/webfinger/">WebFinger</a>.
+   */
+  public static final MediaType XRD_UTF_8 = createConstantUtf8(APPLICATION_TYPE, "xrd+xml");
   public static final MediaType ZIP = createConstant(APPLICATION_TYPE, "zip");
 
-  private static final ImmutableMap<MediaType, MediaType> KNOWN_TYPES = new ImmutableMap.Builder<MediaType, MediaType>()
-      .put(ANY_TYPE, ANY_TYPE).put(ANY_TEXT_TYPE, ANY_TEXT_TYPE)
-      .put(ANY_IMAGE_TYPE, ANY_IMAGE_TYPE).put(ANY_AUDIO_TYPE, ANY_AUDIO_TYPE)
-      .put(ANY_VIDEO_TYPE, ANY_VIDEO_TYPE).put(ANY_APPLICATION_TYPE, ANY_APPLICATION_TYPE)
-      /* text types */
-      .put(CACHE_MANIFEST_UTF_8, CACHE_MANIFEST_UTF_8).put(CSS_UTF_8, CSS_UTF_8)
-      .put(CSV_UTF_8, CSV_UTF_8).put(HTML_UTF_8, HTML_UTF_8)
-      .put(I_CALENDAR_UTF_8, I_CALENDAR_UTF_8).put(PLAIN_TEXT_UTF_8, PLAIN_TEXT_UTF_8)
-      .put(TEXT_JAVASCRIPT_UTF_8, TEXT_JAVASCRIPT_UTF_8).put(VCARD_UTF_8, VCARD_UTF_8)
-      .put(WML_UTF_8, WML_UTF_8).put(XML_UTF_8, XML_UTF_8)
-      /* image types */
-      .put(BMP, BMP).put(GIF, GIF).put(ICO, ICO).put(JPEG, JPEG).put(PNG, PNG)
-      .put(SVG_UTF_8, SVG_UTF_8).put(TIFF, TIFF).put(WEBP, WEBP)
-      /* audio types */
-      .put(MP4_AUDIO, MP4_AUDIO).put(MPEG_AUDIO, MPEG_AUDIO).put(OGG_AUDIO, OGG_AUDIO)
-      .put(WEBM_AUDIO, WEBM_AUDIO)
-      /* video types */
-      .put(MP4_VIDEO, MP4_VIDEO).put(MPEG_VIDEO, MPEG_VIDEO).put(OGG_VIDEO, OGG_VIDEO)
-      .put(QUICKTIME, QUICKTIME).put(WEBM_VIDEO, WEBM_VIDEO).put(WMV, WMV)
-      /* application types */
-      .put(ATOM_UTF_8, ATOM_UTF_8).put(BZIP2, BZIP2).put(FORM_DATA, FORM_DATA).put(GZIP, GZIP)
-      .put(JAVASCRIPT_UTF_8, JAVASCRIPT_UTF_8).put(JSON_UTF_8, JSON_UTF_8).put(KML, KML)
-      .put(KMZ, KMZ).put(MBOX, MBOX).put(MICROSOFT_EXCEL, MICROSOFT_EXCEL)
-      .put(MICROSOFT_POWERPOINT, MICROSOFT_POWERPOINT).put(MICROSOFT_WORD, MICROSOFT_WORD)
-      .put(OCTET_STREAM, OCTET_STREAM).put(OGG_CONTAINER, OGG_CONTAINER)
-      .put(OOXML_DOCUMENT, OOXML_DOCUMENT).put(OOXML_PRESENTATION, OOXML_PRESENTATION)
-      .put(OOXML_SHEET, OOXML_SHEET).put(OPENDOCUMENT_GRAPHICS, OPENDOCUMENT_GRAPHICS)
-      .put(OPENDOCUMENT_PRESENTATION, OPENDOCUMENT_PRESENTATION)
-      .put(OPENDOCUMENT_SPREADSHEET, OPENDOCUMENT_SPREADSHEET)
-      .put(OPENDOCUMENT_TEXT, OPENDOCUMENT_TEXT).put(PDF, PDF).put(POSTSCRIPT, POSTSCRIPT)
-      .put(RTF_UTF_8, RTF_UTF_8).put(SHOCKWAVE_FLASH, SHOCKWAVE_FLASH).put(SKETCHUP, SKETCHUP)
-      .put(TAR, TAR).put(XHTML_UTF_8, XHTML_UTF_8).put(ZIP, ZIP).build();
+  private static final ImmutableMap<MediaType, MediaType> KNOWN_TYPES =
+      new ImmutableMap.Builder<MediaType, MediaType>()
+          .put(ANY_TYPE, ANY_TYPE)
+          .put(ANY_TEXT_TYPE, ANY_TEXT_TYPE)
+          .put(ANY_IMAGE_TYPE, ANY_IMAGE_TYPE)
+          .put(ANY_AUDIO_TYPE, ANY_AUDIO_TYPE)
+          .put(ANY_VIDEO_TYPE, ANY_VIDEO_TYPE)
+          .put(ANY_APPLICATION_TYPE, ANY_APPLICATION_TYPE)
+          /* text types */
+          .put(CACHE_MANIFEST_UTF_8, CACHE_MANIFEST_UTF_8)
+          .put(CSS_UTF_8, CSS_UTF_8)
+          .put(CSV_UTF_8, CSV_UTF_8)
+          .put(HTML_UTF_8, HTML_UTF_8)
+          .put(I_CALENDAR_UTF_8, I_CALENDAR_UTF_8)
+          .put(PLAIN_TEXT_UTF_8, PLAIN_TEXT_UTF_8)
+          .put(TEXT_JAVASCRIPT_UTF_8, TEXT_JAVASCRIPT_UTF_8)
+          .put(VCARD_UTF_8, VCARD_UTF_8)
+          .put(WML_UTF_8, WML_UTF_8)
+          .put(XML_UTF_8, XML_UTF_8)
+          /* image types */
+          .put(BMP, BMP)
+          .put(GIF, GIF)
+          .put(ICO, ICO)
+          .put(JPEG, JPEG)
+          .put(PNG, PNG)
+          .put(SVG_UTF_8, SVG_UTF_8)
+          .put(TIFF, TIFF)
+          .put(WEBP, WEBP)
+          /* audio types */
+          .put(MP4_AUDIO, MP4_AUDIO)
+          .put(MPEG_AUDIO, MPEG_AUDIO)
+          .put(OGG_AUDIO, OGG_AUDIO)
+          .put(WEBM_AUDIO, WEBM_AUDIO)
+          /* video types */
+          .put(MP4_VIDEO, MP4_VIDEO)
+          .put(MPEG_VIDEO, MPEG_VIDEO)
+          .put(OGG_VIDEO, OGG_VIDEO)
+          .put(QUICKTIME, QUICKTIME)
+          .put(WEBM_VIDEO, WEBM_VIDEO)
+          .put(WMV, WMV)
+          /* application types */
+          .put(APPLICATION_XML_UTF_8, APPLICATION_XML_UTF_8)
+          .put(ATOM_UTF_8, ATOM_UTF_8)
+          .put(BZIP2, BZIP2)
+          .put(FORM_DATA, FORM_DATA)
+          .put(APPLICATION_BINARY, APPLICATION_BINARY)
+          .put(GZIP, GZIP)
+          .put(JAVASCRIPT_UTF_8, JAVASCRIPT_UTF_8)
+          .put(JSON_UTF_8, JSON_UTF_8)
+          .put(KML, KML)
+          .put(KMZ, KMZ)
+          .put(MBOX, MBOX)
+          .put(MICROSOFT_EXCEL, MICROSOFT_EXCEL)
+          .put(MICROSOFT_POWERPOINT, MICROSOFT_POWERPOINT)
+          .put(MICROSOFT_WORD, MICROSOFT_WORD)
+          .put(OCTET_STREAM, OCTET_STREAM)
+          .put(OGG_CONTAINER, OGG_CONTAINER)
+          .put(OOXML_DOCUMENT, OOXML_DOCUMENT)
+          .put(OOXML_PRESENTATION, OOXML_PRESENTATION)
+          .put(OOXML_SHEET, OOXML_SHEET)
+          .put(OPENDOCUMENT_GRAPHICS, OPENDOCUMENT_GRAPHICS)
+          .put(OPENDOCUMENT_PRESENTATION, OPENDOCUMENT_PRESENTATION)
+          .put(OPENDOCUMENT_SPREADSHEET, OPENDOCUMENT_SPREADSHEET)
+          .put(OPENDOCUMENT_TEXT, OPENDOCUMENT_TEXT)
+          .put(PDF, PDF)
+          .put(POSTSCRIPT, POSTSCRIPT)
+          .put(RDF_XML_UTF_8, RDF_XML_UTF_8)
+          .put(RTF_UTF_8, RTF_UTF_8)
+          .put(SHOCKWAVE_FLASH, SHOCKWAVE_FLASH)
+          .put(SKETCHUP, SKETCHUP)
+          .put(TAR, TAR)
+          .put(XHTML_UTF_8, XHTML_UTF_8)
+          .put(XRD_UTF_8, XRD_UTF_8)
+          .put(ZIP, ZIP)
+          .build();
 
   private final String type;
   private final String subtype;

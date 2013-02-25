@@ -126,7 +126,7 @@ public final class ByteStreams {
 
     @Override
     public String toString() {
-      return "ByteStreams.newByteSource(" + BaseEncoding.base16().encode(bytes) + ")";
+      return "ByteStreams.asByteSource(" + BaseEncoding.base16().encode(bytes) + ")";
     }
   }
 
@@ -785,10 +785,10 @@ public final class ByteStreams {
 
     Closer closer = Closer.create();
     try {
-      InputStream in = closer.add(supplier.getInput());
+      InputStream in = closer.register(supplier.getInput());
       return readBytes(in, processor);
     } catch (Throwable e) {
-      throw closer.rethrow(e, IOException.class);
+      throw closer.rethrow(e);
     } finally {
       closer.close();
     }

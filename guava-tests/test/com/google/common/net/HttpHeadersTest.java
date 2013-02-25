@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 /**
  * Tests for the HttpHeaders class.
  *
- * @author Kurt Aflred Kluever
+ * @author Kurt Alfred Kluever
  */
 public class HttpHeadersTest extends TestCase {
   public void testConstantNameMatchesString() throws Exception {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The Guava Authors
+ * Copyright (C) 2010 The Guava Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.common.cache;
+package com.google.common.collect;
+
+import com.google.common.annotations.GwtCompatible;
 
 /**
- * GWT emulated version of LongAdder.
+ * Dummy class that makes the GWT serialization policy happy.  It isn't used
+ * on the server-side.
  *
- * @author Charles Fry
+ * @author Hayward Chan
  */
-class LongAdder implements LongAddable {
-
-  private long value;
-
-  public void increment() {
-    value++;
-  }
-
-  public void add(long x) {
-    value += x;
-  }
-
-  public long sum() {
-    return value;
-  }
-
+@GwtCompatible(emulated = true)
+class ForwardingImmutableCollection {
+  private ForwardingImmutableCollection() {}
 }
