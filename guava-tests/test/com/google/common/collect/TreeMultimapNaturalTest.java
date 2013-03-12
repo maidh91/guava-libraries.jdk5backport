@@ -16,19 +16,10 @@
 
 package com.google.common.collect;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.testing.DerivedComparable;
-import com.google.common.collect.testing.Helpers;
-import com.google.common.collect.testing.NavigableMapTestSuiteBuilder;
-import com.google.common.collect.testing.NavigableSetTestSuiteBuilder;
-import com.google.common.collect.testing.SampleElements;
-import com.google.common.collect.testing.TestSortedMapGenerator;
-import com.google.common.collect.testing.TestStringSetGenerator;
-import com.google.common.collect.testing.TestStringSortedSetGenerator;
 import com.google.common.collect.testing.features.CollectionFeature;
 import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.features.MapFeature;
@@ -37,15 +28,12 @@ import com.google.common.collect.testing.google.TestStringSetMultimapGenerator;
 import com.google.common.testing.SerializableTester;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -53,6 +41,7 @@ import java.util.SortedSet;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.truth0.Truth;
 import org.truth0.subjects.CollectionSubject;
 
 /**
@@ -101,152 +90,6 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
           CollectionFeature.SERIALIZABLE,
           CollectionSize.ANY)
       .createTestSuite());
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSortedSetGenerator() {
-        @Override
-        protected NavigableSet<String> create(String[] elements) {
-          TreeMultimap<String, Integer> multimap = TreeMultimap.create(
-              Ordering.natural().nullsFirst(), Ordering.natural());
-          for (int i = 0; i < elements.length; i++) {
-            multimap.put(elements[i], i);
-          }
-          return multimap.keySet();
-        }
-
-        @Override
-        public List<String> order(List<String> insertionOrder) {
-          return Ordering.natural().nullsFirst().sortedCopy(insertionOrder);
-        }
-      })
-      .named("TreeMultimap.keySet")
-      .withFeatures(
-          CollectionFeature.ALLOWS_NULL_VALUES,
-          CollectionFeature.SUPPORTS_REMOVE,
-          CollectionFeature.KNOWN_ORDER,
-          CollectionSize.ANY)
-      .createTestSuite());
-    suite.addTest(NavigableMapTestSuiteBuilder.using(
-      new TestSortedMapGenerator<String, Collection<String>>() {
-
-        @Override
-        public String[] createKeyArray(int length) {
-          return new String[length];
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public Collection<String>[] createValueArray(int length) {
-          return new Collection[length];
-        }
-
-        @Override
-        public SampleElements<Entry<String, Collection<String>>> samples() {
-          return new SampleElements<Entry<String, Collection<String>>>(
-              Helpers.mapEntry("a", (Collection<String>) ImmutableSortedSet.of("alex")),
-              Helpers.mapEntry("b", (Collection<String>) ImmutableSortedSet.of("bob", "bagel")),
-              Helpers.mapEntry("c", (Collection<String>) ImmutableSortedSet.of("carl", "carol")),
-              Helpers.mapEntry("d", (Collection<String>) ImmutableSortedSet.of("david", "dead")),
-              Helpers.mapEntry("e", (Collection<String>) ImmutableSortedSet.of("eric", "elaine")));
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public Entry<String, Collection<String>>[] createArray(int length) {
-          return new Entry[length];
-        }
-
-        @Override
-        public Iterable<Entry<String, Collection<String>>> order(
-            List<Entry<String, Collection<String>>> insertionOrder) {
-          return new Ordering<Entry<String, ?>>() {
-            @Override
-            public int compare(Entry<String, ?> left, Entry<String, ?> right) {
-              return left.getKey().compareTo(right.getKey());
-            }
-          }.sortedCopy(insertionOrder);
-        }
-
-        @Override
-        public NavigableMap<String, Collection<String>> create(Object... elements) {
-          TreeMultimap<String, String> multimap = TreeMultimap.create();
-          for (Object o : elements) {
-            @SuppressWarnings("unchecked")
-            Entry<String, Collection<String>> entry = (Entry<String, Collection<String>>) o;
-            checkArgument(!multimap.containsKey(entry.getKey()));
-            multimap.putAll(entry.getKey(), entry.getValue());
-          }
-          return multimap.asMap();
-        }
-
-        @Override
-        public Entry<String, Collection<String>> belowSamplesLesser() {
-          return Helpers.mapEntry("-- a", (Collection<String>) ImmutableSortedSet.of("--below"));
-        }
-
-        @Override
-        public Entry<String, Collection<String>> belowSamplesGreater() {
-          return Helpers.mapEntry("-- b", (Collection<String>) ImmutableSortedSet.of("--below"));
-        }
-
-        @Override
-        public Entry<String, Collection<String>> aboveSamplesLesser() {
-          return Helpers.mapEntry("~~ b", (Collection<String>) ImmutableSortedSet.of("~above"));
-        }
-
-        @Override
-        public Entry<String, Collection<String>> aboveSamplesGreater() {
-          return Helpers.mapEntry("~~ c", (Collection<String>) ImmutableSortedSet.of("~above"));
-        }
-      })
-      .named("TreeMultimap.asMap")
-      .withFeatures(
-          MapFeature.SUPPORTS_REMOVE,
-          MapFeature.REJECTS_DUPLICATES_AT_CREATION,
-          CollectionFeature.KNOWN_ORDER,
-          CollectionSize.ANY)
-      .createTestSuite());
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
-        @Override
-        protected Set<String> create(String[] elements) {
-          TreeMultimap<Integer, String> multimap = TreeMultimap.create(
-              Ordering.natural(), Ordering.natural().nullsFirst());
-          multimap.putAll(1, Arrays.asList(elements));
-          return multimap.get(1);
-        }
-
-        @Override
-        public List<String> order(List<String> insertionOrder) {
-          return Ordering.natural().nullsFirst().sortedCopy(insertionOrder);
-        }
-      })
-      .named("TreeMultimap.get")
-      .withFeatures(
-          CollectionFeature.ALLOWS_NULL_VALUES,
-          CollectionFeature.GENERAL_PURPOSE,
-          CollectionFeature.KNOWN_ORDER,
-          CollectionSize.ANY)
-      .createTestSuite());
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
-        @Override
-        protected Set<String> create(String[] elements) {
-          TreeMultimap<Integer, String> multimap = TreeMultimap.create(
-              Ordering.natural(), Ordering.natural().nullsFirst());
-          multimap.putAll(1, Arrays.asList(elements));
-          return (Set<String>) multimap.asMap().entrySet().iterator().next().getValue();
-        }
-
-        @Override
-        public List<String> order(List<String> insertionOrder) {
-          return Ordering.natural().nullsFirst().sortedCopy(insertionOrder);
-        }
-      })
-      .named("TreeMultimap.asMap.entrySet collection")
-      .withFeatures(
-          CollectionFeature.ALLOWS_NULL_VALUES,
-          CollectionFeature.GENERAL_PURPOSE,
-          CollectionFeature.KNOWN_ORDER,
-          CollectionSize.ONE,
-          CollectionSize.SEVERAL)
-      .createTestSuite());
     suite.addTestSuite(TreeMultimapNaturalTest.class);
     return suite;
   }
@@ -287,14 +130,14 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
 
   public void testOrderedGet() {
     TreeMultimap<String, Integer> multimap = createPopulate();
-    assertThat(multimap.get("foo")).has().allOf(1, 3, 7).inOrder();
-    assertThat(multimap.get("google")).has().allOf(2, 6).inOrder();
-    assertThat(multimap.get("tree")).has().allOf(0, 4).inOrder();
+    ASSERT.that(multimap.get("foo")).has().allOf(1, 3, 7).inOrder();
+    ASSERT.that(multimap.get("google")).has().allOf(2, 6).inOrder();
+    ASSERT.that(multimap.get("tree")).has().allOf(0, 4).inOrder();
   }
 
   public void testOrderedKeySet() {
     TreeMultimap<String, Integer> multimap = createPopulate();
-    assertThat(multimap.keySet()).has().allOf("foo", "google", "tree").inOrder();
+    ASSERT.that(multimap.keySet()).has().allOf("foo", "google", "tree").inOrder();
   }
 
   public void testOrderedAsMapEntries() {
@@ -303,18 +146,18 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
         multimap.asMap().entrySet().iterator();
     Map.Entry<String, Collection<Integer>> entry = iterator.next();
     assertEquals("foo", entry.getKey());
-    assertThat(entry.getValue()).has().allOf(1, 3, 7);
+    ASSERT.that(entry.getValue()).has().allOf(1, 3, 7);
     entry = iterator.next();
     assertEquals("google", entry.getKey());
-    assertThat(entry.getValue()).has().allOf(2, 6);
+    ASSERT.that(entry.getValue()).has().allOf(2, 6);
     entry = iterator.next();
     assertEquals("tree", entry.getKey());
-    assertThat(entry.getValue()).has().allOf(0, 4);
+    ASSERT.that(entry.getValue()).has().allOf(0, 4);
   }
 
   public void testOrderedEntries() {
     TreeMultimap<String, Integer> multimap = createPopulate();
-    assertThat(multimap.entries()).has().allOf(
+    ASSERT.that(multimap.entries()).has().allOf(
         Maps.immutableEntry("foo", 1),
         Maps.immutableEntry("foo", 3),
         Maps.immutableEntry("foo", 7),
@@ -326,7 +169,7 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
 
   public void testOrderedValues() {
     TreeMultimap<String, Integer> multimap = createPopulate();
-    assertThat(multimap.values()).has().allOf(
+    ASSERT.that(multimap.values()).has().allOf(
         1, 3, 7, 2, 6, 0, 4).inOrder();
   }
 
@@ -407,8 +250,8 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
     TreeMultimap<String, Integer> multimap = createPopulate();
     TreeMultimap<String, Integer> copy
         = SerializableTester.reserializeAndAssert(multimap);
-    assertThat(copy.values()).has().allOf(1, 3, 7, 2, 6, 0, 4).inOrder();
-    assertThat(copy.keySet()).has().allOf("foo", "google", "tree").inOrder();
+    ASSERT.that(copy.values()).has().allOf(1, 3, 7, 2, 6, 0, 4).inOrder();
+    ASSERT.that(copy.keySet()).has().allOf("foo", "google", "tree").inOrder();
     assertEquals(multimap.keyComparator(), copy.keyComparator());
     assertEquals(multimap.valueComparator(), copy.valueComparator());
   }
@@ -423,9 +266,9 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
     multimap.put(new DerivedComparable("bar"), new DerivedComparable("b"));
     multimap.put(new DerivedComparable("bar"), new DerivedComparable("a"));
     multimap.put(new DerivedComparable("bar"), new DerivedComparable("r"));
-    assertThat(multimap.keySet()).has().allOf(
+    ASSERT.that(multimap.keySet()).has().allOf(
         new DerivedComparable("bar"), new DerivedComparable("foo")).inOrder();
-    assertThat(multimap.values()).has().allOf(
+    ASSERT.that(multimap.values()).has().allOf(
         new DerivedComparable("a"), new DerivedComparable("b"), new DerivedComparable("r"),
         new DerivedComparable("f"), new DerivedComparable("o")).inOrder();
     assertEquals(Ordering.natural(), multimap.keyComparator());
@@ -444,9 +287,9 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
     multimap.put(new LegacyComparable("bar"), new LegacyComparable("b"));
     multimap.put(new LegacyComparable("bar"), new LegacyComparable("a"));
     multimap.put(new LegacyComparable("bar"), new LegacyComparable("r"));
-    assertThat(multimap.keySet()).has().allOf(
+    ASSERT.that(multimap.keySet()).has().allOf(
         new LegacyComparable("bar"), new LegacyComparable("foo")).inOrder();
-    assertThat(multimap.values()).has().allOf(
+    ASSERT.that(multimap.values()).has().allOf(
         new LegacyComparable("a"),
         new LegacyComparable("b"),
         new LegacyComparable("r"),
@@ -521,8 +364,11 @@ public class TreeMultimapNaturalTest extends AbstractSetMultimapTest {
   }
 
   // Hack for JDK5 type inference.
-  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
-      Collection<T> collection) {
-    return ASSERT.<T, Collection<T>>that(collection);
+  private static class ASSERT {
+    static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> that(
+        Collection<T> collection) {
+      return Truth.ASSERT.<T, Collection<T>>that(collection);
+    }
   }
+
 }
