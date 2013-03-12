@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.unmodifiableIterable;
 import static com.google.common.collect.Sets.newEnumSet;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Sets.powerSet;
-import static com.google.common.collect.Sets.unmodifiableNavigableSet;
 import static com.google.common.collect.testing.IteratorFeature.UNMODIFIABLE;
 import static com.google.common.collect.testing.testers.CollectionIteratorTester.getIteratorKnownOrderRemoveSupportedMethod;
 import static java.io.ObjectStreamConstants.TC_REFERENCE;
@@ -34,8 +33,6 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.testing.AnEnum;
 import com.google.common.collect.testing.IteratorTester;
 import com.google.common.collect.testing.MinimalIterable;
-import com.google.common.collect.testing.NavigableSetTestSuiteBuilder;
-import com.google.common.collect.testing.SafeTreeSet;
 import com.google.common.collect.testing.SetTestSuiteBuilder;
 import com.google.common.collect.testing.TestEnumSetGenerator;
 import com.google.common.collect.testing.TestStringSetGenerator;
@@ -163,34 +160,6 @@ public class SetsTest extends TestCase {
         .withFeatures(CollectionSize.ONE, CollectionSize.SEVERAL,
             CollectionFeature.ALLOWS_NULL_QUERIES).createTestSuite());
 
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
-      @Override
-      protected Set<String> create(String[] elements) {
-        SafeTreeSet<String> set = new SafeTreeSet<String>(Arrays.asList(elements));
-        return Sets.unmodifiableNavigableSet(set);
-      }
-
-      @Override
-      public List<String> order(List<String> insertionOrder) {
-        return Ordering.natural().sortedCopy(insertionOrder);
-      }
-    }).named("Sets.unmodifiableNavigableSet[TreeSet]")
-        .withFeatures(CollectionSize.ANY, CollectionFeature.KNOWN_ORDER).createTestSuite());
-
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
-      @Override
-      protected Set<String> create(String[] elements) {
-        SafeTreeSet<String> set = new SafeTreeSet<String>(Arrays.asList(elements));
-        return SerializableTester.reserialize(Sets.unmodifiableNavigableSet(set));
-      }
-
-      @Override
-      public List<String> order(List<String> insertionOrder) {
-        return Ordering.natural().sortedCopy(insertionOrder);
-      }
-    }).named("Sets.unmodifiableNavigableSet[TreeSet], reserialized")
-        .withFeatures(CollectionSize.ANY, CollectionFeature.KNOWN_ORDER).createTestSuite());
-
     suite.addTest(testsForFilter());
     suite.addTest(testsForFilterNoNulls());
     suite.addTest(testsForFilterFiltered());
@@ -235,26 +204,7 @@ public class SetsTest extends TestCase {
         .withFeatures(SetFeature.GENERAL_PURPOSE, CollectionFeature.KNOWN_ORDER,
             CollectionSize.ANY, CollectionFeature.ALLOWS_NULL_QUERIES)
         .suppressing(getIteratorKnownOrderRemoveSupportedMethod()).createTestSuite());
-    suite.addTest(NavigableSetTestSuiteBuilder
-        .using(new TestStringSetGenerator() {
-          @Override
-          public NavigableSet<String> create(String[] elements) {
-            NavigableSet<String> unfiltered = Sets.newTreeSet();
-            unfiltered.add("yyy");
-            unfiltered.addAll(ImmutableList.copyOf(elements));
-            unfiltered.add("zzz");
-            return Sets.filter(unfiltered, Collections2Test.LENGTH_1);
-          }
 
-          @Override
-          public List<String> order(List<String> insertionOrder) {
-            return Ordering.natural().sortedCopy(insertionOrder);
-          }
-        })
-        .named("Sets.filter[NavigableSet]")
-        .withFeatures(SetFeature.GENERAL_PURPOSE, CollectionFeature.KNOWN_ORDER,
-            CollectionSize.ANY, CollectionFeature.ALLOWS_NULL_QUERIES)
-        .suppressing(getIteratorKnownOrderRemoveSupportedMethod()).createTestSuite());
     return suite;
   }
 
@@ -1039,45 +989,6 @@ public class SetsTest extends TestCase {
     }
 
     private static final long serialVersionUID = 0;
-  }
-
-  @GwtIncompatible("NavigableSet")
-  public void testUnmodifiableNavigableSet() {
-    TreeSet<Integer> mod = Sets.newTreeSet();
-    mod.add(1);
-    mod.add(2);
-    mod.add(3);
-
-    NavigableSet<Integer> unmod = unmodifiableNavigableSet(mod);
-
-    /* Unmodifiable is a view. */
-    mod.add(4);
-    assertTrue(unmod.contains(4));
-    assertTrue(unmod.descendingSet().contains(4));
-
-    ensureNotDirectlyModifiable(unmod);
-    ensureNotDirectlyModifiable(unmod.descendingSet());
-    ensureNotDirectlyModifiable(unmod.headSet(2));
-    ensureNotDirectlyModifiable(unmod.headSet(2, true));
-    ensureNotDirectlyModifiable(unmod.tailSet(2));
-    ensureNotDirectlyModifiable(unmod.tailSet(2, true));
-    ensureNotDirectlyModifiable(unmod.subSet(1, 3));
-    ensureNotDirectlyModifiable(unmod.subSet(1, true, 3, true));
-
-    /* UnsupportedOperationException on indirect modifications. */
-    NavigableSet<Integer> reverse = unmod.descendingSet();
-    try {
-      reverse.add(4);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      reverse.addAll(Collections.singleton(4));
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      reverse.remove(4);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
   }
 
   void ensureNotDirectlyModifiable(SortedSet<Integer> unmod) {
