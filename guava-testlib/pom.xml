@@ -7,7 +7,7 @@
     <artifactId>guava-parent-jdk5</artifactId>
     <version>14.0</version>
   </parent>
-  <artifactId>guava-testlib</artifactId>
+  <artifactId>guava-testlib-jdk5</artifactId>
   <name>Guava Testing Library</name>
   <description>
     Guava testlib is a set of java classes used for more convenient

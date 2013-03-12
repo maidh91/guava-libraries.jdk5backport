@@ -7,7 +7,7 @@
     <artifactId>guava-parent-jdk5</artifactId>
     <version>14.0</version>
   </parent>
-  <artifactId>guava-tests</artifactId>
+  <artifactId>guava-tests-jdk5</artifactId>
   <name>Guava Unit Tests</name>
   <description>
     The unit tests for the Guava libraries - separated into a
