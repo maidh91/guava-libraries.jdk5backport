@@ -21,13 +21,13 @@ import static com.google.common.collect.BoundType.OPEN;
 import static com.google.common.collect.DiscreteDomain.integers;
 import static com.google.common.testing.SerializableTester.reserialize;
 import static com.google.common.testing.SerializableTester.reserializeAndAssert;
-import static org.truth0.Truth.ASSERT;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.testing.EqualsTester;
 
 import junit.framework.TestCase;
+
 import org.truth0.Truth;
 import org.truth0.subjects.CollectionSubject;
 
@@ -283,7 +283,7 @@ public class ContiguousSetTest extends TestCase {
 
   // Hack for JDK5 type inference.
   private static class ASSERT {
-    private <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> that(
+    static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> that(
         Collection<T> collection) {
       return Truth.ASSERT.<T, Collection<T>>that(collection);
     }
