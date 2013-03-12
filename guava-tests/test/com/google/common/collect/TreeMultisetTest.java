@@ -26,12 +26,16 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.testing.Helpers.NullsBeforeB;
 import com.google.common.collect.testing.IteratorTester;
-import com.google.common.collect.testing.NavigableSetTestSuiteBuilder;
+import com.google.common.collect.testing.SortedSetTestSuiteBuilder;
 import com.google.common.collect.testing.TestStringSetGenerator;
 import com.google.common.collect.testing.features.CollectionFeature;
 import com.google.common.collect.testing.features.CollectionSize;
 import com.google.common.collect.testing.google.SortedMultisetTestSuiteBuilder;
 import com.google.common.collect.testing.google.TestStringMultisetGenerator;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import org.truth0.subjects.CollectionSubject;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -42,11 +46,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import org.truth0.subjects.CollectionSubject;
 
 /**
  * Unit test for {@link TreeMultiset}.
@@ -98,7 +97,7 @@ public class TreeMultisetTest extends AbstractMultisetTest {
             CollectionFeature.ALLOWS_NULL_VALUES)
         .named("TreeMultiset, NullsBeforeB")
         .createTestSuite());
-    suite.addTest(NavigableSetTestSuiteBuilder.using(new TestStringSetGenerator() {
+    suite.addTest(SortedSetTestSuiteBuilder.using(new TestStringSetGenerator() {
         @Override
         protected Set<String> create(String[] elements) {
           return TreeMultiset.create(Arrays.asList(elements)).elementSet();

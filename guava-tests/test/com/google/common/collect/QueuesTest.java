@@ -18,6 +18,8 @@ package com.google.common.collect;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 
+import junit.framework.TestCase;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -29,8 +31,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for {@link Queues}.
@@ -207,17 +207,6 @@ public class QueuesTest extends TestCase {
     assertTrue(Thread.interrupted());
     assertEquals(100, elements);
     assertEquals(100, buf.size());
-  }
-
-  public void testNewLinkedBlockingDequeCapacity() {
-    try {
-      Queues.newLinkedBlockingDeque(0);
-      fail("Should have thrown IllegalArgumentException");
-    } catch (IllegalArgumentException expected) {
-      // any capacity less than 1 should throw IllegalArgumentException
-    }
-    assertEquals(1, Queues.newLinkedBlockingDeque(1).remainingCapacity());
-    assertEquals(11, Queues.newLinkedBlockingDeque(11).remainingCapacity());
   }
 
   public void testNewLinkedBlockingQueueCapacity() {

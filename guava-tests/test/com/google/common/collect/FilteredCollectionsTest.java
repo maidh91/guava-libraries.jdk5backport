@@ -16,11 +16,14 @@
 
 package com.google.common.collect;
 
-import static org.truth0.Truth.ASSERT;
-
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.testing.EqualsTester;
+
+import junit.framework.TestCase;
+
+import org.truth0.Truth;
+import org.truth0.subjects.CollectionSubject;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,10 +33,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import junit.framework.TestCase;
-
-import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for filtered collection views.
@@ -103,7 +102,7 @@ public class FilteredCollectionsTest extends TestCase {
         target.add(4);
         C addThenFilter = filter(createUnfiltered(target), EVEN);
 
-        assertThat(filterThenAdd).has().allFrom(addThenFilter);
+        ASSERT.that(filterThenAdd).has().allFrom(addThenFilter);
       }
     }
 
@@ -159,7 +158,7 @@ public class FilteredCollectionsTest extends TestCase {
         } catch (IllegalArgumentException expected) {
         }
 
-        assertThat(filteredToModify).has().allFrom(filtered);
+        ASSERT.that(filteredToModify).has().allFrom(filtered);
       }
     }
 
@@ -193,7 +192,7 @@ public class FilteredCollectionsTest extends TestCase {
             Predicates.not(Predicates.and(EVEN, PRIME_DIGIT)));
 
         filtered2.clear();
-        assertThat(unfiltered).has().allFrom(inverseFiltered);
+        ASSERT.that(unfiltered).has().allFrom(inverseFiltered);
       }
     }
   }
@@ -330,7 +329,7 @@ public class FilteredCollectionsTest extends TestCase {
         NavigableSet<Integer> filtered = filter(createUnfiltered(contents), EVEN);
         NavigableSet<Integer> unfiltered = createUnfiltered(filtered);
 
-        assertThat(filtered.descendingSet()).has().allFrom(unfiltered.descendingSet()).inOrder();
+        ASSERT.that(filtered.descendingSet()).has().allFrom(unfiltered.descendingSet()).inOrder();
       }
     }
 
@@ -429,26 +428,15 @@ public class FilteredCollectionsTest extends TestCase {
     }
   }
 
-  public static final class SetsFilterNavigableSetTest extends AbstractFilteredNavigableSetTest {
-    @Override
-    NavigableSet<Integer> createUnfiltered(Iterable<Integer> contents) {
-      return Sets.newTreeSet(contents);
-    }
-
-    @Override
-    NavigableSet<Integer> filter(
-        NavigableSet<Integer> elements, Predicate<? super Integer> predicate) {
-      return Sets.filter(elements, predicate);
-    }
-  }
-
   /** No-op test so that the class has at least one method, making Maven's test runner happy. */
   public void testNoop() {
   }
 
   // Hack for JDK5 type inference.
-  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
-      Collection<T> collection) {
-    return ASSERT.<T, Collection<T>>that(collection);
+  private static class ASSERT {
+    static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> that(
+        Collection<T> collection) {
+      return Truth.ASSERT.<T, Collection<T>>that(collection);
+    }
   }
 }
