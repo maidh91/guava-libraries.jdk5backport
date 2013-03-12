@@ -32,6 +32,13 @@ import com.google.common.collect.testing.google.SortedMapGenerators.ImmutableSor
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.truth0.Truth;
+import org.truth0.subjects.CollectionSubject;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,12 +47,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.truth0.subjects.CollectionSubject;
 
 /**
  * Tests for {@link ImmutableSortedMap}.
@@ -705,7 +706,7 @@ public class ImmutableSortedMapTest extends TestCase {
   public void testHeadMapInclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).headMap("three", true);
-    assertThat(map.entrySet()).has().allOf(
+    ASSERT.that(map.entrySet()).has().allOf(
         Maps.immutableEntry("one", 1),
         Maps.immutableEntry("three", 3)).inOrder();
   }
@@ -714,14 +715,14 @@ public class ImmutableSortedMapTest extends TestCase {
   public void testHeadMapExclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).headMap("three", false);
-    assertThat(map.entrySet()).has().allOf(Maps.immutableEntry("one", 1)).inOrder();
+    ASSERT.that(map.entrySet()).has().allOf(Maps.immutableEntry("one", 1)).inOrder();
   }
 
   @SuppressWarnings("unchecked") // varargs
   public void testTailMapInclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).tailMap("three", true);
-    assertThat(map.entrySet()).has().allOf(Maps.immutableEntry("three", 3),
+    ASSERT.that(map.entrySet()).has().allOf(Maps.immutableEntry("three", 3),
         Maps.immutableEntry("two", 2)).inOrder();
   }
 
@@ -729,21 +730,21 @@ public class ImmutableSortedMapTest extends TestCase {
   public void testTailMapExclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).tailMap("three", false);
-    assertThat(map.entrySet()).has().allOf(Maps.immutableEntry("two", 2)).inOrder();
+    ASSERT.that(map.entrySet()).has().allOf(Maps.immutableEntry("two", 2)).inOrder();
   }
 
   @SuppressWarnings("unchecked") // varargs
   public void testSubMapExclusiveExclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).subMap("one", false, "two", false);
-    assertThat(map.entrySet()).has().allOf(Maps.immutableEntry("three", 3)).inOrder();
+    ASSERT.that(map.entrySet()).has().allOf(Maps.immutableEntry("three", 3)).inOrder();
   }
 
   @SuppressWarnings("unchecked") // varargs
   public void testSubMapInclusiveExclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).subMap("one", true, "two", false);
-    assertThat(map.entrySet()).has().allOf(Maps.immutableEntry("one", 1),
+    ASSERT.that(map.entrySet()).has().allOf(Maps.immutableEntry("one", 1),
         Maps.immutableEntry("three", 3)).inOrder();
   }
 
@@ -751,7 +752,7 @@ public class ImmutableSortedMapTest extends TestCase {
   public void testSubMapExclusiveInclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).subMap("one", false, "two", true);
-    assertThat(map.entrySet()).has().allOf(Maps.immutableEntry("three", 3),
+    ASSERT.that(map.entrySet()).has().allOf(Maps.immutableEntry("three", 3),
         Maps.immutableEntry("two", 2)).inOrder();
   }
 
@@ -759,7 +760,7 @@ public class ImmutableSortedMapTest extends TestCase {
   public void testSubMapInclusiveInclusive() {
     Map<String, Integer> map =
         ImmutableSortedMap.of("one", 1, "two", 2, "three", 3).subMap("one", true, "two", true);
-    assertThat(map.entrySet()).has().allOf(Maps.immutableEntry("one", 1),
+    ASSERT.that(map.entrySet()).has().allOf(Maps.immutableEntry("one", 1),
         Maps.immutableEntry("three", 3), Maps.immutableEntry("two", 2)).inOrder();
   }
 
@@ -789,8 +790,10 @@ public class ImmutableSortedMapTest extends TestCase {
   }
 
   // Hack for JDK5 type inference.
-  private static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> assertThat(
-      Collection<T> collection) {
-    return ASSERT.<T, Collection<T>>that(collection);
+  private static class ASSERT {
+    static <T> CollectionSubject<? extends CollectionSubject<?, T, Collection<T>>, T, Collection<T>> that(
+        Collection<T> collection) {
+      return Truth.ASSERT.<T, Collection<T>>that(collection);
+    }
   }
 }
