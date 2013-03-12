@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>guava</artifactId>
+      <artifactId>guava-jdk5</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -34,6 +34,13 @@
       <groupId>org.truth0</groupId>
       <artifactId>truth</artifactId>
       <version>0.10</version>
+      <exclusions>
+        <exclusion>
+          <!-- Use current Guava being built in maven only -->
+          <groupId>${project.groupId}</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <build>
@@ -42,8 +49,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.5</source>
+          <target>1.5</target>
         </configuration>
       </plugin>
       <plugin>

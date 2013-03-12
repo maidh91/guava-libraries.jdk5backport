@@ -23,7 +23,13 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>guava-testlib</artifactId>
+      <artifactId>guava-jdk5</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>guava-testlib-jdk5</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -50,6 +56,13 @@
       <artifactId>truth</artifactId>
       <version>0.10</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <!-- Use current Guava being built in maven only -->
+          <groupId>${project.groupId}</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.caliper</groupId>
@@ -64,8 +77,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.5</source>
+          <target>1.5</target>
         </configuration>
       </plugin>
       <plugin>
