@@ -53,7 +53,7 @@ public class SafeTreeMapTest extends TestCase {
   @GwtIncompatible("SerializableTester")
   public static class ReserializedMapTests
       extends SortedMapInterfaceTest<String, Integer> {
-    ReserializedMapTests() {
+    public ReserializedMapTests() {
       super(false, true, true, true, true);
     }
 
