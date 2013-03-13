@@ -120,7 +120,7 @@ public final class Closer implements Closeable {
    */
   // close. this word no longer has any meaning to me.
   public <C extends Closeable> C register(C closeable) {
-    stack.push(closeable);
+    stack.addFirst(closeable);
     return closeable;
   }
 
@@ -196,12 +196,13 @@ public final class Closer implements Closeable {
    * additional exceptions that are thrown after that will be suppressed.
    */
 
+  @Override
   public void close() throws IOException {
     Throwable throwable = thrown;
 
     // close closeables in LIFO order
     while (!stack.isEmpty()) {
-      Closeable closeable = stack.removeLast();
+      Closeable closeable = stack.removeFirst();
       try {
         closeable.close();
       } catch (Throwable e) {
@@ -240,6 +241,7 @@ public final class Closer implements Closeable {
 
     static final LoggingSuppressor INSTANCE = new LoggingSuppressor();
 
+    @Override
     public void suppress(Closeable closeable, Throwable thrown, Throwable suppressed) {
       // log to the same place as Closeables
       Closeables.logger.log(Level.WARNING,
@@ -270,6 +272,7 @@ public final class Closer implements Closeable {
       }
     }
 
+    @Override
     public void suppress(Closeable closeable, Throwable thrown, Throwable suppressed) {
       // ensure no exceptions from addSuppressed
       if (thrown == suppressed) {
