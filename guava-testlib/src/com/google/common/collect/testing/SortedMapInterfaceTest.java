@@ -100,7 +100,7 @@ public abstract class SortedMapInterfaceTest<K, V>
     }
   }
 
-  public void __disabled_testEntrySetContainsEntryIncompatibleComparableKey() {
+  public void testEntrySetContainsEntryIncompatibleComparableKey() {
     final Map<K, V> map;
     final Set<Entry<K, V>> entrySet;
     try {

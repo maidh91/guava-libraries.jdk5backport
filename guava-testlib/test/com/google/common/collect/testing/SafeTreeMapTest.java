@@ -57,6 +57,13 @@ public class SafeTreeMapTest extends TestCase {
       super(false, true, true, true, true);
     }
 
+    @Override public void testEntrySetContainsEntryIncompatibleComparableKey() {
+      try {
+        super.testEntrySetContainsEntryIncompatibleComparableKey();
+      } catch (ClassCastException tolerated) {
+      }
+    }
+
     @Override protected SortedMap<String, Integer> makePopulatedMap() {
       SortedMap<String, Integer> map = new SafeTreeMap<String, Integer>();
       map.put("one", 1);
