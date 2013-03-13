@@ -43,6 +43,10 @@ import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -63,7 +67,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
@@ -71,10 +74,6 @@ import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.annotation.Nullable;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Unit test for {@code Sets}.
@@ -1012,39 +1011,4 @@ public class SetsTest extends TestCase {
     } catch (UnsupportedOperationException expected) {}
   }
 
-  @GwtIncompatible("NavigableSet")
-  void ensureNotDirectlyModifiable(NavigableSet<Integer> unmod) {
-    try {
-      unmod.add(4);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      unmod.remove(4);
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      unmod.addAll(Collections.singleton(4));
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      unmod.pollFirst();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      unmod.pollLast();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      Iterator<Integer> iterator = unmod.iterator();
-      iterator.next();
-      iterator.remove();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-    try {
-      Iterator<Integer> iterator = unmod.descendingIterator();
-      iterator.next();
-      iterator.remove();
-      fail("UnsupportedOperationException expected");
-    } catch (UnsupportedOperationException expected) {}
-  }
 }
