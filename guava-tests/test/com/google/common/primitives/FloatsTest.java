@@ -26,13 +26,13 @@ import com.google.common.collect.testing.Helpers;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.testing.SerializableTester;
 
+import junit.framework.TestCase;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 /**
  * Unit test for {@link Floats}.
@@ -49,10 +49,11 @@ public class FloatsTest extends TestCase {
 
   private static final float LEAST = Float.NEGATIVE_INFINITY;
   private static final float GREATEST = Float.POSITIVE_INFINITY;
+  private static final float MIN_NORMAL = 1.17549435E-38f; // Doubles.MIN_NORMAL from 1.6
 
   private static final float[] NUMBERS = new float[] {
       LEAST, -Float.MAX_VALUE, -1f, -0f, 0f, 1f, Float.MAX_VALUE, GREATEST,
-      Float.MIN_NORMAL, -Float.MIN_NORMAL,  Float.MIN_VALUE, -Float.MIN_VALUE,
+      MIN_NORMAL, -MIN_NORMAL,  Float.MIN_VALUE, -Float.MIN_VALUE,
       Integer.MIN_VALUE, Integer.MAX_VALUE, Long.MIN_VALUE, Long.MAX_VALUE
   };
 

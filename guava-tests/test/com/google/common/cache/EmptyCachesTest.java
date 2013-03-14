@@ -17,7 +17,6 @@ package com.google.common.cache;
 import static com.google.common.cache.CacheTesting.checkEmpty;
 import static com.google.common.cache.TestingCacheLoaders.identityLoader;
 import static java.util.Arrays.asList;
-import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.base.Function;
@@ -28,12 +27,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.testing.EqualsTester;
 
+import junit.framework.TestCase;
+
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-
-import junit.framework.TestCase;
 
 /**
  * {@link LoadingCache} tests that deal with empty caches.
@@ -369,14 +368,14 @@ public class EmptyCachesTest extends TestCase {
         .withExpireAfterWrites(ImmutableSet.of(
             DurationSpec.of(0, SECONDS),
             DurationSpec.of(1, SECONDS),
-            DurationSpec.of(1, DAYS)))
+            DurationSpec.of(24 * 60 * 60 * 1, SECONDS)))
         .withExpireAfterAccesses(ImmutableSet.of(
             DurationSpec.of(0, SECONDS),
             DurationSpec.of(1, SECONDS),
-            DurationSpec.of(1, DAYS)))
+            DurationSpec.of(24 * 60 * 60 * 1, SECONDS)))
         .withRefreshes(ImmutableSet.of(
             DurationSpec.of(1, SECONDS),
-            DurationSpec.of(1, DAYS)));
+            DurationSpec.of(24 * 60 * 60 * 1, SECONDS)));
   }
 
   private void warmUp(LoadingCache<Object, Object> cache, int minimum, int maximum) {
