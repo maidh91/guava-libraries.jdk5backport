@@ -23,14 +23,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.SourceSinkFactory.ByteSinkFactory;
 import com.google.common.io.SourceSinkFactory.CharSinkFactory;
 
+import junit.framework.TestSuite;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.Map;
-
-import junit.framework.TestSuite;
 
 /**
  * A generator of {@code TestSuite} instances for testing {@code ByteSink} implementations.
@@ -56,7 +57,12 @@ public class ByteSinkTester extends SourceSinkTester<ByteSink, byte[], ByteSinkF
 
   private static TestSuite suiteForString(String name, ByteSinkFactory factory,
       String string, String desc) {
-    byte[] bytes = string.getBytes(Charsets.UTF_8);
+    byte[] bytes;
+    try {
+      bytes = string.getBytes(Charsets.UTF_8.name());
+    } catch (UnsupportedEncodingException e) {
+      throw new AssertionError(e);
+    }
     TestSuite suite = suiteForBytes(name, factory, desc, bytes);
     CharSinkFactory charSinkFactory = SourceSinkFactories.asCharSinkFactory(factory);
     suite.addTest(CharSinkTester.suiteForString(name + ".asCharSink[Charset]", charSinkFactory,

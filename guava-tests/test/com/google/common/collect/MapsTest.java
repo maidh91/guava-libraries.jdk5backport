@@ -39,7 +39,7 @@ import org.truth0.Truth;
 import org.truth0.subjects.CollectionSubject;
 
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.StringBufferInputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
@@ -791,7 +791,7 @@ public class MapsTest extends TestCase {
     // Now test values loaded from a stream.
     String props = "test\n second = 2\n Third item :   a short  phrase   ";
 
-    testProp.load(new StringReader(props));
+    testProp.load(new StringBufferInputStream(props));
 
     result = Maps.fromProperties(testProp);
     assertEquals(4, result.size());
@@ -809,7 +809,7 @@ public class MapsTest extends TestCase {
     testProp = new Properties(System.getProperties());
     String override = "test\njava.version : hidden";
 
-    testProp.load(new StringReader(override));
+    testProp.load(new StringBufferInputStream(override));
 
     result = Maps.fromProperties(testProp);
     assertTrue(result.size() > 2);

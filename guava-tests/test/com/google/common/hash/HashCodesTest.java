@@ -16,12 +16,14 @@
 
 package com.google.common.hash;
 
+import static com.google.common.jdk5backport.Arrays.copyOf;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.ClassSanityTester;
 
-import java.util.Arrays;
-
 import junit.framework.TestCase;
+
+import java.util.Arrays;
 
 /**
  * Tests for HashCodes, especially making sure that their endianness promises (big-endian)
@@ -177,7 +179,7 @@ public class HashCodesTest extends TestCase {
       byte[] bb = new byte[bytes];
       hashCode.writeBytesTo(bb, 0, bb.length);
 
-      assertTrue(Arrays.equals(Arrays.copyOf(hashBytes, bytes), bb));
+      assertTrue(Arrays.equals(copyOf(hashBytes, bytes), bb));
     }
   }
 

@@ -19,8 +19,8 @@ package com.google.common.primitives;
 import com.google.caliper.Param;
 import com.google.caliper.Runner;
 import com.google.caliper.SimpleBenchmark;
+import com.google.common.jdk5backport.Arrays;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -103,4 +103,5 @@ public class UnsignedBytesBenchmark extends SimpleBenchmark {
     }*/
     Runner.main(UnsignedBytesBenchmark.class, args);
   }
+
 }

@@ -16,6 +16,7 @@
 
 package com.google.common.io;
 
+import static com.google.common.base.Charsets.UTF_16;
 import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.ByteStreams.newInputStreamSupplier;
 
@@ -23,7 +24,10 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.Hashing;
+import com.google.common.jdk5backport.Arrays;
 import com.google.common.testing.TestLogHandler;
+
+import junit.framework.TestSuite;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,15 +37,13 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
-
-import junit.framework.TestSuite;
 
 /**
  * Unit test for {@link ByteStreams}.
@@ -588,7 +590,7 @@ public class ByteStreamsTest extends IoTestCase {
     in.readFully(actual);
     assertEquals(bytes, actual);
   }
-  
+
   public void testNewDataInput_readFullyAndThenSome() {
     ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
     byte[] actual = new byte[bytes.length * 2];
@@ -599,7 +601,7 @@ public class ByteStreamsTest extends IoTestCase {
       assertTrue(ex.getCause() instanceof EOFException);
     }
   }
-  
+
   public void testNewDataInput_readFullyWithOffset() {
     ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
     byte[] actual = new byte[4];
@@ -609,10 +611,10 @@ public class ByteStreamsTest extends IoTestCase {
     assertEquals(bytes[0], actual[2]);
     assertEquals(bytes[1], actual[3]);
   }
-  
-  public void testNewDataInput_readLine() {
+
+  public void testNewDataInput_readLine() throws UnsupportedEncodingException {
     ByteArrayDataInput in = ByteStreams.newDataInput(
-        "This is a line\r\nThis too\rand this\nand also this".getBytes(Charsets.UTF_8));
+        "This is a line\r\nThis too\rand this\nand also this".getBytes(Charsets.UTF_8.name()));
     assertEquals("This is a line", in.readLine());
     assertEquals("This too", in.readLine());
     assertEquals("and this", in.readLine());
@@ -625,29 +627,29 @@ public class ByteStreamsTest extends IoTestCase {
     assertEquals(Float.intBitsToFloat(0x12345678), in.readFloat(), 0.0);
     assertEquals(Float.intBitsToFloat(0x76543210), in.readFloat(), 0.0);
   }
-  
+
   public void testNewDataInput_readDouble() {
     byte[] data = {0x12, 0x34, 0x56, 0x78, 0x76, 0x54, 0x32, 0x10};
     ByteArrayDataInput in = ByteStreams.newDataInput(data);
     assertEquals(Double.longBitsToDouble(0x1234567876543210L), in.readDouble(), 0.0);
   }
 
-  public void testNewDataInput_readUTF() {
+  public void testNewDataInput_readUTF() throws UnsupportedEncodingException {
     byte[] data = new byte[17];
     data[1] = 15;
-    System.arraycopy("Kilroy was here".getBytes(Charsets.UTF_8), 0, data, 2, 15);
+    System.arraycopy("Kilroy was here".getBytes(Charsets.UTF_8.name()), 0, data, 2, 15);
     ByteArrayDataInput in = ByteStreams.newDataInput(data);
     assertEquals("Kilroy was here", in.readUTF());
   }
 
-  public void testNewDataInput_readChar() {
-    byte[] data = "qed".getBytes(Charsets.UTF_16BE);
+  public void testNewDataInput_readChar() throws UnsupportedEncodingException {
+    byte[] data = "qed".getBytes(Charsets.UTF_16BE.name());
     ByteArrayDataInput in = ByteStreams.newDataInput(data);
     assertEquals('q', in.readChar());
     assertEquals('e', in.readChar());
     assertEquals('d', in.readChar());
   }
-  
+
   public void testNewDataInput_readUnsignedShort() {
     byte[] data = {0, 0, 0, 1, (byte) 0xFF, (byte) 0xFF, 0x12, 0x34};
     ByteArrayDataInput in = ByteStreams.newDataInput(data);
@@ -656,7 +658,7 @@ public class ByteStreamsTest extends IoTestCase {
     assertEquals(65535, in.readUnsignedShort());
     assertEquals(0x1234, in.readUnsignedShort());
   }
-  
+
   public void testNewDataInput_readLong() {
     byte[] data = {0x12, 0x34, 0x56, 0x78, 0x76, 0x54, 0x32, 0x10};
     ByteArrayDataInput in = ByteStreams.newDataInput(data);
@@ -667,7 +669,7 @@ public class ByteStreamsTest extends IoTestCase {
     ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
     assertTrue(in.readBoolean());
   }
-  
+
   public void testNewDataInput_readByte() {
     ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
     for (int i = 0; i < bytes.length; i++) {
@@ -680,7 +682,7 @@ public class ByteStreamsTest extends IoTestCase {
       assertTrue(ex.getCause() instanceof EOFException);
     }
   }
-  
+
   public void testNewDataInput_readUnsignedByte() {
     ByteArrayDataInput in = ByteStreams.newDataInput(bytes);
     for (int i = 0; i < bytes.length; i++) {
@@ -772,18 +774,18 @@ public class ByteStreamsTest extends IoTestCase {
     assertEquals(new byte[] {0, 97}, out.toByteArray());
   }
 
-  public void testNewDataOutput_writeChars() {
+  public void testNewDataOutput_writeChars() throws UnsupportedEncodingException {
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
     out.writeChars("r\u00C9sum\u00C9");
     // need to remove byte order mark before comparing
-    byte[] expected = Arrays.copyOfRange("r\u00C9sum\u00C9".getBytes(Charsets.UTF_16), 2, 14);
+    byte[] expected = Arrays.copyOfRange("r\u00C9sum\u00C9".getBytes(UTF_16.name()), 2, 14);
     assertEquals(expected, out.toByteArray());
   }
 
-  public void testNewDataOutput_writeUTF() {
+  public void testNewDataOutput_writeUTF() throws UnsupportedEncodingException {
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
     out.writeUTF("r\u00C9sum\u00C9");
-    byte[] expected ="r\u00C9sum\u00C9".getBytes(Charsets.UTF_8);
+    byte[] expected ="r\u00C9sum\u00C9".getBytes(Charsets.UTF_8.name());
     byte[] actual = out.toByteArray();
     // writeUTF writes the length of the string in 2 bytes
     assertEquals(0, actual[0]);
@@ -802,7 +804,7 @@ public class ByteStreamsTest extends IoTestCase {
     out.writeDouble(Double.longBitsToDouble(0x1234567876543210L));
     assertEquals(bytes, out.toByteArray());
   }
-  
+
   public void testNewDataOutput_writeFloat() {
     ByteArrayDataOutput out = ByteStreams.newDataOutput();
     out.writeFloat(Float.intBitsToFloat(0x12345678));
@@ -812,9 +814,9 @@ public class ByteStreamsTest extends IoTestCase {
 
   public void testChecksum() throws IOException {
     InputSupplier<ByteArrayInputStream> asciiBytes =
-        ByteStreams.newInputStreamSupplier(ASCII.getBytes(Charsets.US_ASCII));
+        ByteStreams.newInputStreamSupplier(ASCII.getBytes(Charsets.US_ASCII.name()));
     InputSupplier<ByteArrayInputStream> i18nBytes =
-        ByteStreams.newInputStreamSupplier(I18N.getBytes(Charsets.UTF_8));
+        ByteStreams.newInputStreamSupplier(I18N.getBytes(Charsets.UTF_8.name()));
 
     Checksum checksum = new CRC32();
     assertEquals(0L, checksum.getValue());
@@ -827,9 +829,9 @@ public class ByteStreamsTest extends IoTestCase {
 
   public void testHash() throws IOException {
     InputSupplier<ByteArrayInputStream> asciiBytes =
-        ByteStreams.newInputStreamSupplier(ASCII.getBytes(Charsets.US_ASCII));
+        ByteStreams.newInputStreamSupplier(ASCII.getBytes(Charsets.US_ASCII.name()));
     InputSupplier<ByteArrayInputStream> i18nBytes =
-        ByteStreams.newInputStreamSupplier(I18N.getBytes(Charsets.UTF_8));
+        ByteStreams.newInputStreamSupplier(I18N.getBytes(Charsets.UTF_8.name()));
 
     String init = "d41d8cd98f00b204e9800998ecf8427e";
     assertEquals(init, Hashing.md5().newHasher().hash().toString());
@@ -1093,7 +1095,7 @@ public class ByteStreamsTest extends IoTestCase {
     lin.skip(3);
     assertEquals(0, lin.available());
   }
-  
+
   public void testLimit_markNotSet() {
     byte[] big = newPreFilledByteArray(5);
     InputStream bin = new ByteArrayInputStream(big);
@@ -1106,7 +1108,7 @@ public class ByteStreamsTest extends IoTestCase {
       assertEquals("Mark not set", expected.getMessage());
     }
   }
-  
+
   public void testLimit_markNotSupported() {
     InputStream lin = ByteStreams.limit(new UnmarkableInputStream(), 2);
 
@@ -1117,17 +1119,17 @@ public class ByteStreamsTest extends IoTestCase {
       assertEquals("Mark not supported", expected.getMessage());
     }
   }
-  
+
   private static class UnmarkableInputStream extends InputStream {
     @Override
     public int read() throws IOException {
       return 0;
     }
-    
+
     @Override
     public boolean markSupported() {
       return false;
-    }    
+    }
   }
 
   private static byte[] copyOfRange(byte[] in, int from, int to) {

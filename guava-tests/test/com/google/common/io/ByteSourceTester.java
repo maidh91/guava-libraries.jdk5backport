@@ -25,17 +25,18 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.SourceSinkFactory.ByteSourceFactory;
 import com.google.common.io.SourceSinkFactory.CharSourceFactory;
 
+import junit.framework.TestSuite;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Random;
-
-import junit.framework.TestSuite;
 
 /**
  * A generator of {@code TestSuite} instances for testing {@code ByteSource} implementations.
@@ -56,8 +57,12 @@ public class ByteSourceTester extends SourceSinkTester<ByteSource, byte[], ByteS
       if (testAsCharSource) {
         suite.addTest(suiteForString(factory, entry.getValue(), name, entry.getKey()));
       } else {
-        suite.addTest(suiteForBytes(
-            factory, entry.getValue().getBytes(Charsets.UTF_8), name, entry.getKey(), true));
+        try {
+          suite.addTest(suiteForBytes(factory, entry.getValue().getBytes(Charsets.UTF_8.name()),
+              name, entry.getKey(), true));
+        } catch (UnsupportedEncodingException e) {
+          throw new AssertionError(e);
+        }
       }
     }
     return suite;
@@ -65,7 +70,12 @@ public class ByteSourceTester extends SourceSinkTester<ByteSource, byte[], ByteS
 
   private static TestSuite suiteForString(ByteSourceFactory factory, String string,
       String name, String desc) {
-    TestSuite suite = suiteForBytes(factory, string.getBytes(Charsets.UTF_8), name, desc, true);
+    TestSuite suite;
+    try {
+      suite = suiteForBytes(factory, string.getBytes(Charsets.UTF_8.name()), name, desc, true);
+    } catch (UnsupportedEncodingException e) {
+      throw new AssertionError(e);
+    }
     CharSourceFactory charSourceFactory = SourceSinkFactories.asCharSourceFactory(factory);
     suite.addTest(CharSourceTester.suiteForString(charSourceFactory, string,
         name + ".asCharSource[Charset]", desc));

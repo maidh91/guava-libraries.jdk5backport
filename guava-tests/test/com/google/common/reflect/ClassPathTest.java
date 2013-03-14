@@ -29,6 +29,10 @@ import com.google.common.reflect.subpackage.ClassInSubPackage;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
 
+import junit.framework.TestCase;
+
+import org.junit.Test;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -41,10 +45,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Manifest;
-
-import junit.framework.TestCase;
-
-import org.junit.Test;
 
 /**
  * Functional tests of {@link ClassPath}.
@@ -367,7 +367,7 @@ public class ClassPathTest extends TestCase {
   }
 
   private static Manifest manifest(String content) throws IOException {
-    InputStream in = new ByteArrayInputStream(content.getBytes(Charsets.US_ASCII));
+    InputStream in = new ByteArrayInputStream(content.getBytes(Charsets.US_ASCII.name()));
     Manifest manifest = new Manifest();
     manifest.read(in);
     return manifest;

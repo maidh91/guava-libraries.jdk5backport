@@ -17,14 +17,12 @@
 package com.google.common.hash;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.jdk5backport.Arrays;
 
 import junit.framework.TestCase;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-
-import junit.framework.TestCase;
 
 /**
  * Tests for the MessageDigestHashFunction.
@@ -72,4 +70,5 @@ public class MessageDigestHashFunctionTest extends TestCase {
       throw new AssertionError(nsae);
     }
   }
+
 }
