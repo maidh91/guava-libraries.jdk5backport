@@ -80,6 +80,9 @@
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
+          <fork>true</fork>
+          <!-- Prepend guava-bootstrap to avoid an API incompatibility between JDK5 and JDK6 -->
+          <compilerArgument>-Xbootclasspath/p:${project.build.directory}/dependency/guava-bootstrap-${project.version}.jar</compilerArgument>
         </configuration>
       </plugin>
       <plugin>
@@ -92,6 +95,22 @@
             <goals><goal>jar</goal></goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+         <executions>
+           <execution>
+            <id>prep-guava-bootstrap</id>
+            <phase>process-sources</phase>
+            <goals><goal>copy-dependencies</goal></goals>
+            <configuration>
+              <includeArtifactIds>guava-bootstrap</includeArtifactIds>
+              <excludeTransitive>true</excludeTransitive>
+              <includeScope>provided</includeScope>
+            </configuration>
+          </execution>
+         </executions>      
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

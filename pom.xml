@@ -17,6 +17,7 @@
   <url>http://code.google.com/p/guava-libraries</url>
   <properties>
     <gpg.skip>true</gpg.skip>
+    <bootstrap.classes>${java.home}/lib/rt.jar</bootstrap.classes>
   </properties>
   <issueManagement>
     <system>code.google.com</system>
@@ -72,6 +73,19 @@
         </executions>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <compilerArguments>
+              <verbose />
+              <bootclasspath>${bootstrap.classes}</bootclasspath>
+            </compilerArguments>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
   <distributionManagement>
     <site>
