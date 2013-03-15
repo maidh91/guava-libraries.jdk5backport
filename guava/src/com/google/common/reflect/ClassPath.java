@@ -290,11 +290,11 @@ public final class ClassPath {
     for (File f : directory.listFiles()) {
       String name = f.getName();
       if (f.isDirectory()) {
-        if (f.getName().equals("META-INF")) {
-          continue;
-        }
         browseDirectory(f, classloader, packagePrefix + name + "/", resources);
       } else {
+        if (name.equals("MANIFEST.MF")) {
+          continue;
+        }
         String resourceName = packagePrefix + name;
         resources.add(ResourceInfo.of(resourceName, classloader));
       }
