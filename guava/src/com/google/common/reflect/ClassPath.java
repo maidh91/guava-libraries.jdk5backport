@@ -149,7 +149,7 @@ public final class ClassPath {
         return new ResourceInfo(resourceName, loader);
       }
     }
-  
+
     ResourceInfo(String resourceName, ClassLoader loader) {
       this.resourceName = checkNotNull(resourceName);
       this.loader = checkNotNull(loader);
@@ -290,6 +290,9 @@ public final class ClassPath {
     for (File f : directory.listFiles()) {
       String name = f.getName();
       if (f.isDirectory()) {
+        if (f.getName().equals("META-INF")) {
+          continue;
+        }
         browseDirectory(f, classloader, packagePrefix + name + "/", resources);
       } else {
         String resourceName = packagePrefix + name;
