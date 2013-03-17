@@ -18,21 +18,23 @@ package com.google.common.base;
 
 import com.google.common.testing.GcFinalization;
 
+import junit.framework.TestCase;
+
 import java.io.Closeable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.CodeSource;
 import java.security.Permission;
+import java.security.PermissionCollection;
 import java.security.Policy;
 import java.security.ProtectionDomain;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-
-import junit.framework.TestCase;
 
 /**
  * Tests that the {@code ClassLoader} of {@link FinalizableReferenceQueue} can be unloaded. These
@@ -74,6 +76,16 @@ public class FinalizableReferenceQueueClassLoaderUnloadingTest extends TestCase 
     @Override
     public boolean implies(ProtectionDomain pd, Permission perm) {
       return true;
+    }
+
+    @Override
+    public PermissionCollection getPermissions(CodeSource codesource) {
+      throw new AssertionError();
+    }
+
+    @Override
+    public void refresh() {
+      throw new AssertionError();
     }
   }
 
