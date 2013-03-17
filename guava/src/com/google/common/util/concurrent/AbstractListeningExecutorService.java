@@ -44,29 +44,29 @@ import javax.annotation.Nullable;
  */
 @Beta
 public abstract class AbstractListeningExecutorService implements ListeningExecutorService {
-  @Override
+  /* @Override JDK5 */
   public ListenableFuture<?> submit(Runnable task) {
     ListenableFutureTask<Void> ftask = ListenableFutureTask.create(task, null);
     execute(ftask);
     return ftask;
   }
 
-  @Override
+  /* @Override JDK5 */
   public <T> ListenableFuture<T> submit(Runnable task, @Nullable T result) {
     ListenableFutureTask<T> ftask = ListenableFutureTask.create(task, result);
     execute(ftask);
     return ftask;
   }
 
-  @Override
+  /* @Override JDK5 */
   public <T> ListenableFuture<T> submit(Callable<T> task) {
     ListenableFutureTask<T> ftask = ListenableFutureTask.create(task);
     execute(ftask);
     return ftask;
   }
 
-  @Override
-  public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException,
+  /* @Override JDK5 */
+  public <T> T invokeAny(Collection<Callable<T>> tasks) throws InterruptedException,
       ExecutionException {
     try {
       return invokeAnyImpl(this, tasks, false, 0);
@@ -75,14 +75,14 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
     }
   }
 
-  @Override
-  public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+  /* @Override JDK5 */
+  public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return invokeAnyImpl(this, tasks, true, unit.toNanos(timeout));
   }
 
-  @Override
-  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+  /* @Override JDK5 */
+  public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks)
       throws InterruptedException {
     if (tasks == null) {
       throw new NullPointerException();
@@ -113,8 +113,8 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
     }
   }
 
-  @Override
-  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout,
+  /* @Override JDK5 */
+  public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout,
       TimeUnit unit) throws InterruptedException {
     if (tasks == null || unit == null) {
       throw new NullPointerException();

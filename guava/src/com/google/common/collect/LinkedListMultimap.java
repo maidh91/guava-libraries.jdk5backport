@@ -126,12 +126,12 @@ public class LinkedListMultimap<K, V> implements ListMultimap<K, V>, Serializabl
       return key + "=" + value;
     }
   }
-  
+
   private static class KeyList<K, V> {
     Node<K, V> head;
     Node<K, V> tail;
     int count;
-    
+
     KeyList(Node<K, V> firstNode) {
       this.head = firstNode;
       this.tail = firstNode;
@@ -145,7 +145,7 @@ public class LinkedListMultimap<K, V> implements ListMultimap<K, V>, Serializabl
   private transient Node<K, V> tail; // the tail for all keys
   private transient Map<K, KeyList<K, V>> keyToKeyList;
   private transient int size;
-  
+
   /*
    * Tracks modifications to keyToKeyList so that addition or removal of keys invalidates
    * preexisting iterators. This does *not* track simple additions and removals of values
@@ -276,7 +276,7 @@ public class LinkedListMultimap<K, V> implements ListMultimap<K, V>, Serializabl
       } else {
         node.previousSibling.nextSibling = node.nextSibling;
       }
-      
+
       if (node.nextSibling == null) {
         keyList.tail = node.previousSibling;
       } else {
@@ -330,14 +330,14 @@ public class LinkedListMultimap<K, V> implements ListMultimap<K, V>, Serializabl
       }
       current = null;
     }
-    
+
     private void checkForConcurrentModification() {
       if (modCount != expectedModCount) {
         throw new ConcurrentModificationException();
       }
     }
-    
-    @Override
+
+    /* @Override JDK5 */
     public boolean hasNext() {
       checkForConcurrentModification();
       return next != null;
@@ -409,14 +409,14 @@ public class LinkedListMultimap<K, V> implements ListMultimap<K, V>, Serializabl
     Node<K, V> current;
 
     int expectedModCount = modCount;
-    
+
     private void checkForConcurrentModification() {
       if (modCount != expectedModCount) {
         throw new ConcurrentModificationException();
       }
     }
 
-    @Override
+    /* @Override JDK5 */
     public boolean hasNext() {
       checkForConcurrentModification();
       return next != null;

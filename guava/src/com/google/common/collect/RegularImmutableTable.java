@@ -42,22 +42,22 @@ import javax.annotation.concurrent.Immutable;
 abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
 
   private RegularImmutableTable() {}
-  
+
   private transient ImmutableCollection<V> values;
 
-  @Override public final ImmutableCollection<V> values() {
+  /* @Override JDK5 */ public final ImmutableCollection<V> values() {
     ImmutableCollection<V> result = values;
     return (result == null) ? values = createValues() : result;
   }
-  
+
   abstract ImmutableCollection<V> createValues();
 
-  @Override public abstract int size();
+  /* @Override JDK5 */ public abstract int size();
 
   public final boolean containsValue(@Nullable Object value) {
     return values().contains(value);
   }
-  
+
   private transient ImmutableSet<Cell<R, C, V>> cellSet;
 
   @Override
@@ -65,11 +65,11 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
     ImmutableSet<Cell<R, C, V>> result = cellSet;
     return (result == null) ? cellSet = createCellSet() : result;
   }
-  
+
   abstract ImmutableSet<Cell<R, C, V>> createCellSet();
-  
+
   abstract class CellSet extends ImmutableSet<Cell<R, C, V>> {
-    @Override
+    /* @Override JDK5 */
     public int size() {
       return RegularImmutableTable.this.size();
     }
@@ -194,7 +194,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         R rowKey = cell.getRowKey();
         C columnKey = cell.getColumnKey();
         V value = cell.getValue();
-        
+
         iterationOrderRow[i] = rowIndex.get(rowKey);
         Map<C, V> thisRow = rows.get(rowKey);
         iterationOrderColumn[i] = thisRow.size();
@@ -212,7 +212,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
         rowBuilder.put(row.getKey(), ImmutableMap.copyOf(row.getValue()));
       }
       this.rowMap = rowBuilder.build();
-      
+
       ImmutableMap.Builder<C, Map<R, V>> columnBuilder = ImmutableMap.builder();
       for (Map.Entry<C, Map<R, V>> col : columns.entrySet()) {
         columnBuilder.put(col.getKey(), ImmutableMap.copyOf(col.getValue()));
@@ -277,12 +277,12 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
     @Override
     ImmutableCollection<V> createValues() {
       return new ImmutableList<V>() {
-        @Override
+        /* @Override JDK5 */
         public int size() {
           return iterationOrderRow.length;
         }
 
-        @Override
+        /* @Override JDK5 */
         public V get(int index) {
           int rowIndex = iterationOrderRow[index];
           ImmutableMap<C, V> row = (ImmutableMap<C, V>) rowMap.values().asList().get(rowIndex);
@@ -306,7 +306,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
     ImmutableSet<Cell<R, C, V>> createCellSet() {
       return new SparseCellSet();
     }
-    
+
     class SparseCellSet extends CellSet {
       @Override
       public UnmodifiableIterator<Cell<R, C, V>> iterator() {
@@ -316,7 +316,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
       @Override
       ImmutableList<Cell<R, C, V>> createAsList() {
         return new ImmutableAsList<Cell<R, C, V>>() {
-          @Override
+          /* @Override JDK5 */
           public Cell<R, C, V> get(int index) {
             int rowIndex = iterationOrderRow[index];
             Map.Entry<R, Map<C, V>> rowEntry = rowMap.entrySet().asList().get(rowIndex);
@@ -635,12 +635,12 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
     @Override
     ImmutableCollection<V> createValues() {
       return new ImmutableList<V>() {
-        @Override
+        /* @Override JDK5 */
         public int size() {
           return iterationOrderRow.length;
         }
 
-        @Override
+        /* @Override JDK5 */
         public V get(int index) {
           return values[iterationOrderRow[index]][iterationOrderColumn[index]];
         }
@@ -671,7 +671,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
       @Override
       ImmutableList<Cell<R, C, V>> createAsList() {
         return new ImmutableAsList<Cell<R, C, V>>() {
-          @Override
+          /* @Override JDK5 */
           public Cell<R, C, V> get(int index) {
             int rowIndex = iterationOrderRow[index];
             int columnIndex = iterationOrderColumn[index];
@@ -680,7 +680,7 @@ abstract class RegularImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
             V value = values[rowIndex][columnIndex];
             return Tables.immutableCell(rowKey, columnKey, value);
           }
-          
+
           @Override
           ImmutableCollection<Cell<R, C, V>> delegateCollection() {
             return DenseCellSet.this;

@@ -196,7 +196,7 @@ public final class Closer implements Closeable {
    * additional exceptions that are thrown after that will be suppressed.
    */
 
-  @Override
+  /* @Override JDK5 */
   public void close() throws IOException {
     Throwable throwable = thrown;
 
@@ -241,7 +241,7 @@ public final class Closer implements Closeable {
 
     static final LoggingSuppressor INSTANCE = new LoggingSuppressor();
 
-    @Override
+    /* @Override JDK5 */
     public void suppress(Closeable closeable, Throwable thrown, Throwable suppressed) {
       // log to the same place as Closeables
       Closeables.logger.log(Level.WARNING,
@@ -272,7 +272,7 @@ public final class Closer implements Closeable {
       }
     }
 
-    @Override
+    /* @Override JDK5 */
     public void suppress(Closeable closeable, Throwable thrown, Throwable suppressed) {
       // ensure no exceptions from addSuppressed
       if (thrown == suppressed) {
