@@ -20,15 +20,11 @@ import static com.google.common.collect.BoundType.CLOSED;
 import static com.google.common.collect.BoundType.OPEN;
 
 import com.google.common.annotations.GwtCompatible;
-import com.google.common.annotations.GwtIncompatible;
 import com.google.common.collect.Multiset.Entry;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.SortedSet;
-
-import javax.annotation.Nullable;
 
 /**
  * Provides static utility methods for creating and working with

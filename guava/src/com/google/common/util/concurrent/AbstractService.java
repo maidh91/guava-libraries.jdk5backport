@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkState;
 import com.google.common.annotations.Beta;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
-import com.google.common.util.concurrent.Service.State; // javadoc needs this
 
 import java.util.List;
 import java.util.Queue;
@@ -38,6 +37,7 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.Immutable;
+// javadoc needs this
 
 /**
  * Base class for implementing services that can handle {@link #doStart} and {@link #doStop}

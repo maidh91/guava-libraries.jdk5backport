@@ -22,6 +22,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

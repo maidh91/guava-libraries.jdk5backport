@@ -21,6 +21,7 @@ import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.Double.doubleToRawLongBits;
 import static java.lang.Double.isNaN;
 import static java.lang.Double.longBitsToDouble;
+
 import java.math.BigInteger;
 
 /**

@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkState;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 /**
  * {@link HashFunction} adapter for {@link MessageDigest} instances.
