@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -272,8 +273,8 @@ public abstract class ImmutableMap<K, V> implements Map<K, V>, Serializable {
         return kvMap;
       }
     } else if (map instanceof EnumMap) {
-      EnumMap<?, ?> enumMap = (EnumMap<?, ?>) map;
-      for (Map.Entry<?, ?> entry : enumMap.entrySet()) {
+      EnumMap enumMap = (EnumMap) map;
+      for (Map.Entry entry : (Set<Map.Entry>)enumMap.entrySet()) {
         checkNotNull(entry.getKey());
         checkNotNull(entry.getValue());
       }
