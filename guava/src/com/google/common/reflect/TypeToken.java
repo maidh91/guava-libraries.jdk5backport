@@ -39,8 +39,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -1077,7 +1079,11 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       @SuppressWarnings("unchecked")
       @Override
       Iterable<? extends Class<?>> getInterfaces(Class<?> type) {
-        return (Iterable<? extends Class<?>>) Arrays.asList(type.getInterfaces());
+         List<Class> interfaces = new ArrayList<Class>();
+         for (Class<?> iface : type.getInterfaces()) {
+           interfaces.add(iface);
+         }
+         return (Iterable) Collections.unmodifiableList(interfaces);
       }
 
       @Override
