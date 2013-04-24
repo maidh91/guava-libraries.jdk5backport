@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Collections;
@@ -2129,8 +2130,9 @@ public final class Multimaps {
       final Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof FilteredKeyMultimap) {
       FilteredKeyMultimap<K, V> prev = (FilteredKeyMultimap<K, V>) unfiltered;
-      return new FilteredKeyMultimap<K, V>(prev.unfiltered, Predicates.and(prev.keyPredicate,
-          keyPredicate));
+      List<Predicate<K>> predicateList =
+          Arrays.asList((Predicate<K>) prev.keyPredicate, (Predicate<K>) keyPredicate);
+      return new FilteredKeyMultimap<K, V>(prev.unfiltered, Predicates.and(predicateList));
     } else if (unfiltered instanceof FilteredMultimap) {
       FilteredMultimap<K, V> prev = (FilteredMultimap<K, V>) unfiltered;
       return new FilteredEntryMultimap<K, V>(prev.unfiltered, Predicates.<Entry<K, V>> and(
