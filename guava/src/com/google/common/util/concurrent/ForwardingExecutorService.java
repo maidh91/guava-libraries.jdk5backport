@@ -49,25 +49,25 @@ public abstract class ForwardingExecutorService extends ForwardingObject impleme
   }
 
   /* @Override JDK5 */
-  public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks)
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
       throws InterruptedException {
     return delegate().invokeAll(tasks);
   }
 
   /* @Override JDK5 */
-  public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout,
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout,
       TimeUnit unit) throws InterruptedException {
     return delegate().invokeAll(tasks, timeout, unit);
   }
 
   /* @Override JDK5 */
-  public <T> T invokeAny(Collection<Callable<T>> tasks) throws InterruptedException,
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException,
       ExecutionException {
     return delegate().invokeAny(tasks);
   }
 
   /* @Override JDK5 */
-  public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return delegate().invokeAny(tasks, timeout, unit);
   }

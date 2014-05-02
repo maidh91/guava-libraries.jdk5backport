@@ -66,7 +66,7 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
   }
 
   /* @Override JDK5 */
-  public <T> T invokeAny(Collection<Callable<T>> tasks) throws InterruptedException,
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException,
       ExecutionException {
     try {
       return invokeAnyImpl(this, tasks, false, 0);
@@ -76,13 +76,13 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
   }
 
   /* @Override JDK5 */
-  public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
+  public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return invokeAnyImpl(this, tasks, true, unit.toNanos(timeout));
   }
 
   /* @Override JDK5 */
-  public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks)
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
       throws InterruptedException {
     if (tasks == null) {
       throw new NullPointerException();
@@ -114,7 +114,7 @@ public abstract class AbstractListeningExecutorService implements ListeningExecu
   }
 
   /* @Override JDK5 */
-  public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout,
+  public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout,
       TimeUnit unit) throws InterruptedException {
     if (tasks == null || unit == null) {
       throw new NullPointerException();

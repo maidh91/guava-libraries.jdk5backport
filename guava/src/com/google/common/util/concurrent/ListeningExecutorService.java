@@ -66,7 +66,7 @@ public interface ListeningExecutorService extends ExecutorService {
    * @throws NullPointerException if any task is null
    */
   /* @Override JDK5 */
-  <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks)
+  <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
       throws InterruptedException;
 
   /**
@@ -82,6 +82,6 @@ public interface ListeningExecutorService extends ExecutorService {
    * @throws NullPointerException if any task is null
    */
   /* @Override JDK5 */
-  <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
+  <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException;
 }
