@@ -352,6 +352,17 @@ public final class NullPointerTester {
     }
   }
 
+  private static String bestAvailableString(
+      TypeToken type, int position, Invokable<?, ?> invokable) {
+    checkNotNull(type);
+    try {
+      return type.toString();
+    } catch (NullPointerException androidBug6636) {
+      // http://stackoverflow.com/a/8169250/28465
+      return String.format("unknown (arg %s of %s)", position, invokable);
+    }
+  }
+
   private Object[] buildParamList(Invokable<?, ?> invokable, int indexOfParamToSetToNull) {
     ImmutableList<Parameter> params = invokable.getParameters();
     Object[] args = new Object[params.size()];
@@ -361,7 +372,8 @@ public final class NullPointerTester {
       if (i != indexOfParamToSetToNull) {
         args[i] = getDefaultValue(param.getType());
         if (!isPrimitiveOrNullable(param)) {
-          Assert.assertTrue("No default value found for " + param + " of "+ invokable,
+          Assert.assertTrue("No default value found for "
+              + bestAvailableString(param.getType(), i, invokable) + " of " + invokable,
               args[i] != null);
         }
       }
